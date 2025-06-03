@@ -1,0 +1,15 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  login_email: MyString
+  user: one
+  success: false
+  message: MyString
+  attempted_at: 2025-06-03 06:07:08
+
+two:
+  login_email: MyString
+  user: two
+  success: false
+  message: MyString
+  attempted_at: 2025-06-03 06:07:08

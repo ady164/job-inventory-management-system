@@ -1,0 +1,24 @@
+<div class="login-container">
+  <%= image_tag 'JIMS-Logo.png', class: "login-logo", alt:"JIMS" %>
+  <h1>Login</h1>
+  <%= form_with url: login_path, method: :post do |f| %>
+    <div class="field-box">
+      <div class="field-label">Email</div>
+      <%= text_field_tag :email, nil, class:"login-field" %>
+    </div>
+    <div class="field-box">
+      <div class="field-label">Password</div>
+      <%= password_field_tag :password, nil, class:"login-field" %>
+    </div>
+    <div class="login-alert">
+      <% if flash[:alert] %>
+        <div class="flash alert">
+          <%= flash[:alert] %>
+        </div>
+      <% end %>
+    </div>
+    <div>
+      <%= submit_tag "Login", class:"login-button" %>
+    </div>
+  <% end %>
+</div>

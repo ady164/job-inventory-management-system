@@ -10,5 +10,17 @@ Rails.application.routes.draw do
   # get "service-worker" => "rails/pwa#service_worker", as: :pwa_service_worker
 
   # Defines the root path route ("/")
-  # root "posts#index"
+  root "dashboard#index"
+
+  # Login route
+  get '/login', to: 'sessions#new', as: :login
+  post '/login', to: 'sessions#create'
+  delete '/logout', to: 'sessions#destroy', as: :logout
+
+  # Dashboard Route
+  get "/dashboard", to: "dashboard#index"
+
+  # Inventories Route
+  resources :inventories, only: [:show, :index, :new, :create, :edit, :update, :destroy]
+
 end

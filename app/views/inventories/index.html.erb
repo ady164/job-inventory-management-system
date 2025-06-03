@@ -1,0 +1,146 @@
+<div class="main-content">
+  <h1>Welcome, <%= current_user.name %>!</h1>
+  <p>INVENTORIES</p>
+
+  <%= link_to 'Add New Inventory', new_inventory_path, class: 'btn-save' %>
+  <h2>Inventory List</h2>
+
+  <table class="inventory-table" id="inventoryTable">
+    <thead>
+      <tr>
+        <th onclick="sortTable(0)">ID</th>
+        <th>Image</th>
+        <th onclick="sortTable(2)">Name</th>
+        <th onclick="sortTable(3)">Product #</th>
+        <th onclick="sortTable(4)">Category</th>
+        <th onclick="sortTable(5)">Quantity</th>
+        <th onclick="sortTable(6)">Alert Qty</th>
+        <th onclick="sortTable(7)">Status</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @inventories.each do |item| %>
+        <tr>
+          <td><%= item.id %></td>
+          <td>
+            <% if item.image.attached? %>
+              <%= image_tag item.image.variant(resize_to_fill: [30, 30]), alt: 'Image', class: 'thumb' %>
+            <% else %>
+              <span style="color: #aaa;">—</span>
+            <% end %>
+          </td>
+          <td><%= item.name %></td>
+          <td><%= item.product_number %></td>
+          <td><%= item.category %></td>
+          <td><%= item.quantity %></td>
+          <td><%= item.alert_quantity %></td>
+          <td><%= item.status %></td>
+          <td>
+            <%= link_to 'Edit', edit_inventory_path(item), class: 'btn-edit' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
+
+<!-- Styles -->
+<style>
+  .main-content {
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+
+  h1, h2 {
+    margin-bottom: 10px;
+  }
+
+  .btn-save {
+    background-color: #28a745;
+    color: white;
+    padding: 8px 14px;
+    text-decoration: none;
+    border-radius: 4px;
+    display: inline-block;
+    margin-bottom: 16px;
+  }
+
+  .btn-save:hover {
+    background-color: #218838;
+  }
+
+  .btn-edit {
+    background-color: #007bff;
+    color: white;
+    padding: 4px 10px;
+    border-radius: 4px;
+    text-decoration: none;
+  }
+
+  .btn-edit:hover {
+    background-color: #0056b3;
+  }
+
+  .inventory-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 16px;
+  }
+
+  .inventory-table th,
+  .inventory-table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+    vertical-align: middle;
+  }
+
+  .inventory-table th {
+    background-color: #f8f9fa;
+    cursor: pointer;
+    user-select: none;
+  }
+
+  .inventory-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
+
+  .inventory-table tr:hover {
+    background-color: #e9f5ff;
+  }
+
+  .thumb {
+    width: 30px;
+    height: 30px;
+    object-fit: cover;
+    border-radius: 4px;
+  }
+</style>
+
+<!-- Sorting Script -->
+<script>
+  function sortTable(columnIndex) {
+    const table = document.getElementById("inventoryTable");
+    const rows = Array.from(table.rows).slice(1);
+    let isNumeric = !isNaN(rows[0].cells[columnIndex].innerText.trim());
+    let ascending = table.dataset.sortCol == columnIndex && table.dataset.sortOrder != "asc";
+
+    rows.sort((a, b) => {
+      let aText = a.cells[columnIndex].innerText.trim();
+      let bText = b.cells[columnIndex].innerText.trim();
+
+      if (isNumeric) {
+        return ascending ? aText - bText : bText - aText;
+      } else {
+        return ascending
+          ? aText.localeCompare(bText)
+          : bText.localeCompare(aText);
+      }
+    });
+
+    rows.forEach(row => table.tBodies[0].appendChild(row));
+    table.dataset.sortCol = columnIndex;
+    table.dataset.sortOrder = ascending ? "asc" : "desc";
+  }
+</script>

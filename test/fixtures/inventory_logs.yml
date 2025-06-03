@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  inventory: one
+  user: one
+  job: one
+  quantity: 1
+  status: MyString
+  message: MyText
+
+two:
+  inventory: two
+  user: two
+  job: two
+  quantity: 1
+  status: MyString
+  message: MyText

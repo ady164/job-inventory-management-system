@@ -22,7 +22,10 @@
     <%= javascript_importmap_tags %>
   </head>
 
-  <body>
+  <body style="background-image: url(<%= asset_path('background.jpg') %>)">
+    <% if current_user %>
+      <%= render 'shared/navigation' %>
+    <% end %>
     <%= yield %>
   </body>
 </html>

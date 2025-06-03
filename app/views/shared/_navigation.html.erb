@@ -1,0 +1,13 @@
+<div class="nav-container">
+    <div class='nav-logo-box'>
+      <%= image_tag 'JIMS-Logo.png', class: "nav-logo", alt:"JIMS" %>
+    </div>
+    <div class="nav-link-container">
+        <% if current_user&.has_permission?('view_dashboard') %>
+            <%= link_to 'Dashboard', dashboard_path, class: "nav-link #{'active' if current_page?(dashboard_path)}" %>
+        <% end %>
+        <%= form_with url: logout_path, method: :delete, local: true, class: "inline-form" do %>
+            <%= submit_tag "Logout", class: "logout-link nav-link", data: { disable_with: "Logging out..." } %>
+        <% end %>
+    </div>
+</div>

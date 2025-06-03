@@ -1,0 +1,145 @@
+<div class="main-content">
+  <h1>Create New Inventory</h1>
+
+  <%= form_with model: @inventory, local: true, html: { multipart: true } do |form| %>
+    <table class="inventory-form-table">
+      <tr>
+        <td><%= form.label :name %></td>
+        <td>
+          <%= form.text_field :name %>
+          <% if @inventory.errors[:name].any? %>
+            <div class="error-message"><%= @inventory.errors[:name].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td><%= form.label :product_number %></td>
+        <td>
+          <%= form.text_field :product_number %>
+          <% if @inventory.errors[:product_number].any? %>
+            <div class="error-message"><%= @inventory.errors[:product_number].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td><%= form.label :description %></td>
+        <td>
+          <%= form.text_area :description %>
+          <% if @inventory.errors[:description].any? %>
+            <div class="error-message"><%= @inventory.errors[:description].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td><%= form.label :category %></td>
+        <td>
+          <%= form.select :category, ['Inserts', 'Powder', 'Others'], {}, class: "form-select" %>
+          <% if @inventory.errors[:category].any? %>
+            <div class="error-message"><%= @inventory.errors[:category].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td><%= form.label :alert_quantity %></td>
+        <td>
+          <%= form.number_field :alert_quantity %>
+          <% if @inventory.errors[:alert_quantity].any? %>
+            <div class="error-message"><%= @inventory.errors[:alert_quantity].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td><%= form.label :status %></td>
+        <td>
+          <%= form.select :status, ['Available', 'Out of Stock', 'Discontinued'], {}, class: "form-select" %>
+          <% if @inventory.errors[:status].any? %>
+            <div class="error-message"><%= @inventory.errors[:status].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td><%= form.label :image %></td>
+        <td>
+          <%= form.file_field :image, accept: 'image/*', id: 'image_input' %>
+        </td>
+      </tr>
+
+      <tr>
+        <td>Image Preview</td>
+        <td>
+          <img id="image_preview" src="<%= url_for(@inventory.image) if @inventory.image.attached? %>" alt="Image preview" style="max-width: 200px; max-height: 200px; display: <%= @inventory.image.attached? ? 'block' : 'none' %>;">
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="2" style="text-align: right;">
+          <%= form.submit 'Create Inventory', class: 'btn-save' %>
+        </td>
+      </tr>
+    </table>
+  <% end %>
+
+  <%= link_to 'Back to List', inventories_path, class: 'btn-back' %>
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', function() {
+    const input = document.getElementById('image_input');
+    const preview = document.getElementById('image_preview');
+
+    input.addEventListener('change', function(event) {
+      const [file] = input.files;
+      if (file) {
+        preview.src = URL.createObjectURL(file);
+        preview.style.display = 'block';
+      } else {
+        preview.src = '';
+        preview.style.display = 'none';
+      }
+    });
+  });
+</script>
+
+<style>
+  .inventory-form-table td {
+    padding: 8px 10px;
+    vertical-align: top;
+  }
+
+  .inventory-form-table input,
+  .inventory-form-table textarea,
+  .inventory-form-table select {
+    width: 100%;
+  }
+
+  .error-message {
+    color: red;
+    font-size: 0.9em;
+    margin-top: 4px;
+  }
+
+  .btn-save {
+    background-color: #04AA6D;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    cursor: pointer;
+  }
+
+  .btn-save:hover {
+    background-color: #037a4b;
+  }
+
+  .btn-back {
+    display: inline-block;
+    margin-top: 10px;
+    text-decoration: none;
+    color: #333;
+  }
+</style>
