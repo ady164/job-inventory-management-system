@@ -4,11 +4,15 @@ class User < ApplicationRecord
   belongs_to :role
   has_many :user_logs
 
-  # Store SHA256 password hash in password_hash column
+  validates :name, presence: true
+  validates :email, presence: true, uniqueness: true
+  validates :role, presence: true
+
+   # Store SHA256 password hash in password_hash column
   def password=(plain_password)
     self.password_hash = Digest::SHA256.hexdigest(plain_password)
   end
-
+  
   def authenticate(plain_password)
     Digest::SHA256.hexdigest(plain_password) == self.password_hash
   end
@@ -17,3 +21,4 @@ class User < ApplicationRecord
     role.permissions.exists?(name: perm_name)
   end
 end
+

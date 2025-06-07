@@ -1,0 +1,112 @@
+<%= form_with(model: [:admin, @user], local: true, id: "user-form") do |f| %>
+  <% if @user.errors.any? %>
+    <div class="alert alert-danger">
+      <h4><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h4>
+      <ul>
+        <% @user.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="form-group">
+    <%= f.label :name %>
+    <%= f.text_field :name, class: "form-control", required: true %>
+  </div>
+
+  <div class="form-group">
+    <%= f.label :email %>
+    <%= f.email_field :email, class: "form-control", required: true %>
+  </div>
+
+  <!-- Password fields (not submitted directly) -->
+  <div class="form-group">
+    <label for="password">Password</label>
+    <input type="password" id="password" class="form-control" minlength="6" />
+  </div>
+
+  <div class="form-group">
+    <label for="password_confirmation">Password Confirmation</label>
+    <input type="password" id="password_confirmation" class="form-control" minlength="6" />
+  </div>
+
+  <!-- PIN fields (not submitted directly) -->
+  <div class="form-group">
+    <label for="pin">PIN</label>
+    <input type="password" id="pin" class="form-control" minlength="6" maxlength="6" pattern="\d{6}" />
+  </div>
+
+  <div class="form-group">
+    <label for="pin_confirmation">PIN Confirmation</label>
+    <input type="password" id="pin_confirmation" class="form-control" minlength="6" maxlength="6" pattern="\d{6}" />
+  </div>
+
+  <!-- Hidden fields to submit hashes -->
+  <%= f.hidden_field :password_hash, id: "password_hash" %>
+  <%= f.hidden_field :pin_hash, id: "pin_hash" %>
+
+  <div class="form-group">
+    <%= f.label :role_id, "Role" %>
+    <%= f.collection_select :role_id, Role.all, :id, :name, { prompt: "Select Role" }, { class: "form-control", required: true } %>
+  </div>
+
+  <div class="form-group mt-3">
+    <%= f.submit class: "btn btn-primary" %>
+  </div>
+<% end %>
+
+<!-- JavaScript to validate and hash password/PIN -->
+<script>
+  document.getElementById('user-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+
+    const pw = document.getElementById('password').value;
+    const pwConfirm = document.getElementById('password_confirmation').value;
+    const pin = document.getElementById('pin').value;
+    const pinConfirm = document.getElementById('pin_confirmation').value;
+
+    if (pw !== pwConfirm) {
+      alert("Passwords do not match.");
+      return;
+    }
+
+    if (pw && pw.length < 6) {
+      alert("Password must be at least 6 characters.");
+      return;
+    }
+
+    if (pin !== pinConfirm) {
+      alert("PINs do not match.");
+      return;
+    }
+
+    if (pin && !/^\d{6}$/.test(pin)) {
+      alert("PIN must be exactly 6 digits.");
+      return;
+    }
+
+    // Hashing function
+    const hash = async (str) => {
+      const buffer = new TextEncoder().encode(str);
+      const digest = await crypto.subtle.digest("SHA-256", buffer);
+      return Array.from(new Uint8Array(digest)).map(b => b.toString(16).padStart(2, '0')).join('');
+    };
+
+    // Hash values if provided
+    const pwHash = pw ? await hash(pw) : '';
+    const pinHash = pin ? await hash(pin) : '';
+
+    document.getElementById('password_hash').value = pwHash;
+    document.getElementById('pin_hash').value = pinHash;
+
+    // Clear original fields (optional)
+    document.getElementById('password').value = '';
+    document.getElementById('password_confirmation').value = '';
+    document.getElementById('pin').value = '';
+    document.getElementById('pin_confirmation').value = '';
+
+    // Now submit the form
+    e.target.submit();
+  });
+</script>

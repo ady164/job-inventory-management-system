@@ -1,4 +1,6 @@
 class InventoriesController < ApplicationController
+  before_action :require_login
+  before_action -> { require_permission("view_dashboard") }
   before_action :set_inventory, only: [:edit, :update, :show]
 
   def index

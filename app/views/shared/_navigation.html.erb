@@ -6,8 +6,38 @@
         <% if current_user&.has_permission?('view_dashboard') %>
             <%= link_to 'Dashboard', dashboard_path, class: "nav-link #{'active' if current_page?(dashboard_path)}" %>
         <% end %>
+        <div class="nav-dropdown">
+            <% if current_user&.has_permission?('view_dashboard') %>
+                <div class="nav-drop-button nav-link">Admin <span class="nav-drop-icon">▼</span></div>
+                <% admin_active = current_page?(admin_users_path) || current_page?(admin_roles_path) %>
+                <div class="nav-dropdown-content <%= 'open' if admin_active %>">
+                    <%= link_to 'Users', admin_users_path, class: "nav-dropdown-item nav-link #{'active' if current_page?(admin_users_path)}"  %>
+                    <%= link_to 'Roles', admin_roles_path, class: "nav-dropdown-item nav-link #{'active' if current_page?(admin_roles_path)}"  %>
+                </div>
+            <% end %>
+        </div>
         <%= form_with url: logout_path, method: :delete, local: true, class: "inline-form" do %>
             <%= submit_tag "Logout", class: "logout-link nav-link", data: { disable_with: "Logging out..." } %>
         <% end %>
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  const dropbtn = document.querySelector('.nav-drop-button');
+  if (dropbtn) {
+    dropbtn.addEventListener('click', (e) => {
+      e.preventDefault();
+      const dropdown = dropbtn.nextElementSibling;
+      dropdown.classList.toggle('open');
+    });
+
+    document.addEventListener('click', (e) => {
+      const dropdown = dropbtn.nextElementSibling;
+      if (!dropbtn.contains(e.target) && !dropdown.contains(e.target)) {
+        dropdown.classList.remove('open');
+      }
+    });
+  }
+});
+</script>

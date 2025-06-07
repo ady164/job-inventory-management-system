@@ -112,14 +112,15 @@
 .logout-link{
   background: none;
   border: none;
-  padding: 0;
+  width:100%;
+  /* padding: 0; */
   font: inherit;
   color: inherit;
   cursor: pointer;
 }
 .nav-link {
    display: block;
-   width: 100%;
+   /* width: calc(100% - 32px); */
    text-align: left;
    color: black;
    padding: 16px;
@@ -140,6 +141,73 @@
 .main-content {
   margin-left: 200px;
   padding: 1px 16px;
+}
+/* Dropdown container - needed to position the dropdown content */
+.nav-dropdown {
+  position: relative;
+  /* display: inline-block;  */
+}
+
+/* Dropdown button */
+.nav-dropdown-button {
+  background: none;
+  border: none;
+  padding: 16px;
+  font: inherit;
+  cursor: pointer;
+  color: black;
+  width: 100%; /* for sidebar, remove if top nav */
+  text-align: left;
+  border-bottom: 1px solid #aeaeae;
+}
+
+.nav-drop-icon{
+   float:right;
+}
+
+/* Dropdown content (hidden by default) */
+.nav-dropdown-content {
+  display: none;
+  /* position: absolute; */
+  background-color: #f9f9f9;
+  min-width: 160px;
+  box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+  z-index: 1;
+  left: 0; /* align under button */
+}
+
+/* Dropdown links */
+.nav-dropdown-content .nav-dropdown-item {
+  color: black;
+  padding-left:30px;
+  text-decoration: none;
+  display: block;
+  border-bottom: 1px solid #aeaeae;
+}
+
+.nav-dropdown-item:hover {
+  background-color: #555;
+  color: white;
+}
+
+/* Show dropdown on hover for desktop */
+.nav-dropdown:hover .dropdown-content {
+  display: block;
+}
+
+/* Change button style on hover */
+.nav-dropdown:hover .nav-drop-button {
+  background-color: #555;
+  color: white;
+}
+
+/* Active styles (optional) */
+.nav-link.active, .nav-drop-button.active {
+  background-color: #04AA6D;
+  color: white;
+}
+.open{
+   display:block !important;
 }
 
  /* Media Query for Tablet */
@@ -184,6 +252,18 @@
    .main-content {
       margin-left: 0;
    }
+  .nav-drop-button {
+    width: auto; /* for top nav */
+    border-bottom: none;
+    border-right: 1px solid #aeaeae;
+    padding: 16px 10px;
+  }
+  .nav-dropdown-content {
+    position: static;
+    box-shadow: none;
+    background-color: #f1f1f1;
+    min-width: auto;
+  }
 }
 
  /* Media Query for Mobile */

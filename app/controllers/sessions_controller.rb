@@ -13,7 +13,7 @@ class SessionsController < ApplicationController
     else
       log_user_event(nil, false, "Invalid credentials", params[:email])
       flash.now[:alert] = "Invalid email or password"
-      render :new
+      render :new, status: :unprocessable_entity 
     end
   end
 
@@ -28,12 +28,12 @@ class SessionsController < ApplicationController
   private
 
   def log_user_event(user, success, message, email_override = nil)
-    UserLog.create(
-      user: user,
-      login_email: email_override || user&.email,
-      success: success,
-      message: message,
-      attempted_at: Time.current
-    )
+      UserLog.create(
+        user: user,
+        login_email: email_override || user&.email,
+        success: success,
+        message: message,
+        attempted_at: Time.current
+      )
   end
 end

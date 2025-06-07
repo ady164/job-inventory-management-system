@@ -1,0 +1,64 @@
+<!-- app/views/admin/index.html.erb -->
+<h1>Admin Panel</h1>
+
+<!-- Users Management -->
+<section>
+  <h2>Users</h2>
+  <%= link_to 'New User', new_user_path, class: 'btn btn-primary' %>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Role</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @users.each do |user| %>
+        <tr>
+          <td><%= user.name %></td>
+          <td><%= user.email %></td>
+          <td><%= user.role.name %></td>
+          <td>
+            <%= link_to 'Edit', edit_user_path(user), class: 'btn btn-secondary' %>
+            <%= link_to 'Delete', user_path(user), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
+
+<!-- Roles Management -->
+<section>
+  <h2>Roles</h2>
+  <%= link_to 'New Role', new_role_path, class: 'btn btn-primary' %>
+  <table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Permissions</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @roles.each do |role| %>
+        <tr>
+          <td><%= role.name %></td>
+          <td>
+            <ul>
+              <% role.permissions.each do |permission| %>
+                <li><%= permission.name %></li>
+              <% end %>
+            </ul>
+          </td>
+          <td>
+            <%= link_to 'Edit', edit_role_path(role), class: 'btn btn-secondary' %>
+            <%= link_to 'Delete', role_path(role), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>

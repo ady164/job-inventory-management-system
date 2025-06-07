@@ -1,0 +1,30 @@
+<div class="main-content">
+    <h1>Users</h1>
+
+<%= link_to 'New User', new_admin_user_path, class: 'btn btn-primary' %>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Email</th>
+      <th>Role</th>
+      <th>Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <td><%= user.name %></td>
+        <td><%= user.email %></td>
+        <td><%= user.role.name if user.role %></td>
+        <td>
+          <%= link_to 'Edit', edit_admin_user_path(user), class: 'btn' %>
+          <%= link_to 'Delete', admin_user_path(user), method: :delete, data: { turbo: false, confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+</div>

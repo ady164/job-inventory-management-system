@@ -23,4 +23,11 @@ Rails.application.routes.draw do
   # Inventories Route
   resources :inventories, only: [:show, :index, :new, :create, :edit, :update, :destroy]
 
+  # Admin Route (User & Roles)
+  namespace :admin do
+    resources :users
+    resources :roles
+  end
+
+
 end

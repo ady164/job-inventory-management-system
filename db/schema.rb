@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_02_220708) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_05_121151) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -99,7 +99,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_02_220708) do
 
   create_table "user_logs", force: :cascade do |t|
     t.string "login_email"
-    t.bigint "user_id", null: false
+    t.bigint "user_id"
     t.boolean "success"
     t.string "message"
     t.datetime "attempted_at", precision: nil

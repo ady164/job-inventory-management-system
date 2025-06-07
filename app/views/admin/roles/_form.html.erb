@@ -1,0 +1,31 @@
+<%= form_with(model: [:admin, role]) do |form| %>
+  <% if role.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(role.errors.count, "error") %> prohibited this role from being saved:</h2>
+      <ul>
+        <% role.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= form.label :name %><br>
+    <%= form.text_field :name %>
+  </div>
+
+  <div class="field">
+    <h3>Permissions</h3>
+    <% permissions.each do |permission| %>
+      <div>
+        <%= check_box_tag 'role[permission_ids][]', permission.id, role.permissions.include?(permission) %>
+        <%= permission.name %> - <%= permission.description %>
+      </div>
+    <% end %>
+  </div>
+
+  <div class="actions">
+    <%= form.submit %>
+  </div>
+<% end %>
