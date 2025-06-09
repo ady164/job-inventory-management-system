@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_05_121151) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_08_120313) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,6 +42,21 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_05_121151) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
+  create_table "assets", force: :cascade do |t|
+    t.string "name"
+    t.string "tag"
+    t.string "brand"
+    t.string "model"
+    t.string "serial_number"
+    t.string "asset_type"
+    t.date "purchase_date"
+    t.string "remarks"
+    t.date "last_calibration_date"
+    t.integer "calibration_frequency_days"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "customers", force: :cascade do |t|
     t.string "name"
     t.string "address"
@@ -59,6 +74,68 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_05_121151) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.string "brand"
+    t.string "image_path"
+  end
+
+  create_table "inventory_logs", force: :cascade do |t|
+    t.bigint "inventory_id", null: false
+    t.bigint "user_id", null: false
+    t.integer "quantity"
+    t.string "status"
+    t.string "message"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "operation_type"
+    t.index ["inventory_id"], name: "index_inventory_logs_on_inventory_id"
+    t.index ["user_id"], name: "index_inventory_logs_on_user_id"
+  end
+
+  create_table "job_measurements", force: :cascade do |t|
+    t.bigint "job_process_id", null: false
+    t.bigint "measurement_type_id", null: false
+    t.integer "order_index"
+    t.integer "measurement_index"
+    t.string "name"
+    t.decimal "value"
+    t.string "remarks"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_process_id"], name: "index_job_measurements_on_job_process_id"
+    t.index ["measurement_type_id"], name: "index_job_measurements_on_measurement_type_id"
+  end
+
+  create_table "job_process_logs", force: :cascade do |t|
+    t.bigint "job_process_id", null: false
+    t.bigint "user_id", null: false
+    t.datetime "start_time", precision: nil
+    t.datetime "end_time", precision: nil
+    t.json "measurement_data"
+    t.json "process_parameter"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_process_id"], name: "index_job_process_logs_on_job_process_id"
+    t.index ["user_id"], name: "index_job_process_logs_on_user_id"
+  end
+
+  create_table "job_process_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "job_processes", force: :cascade do |t|
+    t.bigint "job_process_type_id", null: false
+    t.bigint "job_id", null: false
+    t.integer "order_index"
+    t.string "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint "asset_id", null: false
+    t.index ["asset_id"], name: "index_job_processes_on_asset_id"
+    t.index ["job_id"], name: "index_job_processes_on_job_id"
+    t.index ["job_process_type_id"], name: "index_job_processes_on_job_process_type_id"
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -73,6 +150,20 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_05_121151) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["customer_id"], name: "index_jobs_on_customer_id"
+  end
+
+  create_table "machines", force: :cascade do |t|
+    t.string "name"
+    t.string "model"
+    t.string "remarks"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "measurement_types", force: :cascade do |t|
+    t.string "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "permissions", force: :cascade do |t|
@@ -121,6 +212,15 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_05_121151) do
 
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
+  add_foreign_key "inventory_logs", "inventories"
+  add_foreign_key "inventory_logs", "users"
+  add_foreign_key "job_measurements", "job_processes"
+  add_foreign_key "job_measurements", "measurement_types"
+  add_foreign_key "job_process_logs", "job_processes"
+  add_foreign_key "job_process_logs", "users"
+  add_foreign_key "job_processes", "assets"
+  add_foreign_key "job_processes", "job_process_types"
+  add_foreign_key "job_processes", "jobs"
   add_foreign_key "jobs", "customers"
   add_foreign_key "role_permissions", "permissions"
   add_foreign_key "role_permissions", "roles"

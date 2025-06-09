@@ -1,0 +1,49 @@
+  <div class="container">
+    <div id="item-list">
+        <% @inventories.each do |inventory| %>
+          <% if inventory.quantity > inventory.alert_quantity %>
+            <a class="item" href="/iot/<%= inventory.id %>">
+              <div class="item-index"><%= inventory.id %></div>
+              <%= image_tag "#{inventory.image_path}", alt: 'Image', class: 'item-img' %>
+              <div class="details">
+                  <h3><%= inventory.name %> </h3>
+                  <p>PID: <%= inventory.product_number %> </p>
+                  <p>Available: <%= inventory.quantity %> </p>
+              </div>
+            </a>
+          <% else %>
+            <a class="item item-status-low" href="/iot/<%= inventory.id %>">
+              <div class="item-index"><%= inventory.id %></div>
+              <%= image_tag "#{inventory.image_path}", alt: 'Image', class: 'item-img' %>
+              <div class="details">
+                  <h3><%= inventory.name %> </h3>
+                  <p>PID: <%= inventory.product_number %> </p>
+                  <p>Available: <%= inventory.quantity %> </p>
+              </div>
+            </a>
+          <% end %>
+        <% end %>
+    </div>
+    <div class="footer">
+      <div id="status"></div>
+      <div id="clock"></div>
+    </div>
+  </div>
+
+  <script>
+
+document.addEventListener("turbo:load", () => {
+  // Date time on footer
+    function updateClock() {
+      const now = new Date();
+      const date = now.toLocaleDateString();
+      const time = now.toLocaleTimeString();
+      document.getElementById('clock').textContent = `${date} ${time}`;
+    }
+
+    // Initialise
+    updateClock();
+    setInterval(updateClock, 1000); 
+});
+    
+  </script>

@@ -1,15 +1,18 @@
 class InventoriesController < ApplicationController
   before_action :require_login
-  before_action -> { require_permission("view_dashboard") }
-  before_action :set_inventory, only: [:edit, :update, :show]
+  before_action -> { require_permission("view_inventory") }
+  before_action :set_inventory, only: [:edit, :update, :destroy]
+  before_action -> { require_permission("edit_inventory") }, only: [:edit, :update]
+  before_action -> { require_permission("delete_inventory") }, only: [:destroy]
+  before_action -> { require_permission("create_inventory") }, only: [:new, :create]
 
   def index
-    @inventories = Inventory.all
+    @inventories = Inventory.order(:id)
   end
 
   def show
     @inventory = Inventory.find(params[:id])
-    end
+  end
 
   def new
     @inventory = Inventory.new
@@ -17,6 +20,11 @@ class InventoriesController < ApplicationController
 
   def create
     @inventory = Inventory.new(inventory_params)
+
+    if params[:inventory][:image]
+      save_uploaded_image(@inventory, params[:inventory][:image])
+    end
+
     if @inventory.save
       redirect_to inventories_path, notice: 'Inventory created successfully.'
     else
@@ -27,6 +35,10 @@ class InventoriesController < ApplicationController
   def edit; end
 
   def update
+    if params[:inventory][:image]
+      save_uploaded_image(@inventory, params[:inventory][:image])
+    end
+
     if @inventory.update(inventory_params)
       redirect_to inventories_path, notice: 'Inventory updated successfully.'
     else
@@ -39,18 +51,30 @@ class InventoriesController < ApplicationController
     redirect_to inventories_path, notice: 'Inventory was successfully deleted.'
   end
 
-
   private
 
   def set_inventory
     @inventory = Inventory.find_by(id: params[:id])
     unless @inventory
-        redirect_to inventories_path, alert: "Inventory not found."
+      redirect_to inventories_path, alert: "Inventory not found."
     end
   end
 
-
   def inventory_params
-    params.require(:inventory).permit(:name, :product_number, :description, :category, :quantity, :alert_quantity, :status)
+    params.require(:inventory).permit(:name, :product_number, :brand, :description, :category, :quantity, :alert_quantity, :status)
+  end
+
+  def save_uploaded_image(inventory, uploaded_file)
+    uploads_dir = Rails.root.join('public', 'uploads')
+    FileUtils.mkdir_p(uploads_dir) unless Dir.exist?(uploads_dir)
+
+    filename = "#{SecureRandom.uuid}_#{uploaded_file.original_filename}"
+    filepath = uploads_dir.join(filename)
+
+    File.open(filepath, 'wb') do |file|
+      file.write(uploaded_file.read)
+    end
+
+    inventory.image_path = "/uploads/#{filename}"
   end
 end

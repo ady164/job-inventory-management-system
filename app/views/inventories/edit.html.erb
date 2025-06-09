@@ -2,7 +2,7 @@
   <h1>Edit Inventory</h1>
 
   <%= form_with model: @inventory, local: true, html: { multipart: true } do |form| %>
-    <table class="inventory-form-table">
+    <table class="details-form-table">
       <tr>
         <td><%= form.label :name %></td>
         <td>
@@ -19,6 +19,16 @@
           <%= form.text_field :product_number %>
           <% if @inventory.errors[:product_number].any? %>
             <div class="error-message"><%= @inventory.errors[:product_number].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td><%= form.label :brand %></td>
+        <td>
+          <%= form.text_area :brand %>
+          <% if @inventory.errors[:brand].any? %>
+            <div class="error-message"><%= @inventory.errors[:brand].first %></div>
           <% end %>
         </td>
       </tr>
@@ -85,9 +95,10 @@
     </table>
   <% end %>
 
-  <%= link_to 'Back to List', inventories_path, class: 'btn-back' %>
-<%= link_to 'Delete Inventory', inventory_path(@inventory), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn-delete' %>
-
+  <div style="margin-top: 15px;">
+    <%= link_to 'Back to List', inventories_path, class: 'btn-back' %>
+    <%= link_to 'Delete Inventory', inventory_path(@inventory), data: { turbo_method: :delete, turbo_confirm: 'Are you sure?' }, class: 'btn-delete' %>
+  </div>
 </div>
 
 <script>
@@ -107,55 +118,3 @@
     });
   });
 </script>
-
-<style>
-  .inventory-form-table td {
-    padding: 8px 10px;
-    vertical-align: top;
-  }
-
-  .inventory-form-table input,
-  .inventory-form-table textarea,
-  .inventory-form-table select {
-    width: 100%;
-  }
-
-  .error-message {
-    color: red;
-    font-size: 0.9em;
-    margin-top: 4px;
-  }
-
-  .btn-save {
-    background-color: #04AA6D;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    cursor: pointer;
-  }
-
-  .btn-save:hover {
-    background-color: #037a4b;
-  }
-
-  .btn-back {
-    display: inline-block;
-    margin-top: 10px;
-    text-decoration: none;
-    color: #333;
-  }
-
-  .btn-delete {
-    background-color: #d9534f;
-    color: white;
-    padding: 8px 16px;
-    border: none;
-    cursor: pointer;
-    margin-top: 10px;
-    display: inline-block;
-  }
-
-  .btn-delete:hover {
-    background-color: #c9302c;
-  }
-</style>

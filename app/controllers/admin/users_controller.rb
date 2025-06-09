@@ -1,5 +1,10 @@
 class Admin::UsersController < ApplicationController
+  before_action :require_login
+  before_action -> { require_permission("view_admin") }
   before_action :set_user, only: [:edit, :update, :destroy]
+  before_action -> { require_permission("edit_admin") }, only: [:edit, :update]
+  before_action -> { require_permission("delete_admin") }, only: [:destroy]
+  before_action -> { require_permission("create_admin") }, only: [:new, :create]
 
   def index
     @users = User.includes(:role).all

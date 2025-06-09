@@ -1,15 +1,15 @@
 # Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
 
 one:
-  inventory: one
-  user: one
-  quantity: 1
+  process_type: one
+  job: one
+  order_index: 1
+  machine: one
   status: MyString
-  message: MyString
 
 two:
-  inventory: two
-  user: two
-  quantity: 1
+  process_type: two
+  job: two
+  order_index: 1
+  machine: two
   status: MyString
-  message: MyString

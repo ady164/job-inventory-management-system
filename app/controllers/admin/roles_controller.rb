@@ -1,8 +1,13 @@
 class Admin::RolesController < ApplicationController
-  before_action :set_role, only: %i[edit update destroy]
+  before_action :require_login
+  before_action -> { require_permission("view_admin") }
+  before_action :set_role, only: [:edit, :update, :destroy]
+  before_action -> { require_permission("edit_admin") }, only: [:edit, :update]
+  before_action -> { require_permission("delete_admin") }, only: [:destroy]
+  before_action -> { require_permission("create_admin") }, only: [:new, :create]
 
   def index
-    @roles = Role.all
+    @roles = Role.order(:id)
   end
 
   def new

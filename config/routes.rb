@@ -29,5 +29,9 @@ Rails.application.routes.draw do
     resources :roles
   end
 
+  # IoT routes for inventory management via IoT device
+  resources :iot, only: [:index, :show] do
+    post 'update_quantity', on: :member
+  end
 
 end

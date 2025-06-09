@@ -3,6 +3,7 @@ class CreateInventories < ActiveRecord::Migration[8.0]
     create_table :inventories do |t|
       t.string :name
       t.string :product_number
+      t.string :brand
       t.text :description
       t.string :category
       t.integer :quantity

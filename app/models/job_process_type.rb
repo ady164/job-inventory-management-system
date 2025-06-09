@@ -1,0 +1,2 @@
+class JobProcessType < ApplicationRecord
+end

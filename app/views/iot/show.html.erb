@@ -1,0 +1,187 @@
+<div class="dispense-container">
+    <% if flash[:notice] %>
+    <div id="flash-message" class="flash flash-notice"><%= flash[:notice] %></div>
+    <% elsif flash[:alert] %>
+    <div id="flash-message" class="flash flash-alert"><%= flash[:alert] %></div>
+    <% end %>
+    <div class="dispense-header" id="dispense-header">
+    <button class="back-button" onclick="window.history.back(); return false;">Back</button>
+    <div class="dispense-header-title" id="dispense-header-title">Dispense Item</div>
+    <button class="ops-button" type="button" id="ops-button" onclick="setOpsType()">Restock</button>
+    </div>
+    <div class="dispense-item">
+        <h3><%= @inventory.id %>. <%= @inventory.name %> </h3>
+        <%= image_tag "#{@inventory.image_path}", alt: 'Image', class: 'dispense-item-img' %>
+        <div class="dispense-details">
+            <p>PID: <%= @inventory.id %> </p>
+            <p class="dispense-details-aval-qty">Available: <span id='available-max-qty'><%= @inventory.quantity %></span></p>
+        </div>
+    </div>
+    <div id="quantity-container">
+        <p>Quantity:</p>
+        <button class="quantity-button quantity-button-sub" id="decrease-button">-</button>
+        <div id="dispense-quantity">1</div>
+        <button class="quantity-button quantity-button-add" id="increase-button">+</button>
+    </div>
+    <div class="dispense-button-container"><button id="dispense-button" onclick="openPinModal()" >Confirm</button><div>
+    <div class="footer">
+        <div id="status"></div>
+        <div id="clock"></div>
+    </div>
+
+    <div id="pinModal" class="modal">
+        <div class="modal-content">
+            <%= form_with url: update_quantity_iot_path(@inventory), method: :post, local: true do |form| %>
+            <div class="pin-text">Enter Staff Pin:</div>
+            <%= form.password_field :user_pin, required: true, id: "staff_pin_input", class:"pin-display" %>
+            <%= form.number_field :quantity, required: true, id:"quantity_input", class:"hidden" %>
+            <%= form.text_field :operation_type, required: true, id:"operation_type_input", class:"hidden" %>
+            <div class="numpad">
+                <button type="button" onclick="addDigit('1')">1</button>
+                <button type="button" onclick="addDigit('2')">2</button>
+                <button type="button" onclick="addDigit('3')">3</button>
+                <button type="button" onclick="addDigit('4')">4</button>
+                <button type="button" onclick="addDigit('5')">5</button>
+                <button type="button" onclick="addDigit('6')">6</button>
+                <button type="button" onclick="addDigit('7')">7</button>
+                <button type="button" onclick="addDigit('8')">8</button>
+                <button type="button" onclick="addDigit('9')">9</button>
+                <button type="button" onclick="closePinModal()">back</button>
+                <button type="button" onclick="addDigit('0')">0</button>
+                <button type="button" onclick="deleteDigit()">←</button>
+            </div>
+            <%= form.submit "Submit", class:"pin-submit-button" %>
+            <% end %>
+        </div>
+    </div>
+</div>
+
+<script>
+document.addEventListener('turbo:load', function() {
+    console.log('load')
+
+    // date time on footer
+    function updateClock() {
+        const now = new Date();
+        const date = now.toLocaleDateString();
+        const time = now.toLocaleTimeString();
+        document.getElementById('clock').textContent = `${date} ${time}`;
+    }
+
+    // initialise clock
+    updateClock();
+    setInterval(updateClock, 1000); 
+
+    // increase and decrease selection
+    const increaseButton = document.getElementById("increase-button");
+    const decreaseButton = document.getElementById("decrease-button");
+    const displayQuantity = document.getElementById("dispense-quantity"); 
+    const maxQuantity = parseInt(document.getElementById('available-max-qty').textContent,10);
+
+    const operationDisplayHeader = document.getElementById("dispense-header-title");
+    const operationTypeButon = document.getElementById("ops-button"); 
+    const operationTypeInput = document.getElementById("operation_type_input"); 
+    const operationHeader = document.getElementById("dispense-header"); 
+
+    let currentQuantity = 1; // Starting minimum value of 1
+
+    function updateQuantityDisplay() {
+        displayQuantity.textContent = currentQuantity;
+    }
+
+    function increaseQuantity() {
+        if (operationTypeInput.value == "Dispense") {
+            if (currentQuantity < maxQuantity) {
+                currentQuantity++;
+                updateQuantityDisplay();
+                console.log('Add')
+            }
+        } else{
+             currentQuantity++;
+                updateQuantityDisplay();
+                console.log('Add')
+        }
+    }
+
+    function decreaseQuantity() {
+        if (currentQuantity > 1) {
+            currentQuantity--;
+            updateQuantityDisplay();
+            console.log('subtract')
+        }
+    }
+
+    increaseButton.addEventListener("click", increaseQuantity);
+    decreaseButton.addEventListener("click", decreaseQuantity);
+    updateQuantityDisplay();
+
+    // Pin Pop Up Modal
+    const pinInput = document.getElementById("staff_pin_input");
+    const quantityInput = document.getElementById("quantity_input");
+
+    window.openPinModal = function () {
+        console.log(currentQuantity); 
+        if (quantityInput) {
+            quantityInput.value = currentQuantity;
+        }
+
+        if (operationDisplayHeader.textContent == "Dispense Item") {
+            operationTypeInput.value = "Dispense"
+        } else if (operationDisplayHeader.textContent == "Restock Item") {
+            operationTypeInput.value = "Restock"
+        }
+        console.log("current qty:" +quantityInput.value);
+        document.getElementById("pinModal").style.display = "flex";
+    };
+
+    window.closePinModal = function () {
+        clearPin()
+        document.getElementById("pinModal").style.display = "none";
+    }
+    
+    window.addDigit = function (digit) {
+        console.log("before:"+pinInput.value)
+        if (pinInput.value.length < 6) {
+            if (pinInput) {
+                pinInput.value += digit;
+            }
+        }
+        console.log("after:"+pinInput.value)
+    }
+
+    function clearPin(){
+        pinInput.value = ""
+    }
+    
+    window.deleteDigit = function () {
+        currentPin=pinInput.value
+        currentPin = currentPin.slice(0, -1);
+        pinInput.value = currentPin 
+    }
+    function flashmsg(){
+        const flash = document.getElementById("flash-message");
+        if (flash) {
+        setTimeout(() => {
+            flash.classList.add("fade-out");
+        }, 3000); // start fading after 3 seconds
+
+        setTimeout(() => {
+            flash.remove(); // remove from DOM after fade
+        }, 4500);
+        }
+    }
+    flashmsg();
+
+    window.setOpsType = function () {
+        if (operationTypeButon.textContent == "Dispense") {
+            operationTypeButon.textContent = "Restock"
+            operationDisplayHeader.textContent = "Dispense Item"
+            operationHeader.style.backgroundColor = "Blue"
+        } else if (operationTypeButon.textContent == "Restock") {
+            operationTypeButon.textContent = "Dispense"
+            operationDisplayHeader.textContent = "Restock Item"
+            operationHeader.style.backgroundColor = "Red"
+        }
+    };
+});
+</script>

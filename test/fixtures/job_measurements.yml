@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  job_process: one
+  measurement_type: one
+  order_index: 1
+  measurement_index: 1
+  name: MyString
+  value: 9.99
+  remarks: MyString
+
+two:
+  job_process: two
+  measurement_type: two
+  order_index: 1
+  measurement_index: 1
+  name: MyString
+  value: 9.99
+  remarks: MyString
