@@ -92,12 +92,12 @@
       <tr>
         <td colspan="2" style="text-align: right;">
           <%= form.submit 'Create Inventory', class: 'btn-save' %>
+          <%= link_to 'Back to List', inventories_path, class: 'btn-back' %>
         </td>
       </tr>
     </table>
   <% end %>
 
-  <%= link_to 'Back to List', inventories_path, class: 'btn-back' %>
 </div>
 
 <script>

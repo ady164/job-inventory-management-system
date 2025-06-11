@@ -1,35 +1,22 @@
-<div class="main-content">
-  <h1>Users</h1>
-    <% if current_user&.has_permission?('edit_admin') %>
-      <%= link_to 'New User', new_admin_user_path, class: 'btn btn-primary' %>
-    <% end %>
-  <table class="listing-form-table">
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Role</th>
-        <th>Actions</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @users.each do |user| %>
-        <tr>
-          <td><%= user.name %></td>
-          <td><%= user.email %></td>
-          <td><%= user.role.name if user.role %></td>
-          <td>
-            <!-- Edit Users -->
-            <% if current_user&.has_permission?('edit_admin') %>
-                <%= link_to 'Edit', edit_admin_user_path(user), class: 'btn' %>
-            <% end %>
-            <!-- Delete Users -->
-            <% if current_user&.has_permission?('delete_admin') %>
-              <%= link_to 'Delete', admin_user_path(user), method: :delete, data: { turbo: false, confirm: 'Are you sure?' }, class: 'btn btn-danger' %>
-            <% end %>
-          </td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
-</div>
+<% actions = [] %>
+
+<% if current_user&.has_permission?('edit_admin') %>
+  <% actions << {
+    label: 'Edit',
+    path: ->(u) { edit_admin_user_path(u) },
+    options: { class: 'btn' }
+  } %>
+<% end %>
+
+<%= render 'shared/listing', {
+  title: 'Users',
+  new_path: (current_user&.has_permission?('create_admin') ? new_admin_user_path : nil),
+  rows: @users,
+  columns: [
+    { label: 'ID', sortable: true, value: ->(u) { u.id } },
+    { label: 'Name', sortable: true, value: ->(u) { u.name } },
+    { label: 'Email', sortable: true, value: ->(u) { u.email } },
+    { label: 'Role', sortable: true, value: ->(u) { u.role&.name } }
+  ],
+  actions: actions
+} %>

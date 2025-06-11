@@ -1,0 +1,21 @@
+<% actions = [] %>
+
+<% if current_user&.has_permission?('edit_customer') %>
+  <% actions << {
+    label: 'Edit',
+    path: ->(customer) { edit_customer_path(customer) },
+    options: { class: 'btn' }
+  } %>
+<% end %>
+
+<%= render 'shared/listing', {
+  title: 'Customers',
+  new_path: (current_user&.has_permission?('create_customer') ? new_customer_path : nil),
+  rows: @customers,
+  columns: [
+    { label: 'ID', sortable: true, value: ->(customer) { customer.id } },
+    { label: 'Name', sortable: true, value: ->(customer) { customer.name } },
+    { label: 'Address', sortable: true, value: ->(customer) { customer.address } }
+  ],
+  actions: actions
+} %>

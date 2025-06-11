@@ -1,0 +1,136 @@
+<%= form_with(model: @job, local: true, id: "job-form", html: { multipart: true }) do |form| %>
+  <table class="details-form-table">
+    <% if @job.errors.any? %>
+      <tr>
+        <td colspan="2">
+          <div class="alert alert-danger">
+            <h4><%= pluralize(@job.errors.count, "error") %> prohibited this job from being saved:</h4>
+            <ul>
+              <% @job.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <td><%= form.label :customer_id, "Customer" %></td>
+      <td>
+        <%= form.collection_select :customer_id, Customer.all, :id, :name, { prompt: "Select Customer" }, class: "form-control" %>
+        <% if @job.errors[:customer_id].any? %>
+          <div class="error-message"><%= @job.errors[:customer_id].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= form.label :job_reference_number %></td>
+      <td>
+        <%= form.text_field :job_reference_number, class: "form-control" %>
+        <% if @job.errors[:job_reference_number].any? %>
+          <div class="error-message"><%= @job.errors[:job_reference_number].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= form.label :vessle_name %></td>
+      <td>
+        <%= form.text_field :vessle_name, class: "form-control" %>
+        <% if @job.errors[:vessle_name].any? %>
+          <div class="error-message"><%= @job.errors[:vessle_name].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= form.label :required_date %></td>
+      <td>
+        <%= form.date_field :required_date, class: "form-control" %>
+        <% if @job.errors[:required_date].any? %>
+          <div class="error-message"><%= @job.errors[:required_date].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= form.label :part_type %></td>
+      <td>
+        <%= form.select :part_type, ['Pistons', 'Turbo Shaft', 'Valve Cage', 'Cylinder Head', 'General Parts'], {}, class: "form-control" %>
+        <% if @job.errors[:part_type].any? %>
+          <div class="error-message"><%= @job.errors[:part_type].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= form.label :part_model %></td>
+      <td>
+        <%= form.text_field :part_model, class: "form-control" %>
+        <% if @job.errors[:part_model].any? %>
+          <div class="error-message"><%= @job.errors[:part_model].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= form.label :base_material %></td>
+      <td>
+        <%= form.text_field :base_material, class: "form-control" %>
+        <% if @job.errors[:base_material].any? %>
+          <div class="error-message"><%= @job.errors[:base_material].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= form.label :notes %></td>
+      <td>
+        <%= form.text_area :notes, class: "form-control" %>
+        <% if @job.errors[:notes].any? %>
+          <div class="error-message"><%= @job.errors[:notes].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= form.label :status %></td>
+      <td>
+        <%= form.select :status, ['Pending', 'In Progress', 'Completed', 'Cancelled'], {}, class: "form-control" %>
+        <% if @job.errors[:status].any? %>
+          <div class="error-message"><%= @job.errors[:status].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+
+    <tr>
+      <td colspan="2" style="text-align: right; padding-top: 15px;">
+        <% if action_name == 'edit' %>
+          <%= form.submit "Update Job", class: "btn-save" %>
+        <% else %>
+          <%= form.hidden_field :created_by, value: current_user.id %>
+          <%= form.submit "Create Job", class: "btn-save" %>
+        <% end %>
+        <%= link_to 'Back to List', jobs_path, class: 'btn-back' %>
+      </td>
+    </tr>
+
+    <% if action_name == 'edit' && current_user&.has_permission?('delete_job') %>
+      <tr>
+        <td colspan="2" style="text-align: right; padding-top: 35px;">
+          <%= link_to 'Delete', job_path(@job), method: :delete, data: { turbo: false, confirm: 'Are you sure?' }, class: 'btn-delete' %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<script>
+  document.getElementById('job-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    e.target.submit();
+  });
+</script>

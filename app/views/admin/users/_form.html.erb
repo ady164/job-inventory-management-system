@@ -1,62 +1,108 @@
-<%= form_with(model: [:admin, @user], local: true, id: "user-form") do |f| %>
-  <% if @user.errors.any? %>
-    <div class="alert alert-danger">
-      <h4><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h4>
-      <ul>
-        <% @user.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
+  <%= form_with(model: [:admin, @user], local: true, id: "user-form", html: { multipart: true }) do |f| %>
+    <table class="details-form-table">
+      <% if @user.errors.any? %>
+        <tr>
+          <td colspan="2">
+            <div class="alert alert-danger">
+              <h4><%= pluralize(@user.errors.count, "error") %> prohibited this user from being saved:</h4>
+              <ul>
+                <% @user.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+
+      <tr>
+        <td><%= f.label :name %></td>
+        <td>
+          <%= f.text_field :name, class: "form-control", required: true %>
+          <% if @user.errors[:name].any? %>
+            <div class="error-message"><%= @user.errors[:name].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td><%= f.label :email %></td>
+        <td>
+          <%= f.email_field :email, class: "form-control", required: true %>
+          <% if @user.errors[:email].any? %>
+            <div class="error-message"><%= @user.errors[:email].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td><label for="password">Password</label></td>
+        <td>
+          <input type="password" id="password" class="form-control" minlength="6" />
+          <% if @user.errors[:password].any? %>
+            <div class="error-message"><%= @user.errors[:password].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td><label for="password_confirmation">Password Confirmation</label></td>
+        <td>
+          <input type="password" id="password_confirmation" class="form-control" minlength="6" />
+        </td>
+      </tr>
+
+      <tr>
+        <td><label for="pin">PIN</label></td>
+        <td>
+          <input type="password" id="pin" class="form-control" minlength="6" maxlength="6" pattern="\d{6}" />
+          <% if @user.errors[:pin].any? %>
+            <div class="error-message"><%= @user.errors[:pin].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td><label for="pin_confirmation">PIN Confirmation</label></td>
+        <td>
+          <input type="password" id="pin_confirmation" class="form-control" minlength="6" maxlength="6" pattern="\d{6}" />
+        </td>
+      </tr>
+
+      <%= f.hidden_field :password_hash, id: "password_hash" %>
+      <%= f.hidden_field :pin_hash, id: "pin_hash" %>
+
+      <tr>
+        <td><%= f.label :role_id, "Role" %></td>
+        <td>
+          <%= f.collection_select :role_id, Role.all, :id, :name, { prompt: "Select Role" }, { class: "form-control", required: true } %>
+          <% if @user.errors[:role_id].any? %>
+            <div class="error-message"><%= @user.errors[:role_id].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="2" style="text-align: right; padding-top: 15px;">
+        <% if action_name == 'edit' %>
+          <%= f.submit "Update User", class: "btn-save" %>
         <% end %>
-      </ul>
-    </div>
+        <% if action_name == 'new' %>
+          <%= f.submit "Create User", class: "btn-save" %>
+        <% end %>
+          <%= link_to 'Back to List', admin_users_path, class: 'btn-back' %>
+        </td>
+      </tr>
+      <% if action_name == 'edit' && current_user&.has_permission?('delete_admin') %>
+        <tr>
+          <td colspan="2" style="text-align: right; padding-top: 35px;">
+            <%= link_to 'Delete', admin_user_path(@user), method: :delete, data: { turbo: false, confirm: 'Are you sure?' }, class: 'btn-delete' %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
   <% end %>
 
-  <div class="form-group">
-    <%= f.label :name %>
-    <%= f.text_field :name, class: "form-control", required: true %>
-  </div>
-
-  <div class="form-group">
-    <%= f.label :email %>
-    <%= f.email_field :email, class: "form-control", required: true %>
-  </div>
-
-  <!-- Password fields (not submitted directly) -->
-  <div class="form-group">
-    <label for="password">Password</label>
-    <input type="password" id="password" class="form-control" minlength="6" />
-  </div>
-
-  <div class="form-group">
-    <label for="password_confirmation">Password Confirmation</label>
-    <input type="password" id="password_confirmation" class="form-control" minlength="6" />
-  </div>
-
-  <!-- PIN fields (not submitted directly) -->
-  <div class="form-group">
-    <label for="pin">PIN</label>
-    <input type="password" id="pin" class="form-control" minlength="6" maxlength="6" pattern="\d{6}" />
-  </div>
-
-  <div class="form-group">
-    <label for="pin_confirmation">PIN Confirmation</label>
-    <input type="password" id="pin_confirmation" class="form-control" minlength="6" maxlength="6" pattern="\d{6}" />
-  </div>
-
-  <!-- Hidden fields to submit hashes -->
-  <%= f.hidden_field :password_hash, id: "password_hash" %>
-  <%= f.hidden_field :pin_hash, id: "pin_hash" %>
-
-  <div class="form-group">
-    <%= f.label :role_id, "Role" %>
-    <%= f.collection_select :role_id, Role.all, :id, :name, { prompt: "Select Role" }, { class: "form-control", required: true } %>
-  </div>
-
-  <div class="form-group mt-3">
-    <%= f.submit class: "btn btn-primary" %>
-  </div>
-<% end %>
-
-<!-- JavaScript to validate and hash password/PIN -->
 <script>
   document.getElementById('user-form').addEventListener('submit', async function (e) {
     e.preventDefault();

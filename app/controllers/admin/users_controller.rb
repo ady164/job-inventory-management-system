@@ -33,9 +33,14 @@ class Admin::UsersController < ApplicationController
 
   def update
     Rails.logger.debug "Permitted params: #{user_params.inspect}"
-Rails.logger.debug "User respond_to password_confirmation? => #{@user.respond_to?(:password_confirmation=)}"
+    Rails.logger.debug "User respond_to password_confirmation? => #{@user.respond_to?(:password_confirmation=)}"
 
-    @user.assign_attributes(user_params)
+    # Filter out empty password_hash and pin_hash from params so they won't overwrite
+    filtered_params = user_params.to_h
+    filtered_params.delete("password_hash") if filtered_params["password_hash"].blank?
+    filtered_params.delete("pin_hash") if filtered_params["pin_hash"].blank?
+
+    @user.assign_attributes(filtered_params)
 
     if @user.save
       redirect_to admin_users_path, notice: 'User updated successfully.'

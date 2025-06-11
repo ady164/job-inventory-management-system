@@ -25,6 +25,7 @@ class Admin::RolesController < ApplicationController
       @role.permissions = Permission.where(id: params[:role][:permission_ids])
       redirect_to admin_roles_path, notice: 'Role created successfully.'
     else
+      @permissions = Permission.all
       render :new
     end
   end
@@ -34,13 +35,18 @@ class Admin::RolesController < ApplicationController
       @role.permissions = Permission.where(id: params[:role][:permission_ids])
       redirect_to admin_roles_path, notice: 'Role updated successfully.'
     else
+      @permissions = Permission.all
       render :edit
     end
   end
 
   def destroy
-    @role.destroy
-    redirect_to admin_roles_path, notice: 'Role deleted.'
+    @role.role_permissions.destroy_all
+    if @role.destroy
+      redirect_to admin_roles_path, notice: 'Role deleted.'
+    else
+      redirect_to admin_roles_path, alert: 'Role could not be deleted.'
+    end
   end
 
   private

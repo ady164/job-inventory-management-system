@@ -1,0 +1,29 @@
+<% actions = [] %>
+
+<% if current_user&.has_permission?('edit_equipment') %>
+  <% actions << {
+    label: 'Edit',
+    path: ->(equipment) { edit_equipment_path(equipment) },
+    options: { class: 'btn' }
+  } %>
+<% end %>
+
+<%= render 'shared/listing', {
+  title: 'Equipments',
+  new_path: (current_user&.has_permission?('create_equipment') ? new_equipment_path : nil),
+  rows: @equipments,
+  columns: [
+    { label: 'ID', sortable: true, value: ->(equipment) { equipment.id } },
+    { label: 'Name', sortable: true, value: ->(equipment) { equipment.name } },
+    { label: 'Tag', sortable: true, value: ->(equipment) { equipment.tag } },
+    { label: 'Brand', sortable: true, value: ->(equipment) { equipment.brand } },
+    { label: 'Model', sortable: true, value: ->(equipment) { equipment.model } },
+    { label: 'Serial Number', sortable: true, value: ->(equipment) { equipment.serial_number } },
+    { label: 'Equipment Type', sortable: true, value: ->(equipment) { equipment.equipment_type } },
+    { label: 'Purchase Date', sortable: true, value: ->(equipment) { equipment.purchase_date } },
+    { label: 'Remarks', sortable: false, value: ->(equipment) { equipment.remarks } },
+    { label: 'Last Calibration Date', sortable: true, value: ->(equipment) { equipment.last_calibration_date } },
+    { label: 'Calibration Frequency (Days)', sortable: true, value: ->(equipment) { equipment.calibration_frequency_days } }
+  ],
+  actions: actions
+} %>

@@ -1,0 +1,26 @@
+<% actions = [] %>
+
+<% if current_user&.has_permission?('edit_job') %>
+  <% actions << {
+    label: 'Edit',
+    path: ->(job) { edit_job_path(job) },
+    options: { class: 'btn-edit' }
+  } %>
+<% end %>
+
+<%= render 'shared/listing', {
+  title: 'Jobs',
+  new_path: (current_user&.has_permission?('create_job') ? new_job_path : nil),
+  rows: @jobs,
+  columns: [
+    { label: 'ID', sortable: true, value: ->(job) { job.id } },
+    { label: 'Job Reference Number', sortable: true, value: ->(job) { job.job_reference_number } },
+    { label: 'Customer', sortable: true, value: ->(job) { job.customer.name } },
+    { label: 'Vessel Name', sortable: true, value: ->(job) { job.vessle_name } },
+    { label: 'Part Type', sortable: true, value: ->(job) { job.part_type } },
+    { label: 'Part Model', sortable: true, value: ->(job) { job.part_model } },
+    { label: 'Required Date', sortable: true, value: ->(job) { job.required_date } },
+    { label: 'Created By', sortable: true, value: ->(job) { job.creator&.name || 'N/A' } }
+  ],
+  actions: actions
+} %>

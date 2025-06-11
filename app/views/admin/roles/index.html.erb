@@ -1,34 +1,21 @@
-<div class="main-content">
-    <h1>Roles</h1>
-        <% if current_user&.has_permission?('edit_admin') %>
-            <%= link_to 'New Role', new_admin_role_path, class: 'btn btn-primary' %>
-        <% end %>
-    <table>
-        <thead>
-            <tr>
-            <th>Name</th>
-            <th>Permissions</th>
-            <th>Actions</th>
-            </tr>
-        </thead>
+<% actions = [] %>
 
-        <tbody>
-            <% @roles.each do |role| %>
-            <tr>
-                <td><%= role.name %></td>
-                <td>
-                <%= role.permissions.pluck(:name).join(", ") %>
-                </td>
-                <td>
-                    <% if current_user&.has_permission?('edit_admin') %>
-                        <%= link_to 'Edit', edit_admin_role_path(role), class: 'btn btn-sm btn-warning' %>
-                    <% end %>
-                    <% if current_user&.has_permission?('delete_admin') %>
-                        <%= link_to 'Delete', admin_role_path(role), method: :delete, data: { confirm: 'Are you sure?' }, class: 'btn btn-sm btn-danger' %>
-                    <% end %>
-                </td>
-            </tr>
-            <% end %>
-        </tbody>
-    </table>
-</div>
+<% if current_user&.has_permission?('edit_admin') %>
+  <% actions << {
+    label: 'Edit',
+    path: ->(role) { edit_admin_role_path(role) },
+    options: { class: 'btn btn-sm btn-warning' }
+  } %>
+<% end %>
+
+<%= render 'shared/listing', {
+  title: 'Roles',
+  new_path: (current_user&.has_permission?('edit_admin') ? new_admin_role_path : nil),
+  rows: @roles,
+  columns: [
+    { label: 'ID', sortable: true, value: ->(role) { role.id } },
+    { label: 'Name', sortable: true, value: ->(role) { role.name } },
+    { label: 'Permissions', sortable: false, value: ->(role) { role.permissions.pluck(:name).join(", ") } }
+  ],
+  actions: actions
+} %>

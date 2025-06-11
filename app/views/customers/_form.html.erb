@@ -1,0 +1,64 @@
+  <%= form_with(model: [@customer], local: true, id: "customer-form", html: { multipart: true }) do |f| %>
+    <table class="details-form-table">
+      <% if @customer.errors.any? %>
+        <tr>
+          <td colspan="2">
+            <div class="alert alert-danger">
+              <h4><%= pluralize(@customer.errors.count, "error") %> prohibited this customer from being saved:</h4>
+              <ul>
+                <% @customer.errors.full_messages.each do |msg| %>
+                  <li><%= msg %></li>
+                <% end %>
+              </ul>
+            </div>
+          </td>
+        </tr>
+      <% end %>
+
+      <tr>
+        <td><%= f.label :name %></td>
+        <td>
+          <%= f.text_field :name, class: "form-control", required: true %>
+          <% if @customer.errors[:name].any? %>
+            <div class="error-message"><%= @customer.errors[:name].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td><%= f.label :address %></td>
+        <td>
+          <%= f.text_area :address, class: "form-control", required: true %>
+          <% if @customer.errors[:address].any? %>
+            <div class="error-message"><%= @customer.errors[:address].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
+        <td colspan="2" style="text-align: right; padding-top: 15px;">
+        <% if action_name == 'edit' %>
+          <%= f.submit "Update Customer", class: "btn-save" %>
+        <% end %>
+        <% if action_name == 'new' %>
+          <%= f.submit "Create Customer", class: "btn-save" %>
+        <% end %>
+          <%= link_to 'Back to List', customers_path, class: 'btn-back' %>
+        </td>
+      </tr>
+      <% if action_name == 'edit' && current_user&.has_permission?('delete_customer') %>
+        <tr>
+          <td colspan="2" style="text-align: right; padding-top: 35px;">
+            <%= link_to 'Delete', customer_path(@customer), method: :delete, data: { turbo: false, confirm: 'Are you sure?' }, class: 'btn-delete' %>
+          </td>
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
+
+<script>
+  document.getElementById('customer-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    e.target.submit();
+  });
+</script>

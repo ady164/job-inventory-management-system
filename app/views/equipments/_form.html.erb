@@ -1,0 +1,144 @@
+<%= form_with(model: @equipment, local: true, id: "equipment-form", html: { multipart: true }) do |f| %>
+  <table class="details-form-table">
+    <% if @equipment.errors.any? %>
+      <tr>
+        <td colspan="2">
+          <div class="alert alert-danger">
+            <h4><%= pluralize(@equipment.errors.count, "error") %> prohibited this equipment from being saved:</h4>
+            <ul>
+              <% @equipment.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    <% end %>
+
+    <tr>
+      <td><%= f.label :name %></td>
+      <td>
+        <%= f.text_field :name, class: "form-control", required: true %>
+        <% if @equipment.errors[:name].any? %>
+          <div class="error-message"><%= @equipment.errors[:name].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= f.label :tag %></td>
+      <td>
+        <%= f.text_field :tag, class: "form-control" %>
+        <% if @equipment.errors[:tag].any? %>
+          <div class="error-message"><%= @equipment.errors[:tag].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= f.label :brand %></td>
+      <td>
+        <%= f.text_field :brand, class: "form-control" %>
+        <% if @equipment.errors[:brand].any? %>
+          <div class="error-message"><%= @equipment.errors[:brand].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= f.label :model %></td>
+      <td>
+        <%= f.text_field :model, class: "form-control" %>
+        <% if @equipment.errors[:model].any? %>
+          <div class="error-message"><%= @equipment.errors[:model].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= f.label :serial_number %></td>
+      <td>
+        <%= f.text_field :serial_number, class: "form-control" %>
+        <% if @equipment.errors[:serial_number].any? %>
+          <div class="error-message"><%= @equipment.errors[:serial_number].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= f.label :equipment_type %></td>
+      <td>
+        <%= f.select :equipment_type, options_for_select(['Machine', 'Measuring Tools', 'Power Tools', 'Others'], @equipment.equipment_type), { include_blank: true }, class: "form-control" %>
+        <% if @equipment.errors[:equipment_type].any? %>
+          <div class="error-message"><%= @equipment.errors[:equipment_type].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= f.label :purchase_date %></td>
+      <td>
+        <%= f.date_field :purchase_date, class: "form-control" %>
+        <% if @equipment.errors[:purchase_date].any? %>
+          <div class="error-message"><%= @equipment.errors[:purchase_date].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= f.label :remarks %></td>
+      <td>
+        <%= f.text_area :remarks, class: "form-control" %>
+        <% if @equipment.errors[:remarks].any? %>
+          <div class="error-message"><%= @equipment.errors[:remarks].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= f.label :last_calibration_date %></td>
+      <td>
+        <%= f.date_field :last_calibration_date, class: "form-control" %>
+        <% if @equipment.errors[:last_calibration_date].any? %>
+          <div class="error-message"><%= @equipment.errors[:last_calibration_date].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td><%= f.label :calibration_frequency_days, "Calibration Frequency (Days)" %></td>
+      <td>
+        <%= f.number_field :calibration_frequency_days, class: "form-control", min: 0 %>
+        <% if @equipment.errors[:calibration_frequency_days].any? %>
+          <div class="error-message"><%= @equipment.errors[:calibration_frequency_days].first %></div>
+        <% end %>
+      </td>
+    </tr>
+
+    <tr>
+      <td colspan="2" style="text-align: right; padding-top: 15px;">
+        <% if action_name == 'edit' %>
+          <%= f.submit "Update Equipment", class: "btn-save" %>
+        <% else %>
+          <%= f.submit "Create Equipment", class: "btn-save" %>
+        <% end %>
+        <%= link_to 'Back to List', equipments_path, class: 'btn-back' %>
+      </td>
+    </tr>
+
+    <% if action_name == 'edit' && current_user&.has_permission?('delete_equipment') %>
+      <tr>
+        <td colspan="2" style="text-align: right; padding-top: 35px;">
+          <%= link_to 'Delete', equipment_path(@equipment), method: :delete, data: { turbo: false, confirm: 'Are you sure?' }, class: 'btn-delete' %>
+        </td>
+      </tr>
+    <% end %>
+  </table>
+<% end %>
+
+<script>
+  document.getElementById('equipment-form').addEventListener('submit', async function (e) {
+    e.preventDefault();
+    e.target.submit();
+  });
+</script>

@@ -14,12 +14,12 @@ def sha256(string)
   Digest::SHA256.hexdigest(string)
 end
 
-# Create roles
+# ================= CREATE ROLES ================= 
 superadmin_role = Role.create!(name: "Super Admin")
 admin_role       = Role.create!(name: "Admin")
 technician_role  = Role.create!(name: "Technician")
 
-# Create permission
+# ================= CREATE PERMISSIONS ================= 
 view_dash = Permission.create!(
   name: "view_dashboard",
   description: "View dashboard"
@@ -56,10 +56,62 @@ delete_inventory = Permission.create!(
   name: "delete_inventory",
   description: "Delete inventory"
 )
+view_customer = Permission.create!(
+  name: "view_customer",
+  description: "View customer"
+)
+create_customer = Permission.create!(
+  name: "create_customer",
+  description: "Create customer"
+)
+edit_customer = Permission.create!(
+  name: "edit_customer",
+  description: "Edit customer"
+)
+delete_customer = Permission.create!(
+  name: "delete_customer",
+  description: "Delete customer"
+)
+view_job = Permission.create!(
+  name: "view_job",
+  description: "View job"
+)
+create_job = Permission.create!(
+  name: "create_job",
+  description: "Create job"
+)
+edit_job = Permission.create!(
+  name: "edit_job",
+  description: "Edit job"
+)
+delete_job = Permission.create!(
+  name: "delete_job",
+  description: "Delete job"
+)
+view_equipment = Permission.create!(
+  name: "view_equipment",
+  description: "View equipment"
+)
+create_equipment = Permission.create!(
+  name: "create_equipment",
+  description: "Create equipment"
+)
+edit_equipment = Permission.create!(
+  name: "edit_equipment",
+  description: "Edit equipment"
+)
+delete_equipment = Permission.create!(
+  name: "delete_equipment",
+  description: "Delete equipment"
+)
+maintain_equipment = Permission.create!(
+  name: "maintain_equipment",
+  description: "Maintain equipment"
+)
 
 
-# Link roles and permissions
-# SUPER ADMIN permissions
+# ================= LINK ROLES TO PERMISSIONS ================= 
+# ================= SUPER ADMIN permissions ================= 
 RolePermission.create!(
   role_id: superadmin_role.id,
   permission_id: view_dash.id
@@ -98,7 +150,62 @@ RolePermission.create!(
   role_id: superadmin_role.id,
   permission_id: delete_inventory.id
 )
-# ADMIN permissions
+#  ------ Customer Page -----------
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: view_customer.id
+)
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: create_customer.id
+)
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: edit_customer.id
+)
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: delete_customer.id
+)
+#  ------ Equipments Page -----------
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: view_equipment.id
+)
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: create_equipment.id
+)
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: edit_equipment.id
+)
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: delete_equipment.id
+)
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: maintain_equipment.id
+)
+#  ------ Jobs Page -----------
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: view_job.id
+)
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: create_job.id
+)
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: edit_job.id
+)
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: delete_job.id
+)
+# ================= ADMIN permissions ================= 
 RolePermission.create!(
   role_id: admin_role.id,
   permission_id: view_dash.id
@@ -132,8 +239,87 @@ RolePermission.create!(
   role_id: admin_role.id,
   permission_id: delete_inventory.id
 )
+#  ------ Customer Page -----------
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: view_customer.id
+)
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: create_customer.id
+)
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: edit_customer.id
+)
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: delete_customer.id
+)
+#  ------ Equipments Page -----------
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: view_equipment.id
+)
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: create_equipment.id
+)
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: edit_equipment.id
+)
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: delete_equipment.id
+)
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: maintain_equipment.id
+)
+#  ------ Jobs Page -----------
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: view_job.id
+)
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: create_job.id
+)
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: edit_job.id
+)
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: delete_job.id
+)
+# ================= Technician permissions ================= 
+RolePermission.create!(
+  role_id: technician_role.id,
+  permission_id: view_dash.id
+)
+#  ------ Inventory Page -----------
+RolePermission.create!(
+  role_id: technician_role.id,
+  permission_id: view_inventory.id
+)
+#  ------ Jobs Page -----------
+RolePermission.create!(
+  role_id: technician_role.id,
+  permission_id: view_job.id
+)
+RolePermission.create!(
+  role_id: technician_role.id,
+  permission_id: create_job.id
+)
+RolePermission.create!(
+  role_id: technician_role.id,
+  permission_id: edit_job.id
+)
 
-# Create users
+
+# ================= CREATE USERS ================= 
 User.create!(
   name: "deyao",
   email: "deyao@jims.com",
@@ -158,7 +344,7 @@ User.create!(
   role_id: technician_role.id
 )
 
-# Create Inventory Item
+# ================= CREATE INVENTORY ITEMS ================= 
 Inventory.create!(
   name: "DNMG 15 06 08-MF 1115",
   product_number: "DNMG 15 06 08-MF 1115",
@@ -167,7 +353,8 @@ Inventory.create!(
   category: "Inserts",
   quantity: 0,
   alert_quantity: 5,
-  status: "Available"
+  status: "Available",
+  image_path: "/uploads/e82eb792-6814-4e44-9f67-141b7d6e24a3_Sanvik DNMG.png"
   )
 Inventory.create!(
   name: "DNMG 15 06 04-MF 1115",
@@ -177,7 +364,8 @@ Inventory.create!(
   category: "Inserts",
   quantity: 0,
   alert_quantity: 5,
-  status: "Available"
+  status: "Available",
+  image_path: "/uploads/e82eb792-6814-4e44-9f67-141b7d6e24a3_Sanvik DNMG.png"
   )
 Inventory.create!(
   name: "VBMT 16 04 08-UM 1125",
@@ -187,7 +375,8 @@ Inventory.create!(
   category: "Inserts",
   quantity: 0,
   alert_quantity: 5,
-  status: "Available"
+  status: "Available",
+  image_path: "/uploads/075ec22a-c8c0-42cb-bc86-7953f91c4442_Sanvik VBMT.png"
   )
 Inventory.create!(
   name: "VBMT 16 04 04-UM 1125",
@@ -197,5 +386,258 @@ Inventory.create!(
   category: "Inserts",
   quantity: 0,
   alert_quantity: 5,
-  status: "Available"
+  status: "Available",
+  image_path: "/uploads/075ec22a-c8c0-42cb-bc86-7953f91c4442_Sanvik VBMT.png"
   )
+
+Inventory.create!(
+  name: "DNMG 150408 RP",
+  product_number: "DNMG 150408 RP",
+  brand: "Kennametal",
+  description: "Turning Insert",
+  category: "Inserts",
+  quantity: 0,
+  alert_quantity: 5,
+  status: "Available",
+  image_path: "/uploads/78312b93-1bce-4aa6-a4f4-ccfa6dfda370_KM DNMG.jpg"
+  )
+Inventory.create!(
+  name: "DNMG 150404 RP",
+  product_number: "DNMG 150404 RP",
+  brand: "Kennametal",
+  description: "Turning Insert",
+  category: "Inserts",
+  quantity: 0,
+  alert_quantity: 5,
+  status: "Available",
+  image_path: "/uploads/78312b93-1bce-4aa6-a4f4-ccfa6dfda370_KM DNMG.jpg"
+  )
+Inventory.create!(
+  name: "DNMG 1",
+  product_number: "DNMG 1",
+  brand: "Kennametal",
+  description: "Turning Insert",
+  category: "Inserts",
+  quantity: 0,
+  alert_quantity: 5,
+  status: "Available",
+  image_path: "/uploads/78312b93-1bce-4aa6-a4f4-ccfa6dfda370_KM DNMG.jpg"
+  )
+Inventory.create!(
+  name: "DNMG 2",
+  product_number: "DNMG 2",
+  brand: "Kennametal",
+  description: "Turning Insert",
+  category: "Inserts",
+  quantity: 0,
+  alert_quantity: 5,
+  status: "Available",
+  image_path: "/uploads/78312b93-1bce-4aa6-a4f4-ccfa6dfda370_KM DNMG.jpg"
+  )
+Inventory.create!(
+  name: "VBMT 1",
+  product_number: "VBMT 1",
+  brand: "Sanvik",
+  description: "Sanvik Turning Insert",
+  category: "Inserts",
+  quantity: 0,
+  alert_quantity: 5,
+  status: "Available",
+  image_path: "/uploads/075ec22a-c8c0-42cb-bc86-7953f91c4442_Sanvik VBMT.png"
+  )
+Inventory.create!(
+  name: "VBMT 1",
+  product_number: "VBMT 1",
+  brand: "Sanvik",
+  description: "Sanvik Turning Insert",
+  category: "Inserts",
+  quantity: 0,
+  alert_quantity: 5,
+  status: "Available",
+  image_path: "/uploads/075ec22a-c8c0-42cb-bc86-7953f91c4442_Sanvik VBMT.png"
+  )
+
+
+# ================= CREATE CUSTOMERS ================= 
+Customer.create!(
+  name: "Goltens Singapore",
+  address: "6A Benoi Rd, Singapore 629881"
+  )
+Customer.create!(
+  name: "Raffles Shipmanagement Services",
+  address: "28 Biopolis Rd, Singapore 138568"
+  )
+Customer.create!(
+  name: "Megawatts Engineering Services",
+  address: "10 Kian Teck Wy, Singapore 628747"
+  )
+Customer.create!(
+  name: "Diethelm Marine Diesel",
+  address: "59 & 61, Jln Alam Jaya 1, Taman Perindustrian Alam Jaya, 81500 Pekan Nanas, Johor, Malaysia"
+  )
+Customer.create!(
+  name: "Sulzer Singapore",
+  address: "438 Alexandra Rd, #02-01/06 Alexandra Technopark, Singapore 119968"
+  )
+Customer.create!(
+  name: "Schottel Far East",
+  address: "4 Tech Park Cres, Tech Park, Singapore 638128"
+  )
+
+# ================= CREATE EQUIPMENTS ================= 
+Equipment.create!(
+  name: "Shenyang Lathe Machine (1m x 5m)",
+  tag: "Lathe #1",
+  brand: "YAWO Machinery",
+  model: "Cw6280",
+  serial_number: "SN123Cw6280",
+  equipment_type: "Machine",
+  purchase_date: Date.new(2020, 5, 1),
+  remarks: "Max Load: 3000kg",
+  last_calibration_date: Date.new(2025, 5, 5),
+  calibration_frequency_days: 30
+)
+Equipment.create!(
+  name: "Laser Plant 1",
+  tag: "Laser #1",
+  brand: "Trumpf",
+  model: "LS1234",
+  serial_number: "LS12345678",
+  equipment_type: "Machine",
+  purchase_date: Date.new(2021, 5, 1),
+  remarks: "5000h runtime",
+  last_calibration_date: Date.new(2025, 5, 5),
+  calibration_frequency_days: 30
+)
+Equipment.create!(
+  name: "Laser Plant 2",
+  tag: "Laser #2",
+  brand: "Trumpf",
+  model: "LS1234",
+  serial_number: "LS98765432",
+  equipment_type: "Machine",
+  purchase_date: Date.new(2022, 1, 10),
+  remarks: "5000h runtime",
+  last_calibration_date: Date.new(2025, 5, 5),
+  calibration_frequency_days: 30
+)
+Equipment.create!(
+  name: "Bosch Band Saw",
+  tag: "BandSaw #1",
+  brand: "Bosch",
+  model: "BS-500",
+  serial_number: "SN321BS500",
+  equipment_type: "Machine",
+  purchase_date: Date.new(2022, 10, 10),
+  remarks: "Metal cutting band saw",
+  last_calibration_date: Date.new(2025, 10, 10),
+  calibration_frequency_days: 180
+)
+Equipment.create!(
+  name: "FANUC CNC Milling Machine",
+  tag: "Milling #1",
+  brand: "FANUC",
+  model: "FMC-1000",
+  serial_number: "SN456FMC1000",
+  equipment_type: "Machine",
+  purchase_date: Date.new(2019, 3, 12),
+  remarks: "Used for precision milling",
+  last_calibration_date: Date.new(2024, 3, 12),
+  calibration_frequency_days: 60
+)
+Equipment.create!(
+  name: "Mitutoyo Digimatic Caliper 0-150mm",
+  tag: "Caliper #1",
+  brand: "Mitutoyo",
+  model: "CD-6 CSX",
+  serial_number: "SN123456",
+  equipment_type: "Measuring Tools",
+  purchase_date: Date.new(2023, 3, 15),
+  remarks: "High precision digital caliper",
+  last_calibration_date: Date.new(2025, 3, 15),
+  calibration_frequency_days: 365
+)
+Equipment.create!(
+  name: "Mitutoyo Digimatic Caliper 0-150mm",
+  tag: "Caliper #2",
+  brand: "Mitutoyo",
+  model: "CD-6 CSX",
+  serial_number: "SN123457",
+  equipment_type: "Measuring Tools",
+  purchase_date: Date.new(2023, 3, 15),
+  remarks: "High precision digital caliper",
+  last_calibration_date: Date.new(2025, 3, 15),
+  calibration_frequency_days: 365
+)
+Equipment.create!(
+  name: "Mitutoyo Height Gauge 0-300mm",
+  tag: "HeightGauge #1",
+  brand: "Mitutoyo",
+  model: "192-225",
+  serial_number: "SN789012",
+  equipment_type: "Measuring Tools",
+  purchase_date: Date.new(2021, 11, 5),
+  remarks: "Scriber and dial indicator attachment",
+  last_calibration_date: Date.new(2024, 11, 5),
+  calibration_frequency_days: 365
+)
+Equipment.create!(
+  name: "Mitutoyo Dial Indicator 0-10mm",
+  tag: "DialInd #1",
+  brand: "Mitutoyo",
+  model: "2046S",
+  serial_number: "SN345678",
+  equipment_type: "Measuring Tools",
+  purchase_date: Date.new(2020, 9, 10),
+  remarks: "Shockproof dial indicator",
+  last_calibration_date: Date.new(2023, 9, 10),
+  calibration_frequency_days: 365
+)
+Equipment.create!(
+  name: "Mitutoyo Bore Gauge 1-18mm",
+  tag: "BoreGauge #1",
+  brand: "Mitutoyo",
+  model: "511-731",
+  serial_number: "SN987654",
+  equipment_type: "Measuring Tools",
+  purchase_date: Date.new(2022, 1, 25),
+  remarks: "Precision bore gauge with dial indicator",
+  last_calibration_date: Date.new(2025, 1, 25),
+  calibration_frequency_days: 365
+)
+Equipment.create!(
+  name: "Makita Cordless Impact Driver",
+  tag: "ImpactDriver #1",
+  brand: "Makita",
+  model: "DTD153Z",
+  serial_number: "SN101IMPACT",
+  equipment_type: "Power Tools",
+  purchase_date: Date.new(2023, 2, 14),
+  remarks: "18V LXT lithium-ion brushless driver",
+  last_calibration_date: Date.new(2024, 2, 14),
+  calibration_frequency_days: 365
+)
+Equipment.create!(
+  name: "DeWalt Angle Grinder",
+  tag: "Grinder #2",
+  brand: "DeWalt",
+  model: "DWE402",
+  serial_number: "SN103GRIND",
+  equipment_type: "Power Tools",
+  purchase_date: Date.new(2022, 9, 5),
+  remarks: "4.5-inch 11-amp angle grinder",
+  last_calibration_date: Date.new(2024, 9, 5),
+  calibration_frequency_days: 180
+)
+Equipment.create!(
+  name: "Milwaukee Cordless Drill",
+  tag: "Drill #1",
+  brand: "Milwaukee",
+  model: "M18 FUEL 2804-20",
+  serial_number: "SN105DRILL",
+  equipment_type: "Power Tools",
+  purchase_date: Date.new(2023, 4, 18),
+  remarks: "Brushless hammer drill with Redlink Plus intelligence",
+  last_calibration_date: Date.new(2024, 4, 18),
+  calibration_frequency_days: 365
+)

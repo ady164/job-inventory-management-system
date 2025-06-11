@@ -8,6 +8,7 @@ class CreateJobs < ActiveRecord::Migration[8.0]
       t.string :part_type
       t.string :part_model
       t.string :base_material
+      t.string :status
       t.integer :created_by
 
       t.timestamps

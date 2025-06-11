@@ -57,7 +57,8 @@ class IotController < ApplicationController
         quantity: qty,
         status: update_status,
         operation_type: op_type,
-        message: "#{op_type} request successful."
+        message: "#{op_type} request successful.",
+        job_id: params[:job_id]
         )
         inventoryname = @inventory.name
         if op_type == "Dispense"

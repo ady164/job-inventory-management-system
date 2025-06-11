@@ -20,14 +20,23 @@ Rails.application.routes.draw do
   # Dashboard Route
   get "/dashboard", to: "dashboard#index"
 
-  # Inventories Route
-  resources :inventories, only: [:show, :index, :new, :create, :edit, :update, :destroy]
-
   # Admin Route (User & Roles)
   namespace :admin do
     resources :users
     resources :roles
   end
+
+  # Customers Route
+  resources :customers, only: [:show, :index, :new, :create, :edit, :update, :destroy]
+
+  # Equipments Route
+  resources :equipments, only: [:show, :index, :new, :create, :edit, :update, :destroy]
+
+  # Inventories Route
+  resources :inventories, only: [:show, :index, :new, :create, :edit, :update, :destroy]
+
+  # Jobs Route
+  resources :jobs, only: [:show, :index, :new, :create, :edit, :update, :destroy]
 
   # IoT routes for inventory management via IoT device
   resources :iot, only: [:index, :show] do

@@ -86,17 +86,17 @@ production:
   primary: &primary_production
     <<: *default
     database: job_inventory_management_system_production
-    username: job_inventory_management_system
-    password: <%= ENV["JOB_INVENTORY_MANAGEMENT_SYSTEM_DATABASE_PASSWORD"] %>
+    # password: <%= ENV["JOB_INVENTORY_MANAGEMENT_SYSTEM_DATABASE_PASSWORD"] %>
+    password: <%= Rails.application.credentials.dig(:production, :db, :password) %>
   cache:
     <<: *primary_production
-    database: job_inventory_management_system_production_cache
+    database: job_inventory_management_system_production-cache
     migrations_paths: db/cache_migrate
   queue:
     <<: *primary_production
-    database: job_inventory_management_system_production_queue
+    database: job_inventory_management_system_production-queue
     migrations_paths: db/queue_migrate
   cable:
     <<: *primary_production
-    database: job_inventory_management_system_production_cable
+    database: job_inventory_management_system_production-cable
     migrations_paths: db/cable_migrate

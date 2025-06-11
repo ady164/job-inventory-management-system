@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_08_120313) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_09_135805) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -42,24 +42,24 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_08_120313) do
     t.index ["blob_id", "variation_digest"], name: "index_active_storage_variant_records_uniqueness", unique: true
   end
 
-  create_table "assets", force: :cascade do |t|
+  create_table "customers", force: :cascade do |t|
+    t.string "name"
+    t.string "address"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  create_table "equipments", force: :cascade do |t|
     t.string "name"
     t.string "tag"
     t.string "brand"
     t.string "model"
     t.string "serial_number"
-    t.string "asset_type"
+    t.string "equipment_type"
     t.date "purchase_date"
     t.string "remarks"
     t.date "last_calibration_date"
     t.integer "calibration_frequency_days"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "customers", force: :cascade do |t|
-    t.string "name"
-    t.string "address"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -87,7 +87,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_08_120313) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.string "operation_type"
+    t.bigint "job_id"
     t.index ["inventory_id"], name: "index_inventory_logs_on_inventory_id"
+    t.index ["job_id"], name: "index_inventory_logs_on_job_id"
     t.index ["user_id"], name: "index_inventory_logs_on_user_id"
   end
 
@@ -132,8 +134,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_08_120313) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "asset_id", null: false
-    t.index ["asset_id"], name: "index_job_processes_on_asset_id"
+    t.bigint "equipment_id", null: false
+    t.index ["equipment_id"], name: "index_job_processes_on_equipment_id"
     t.index ["job_id"], name: "index_job_processes_on_job_id"
     t.index ["job_process_type_id"], name: "index_job_processes_on_job_process_type_id"
   end
@@ -146,6 +148,8 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_08_120313) do
     t.string "part_type"
     t.string "part_model"
     t.string "base_material"
+    t.string "notes"
+    t.string "status"
     t.integer "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -213,12 +217,13 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_08_120313) do
   add_foreign_key "active_storage_attachments", "active_storage_blobs", column: "blob_id"
   add_foreign_key "active_storage_variant_records", "active_storage_blobs", column: "blob_id"
   add_foreign_key "inventory_logs", "inventories"
+  add_foreign_key "inventory_logs", "jobs"
   add_foreign_key "inventory_logs", "users"
   add_foreign_key "job_measurements", "job_processes"
   add_foreign_key "job_measurements", "measurement_types"
   add_foreign_key "job_process_logs", "job_processes"
   add_foreign_key "job_process_logs", "users"
-  add_foreign_key "job_processes", "assets"
+  add_foreign_key "job_processes", "equipments"
   add_foreign_key "job_processes", "job_process_types"
   add_foreign_key "job_processes", "jobs"
   add_foreign_key "jobs", "customers"
