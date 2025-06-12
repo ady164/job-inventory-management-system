@@ -91,11 +91,8 @@ production:
   primary: &primary_production
     <<: *default
     database: job_inventory_management_system_production
-    host: iscp-postgres.c5s6uqoikiyt.ap-southeast-1.rds.amazonaws.com
-    port: 5432
     username: postgres
-    passwrod: K36MC942zCW32nYQVhts
-    # password: <%= Rails.application.credentials.dig(:production, :db, :password) %>
+    password: <%= Rails.application.credentials.dig(:production, :db, :password) %>
   # cache:
   #   <<: *primary_production
   #   database: job_inventory_management_system_production-cache
