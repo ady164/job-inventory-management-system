@@ -63,7 +63,9 @@ class JobsController < ApplicationController
       :required_date,
       :part_type,
       :part_model,
+      :part_name,
       :base_material,
+      :filler_material,
       :notes,
       :status
     )

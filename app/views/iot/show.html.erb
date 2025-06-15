@@ -1,4 +1,9 @@
-<div class="dispense-container">
+<style>
+  body{
+    width:320px !important;
+  }
+</style>
+<div class="iot-container">
   <% if flash[:notice] %>
     <div id="flash-message" class="flash flash-notice"><%= flash[:notice] %></div>
   <% elsif flash[:alert] %>
@@ -45,12 +50,12 @@
   </div>
   
   <div class="footer">
-    <div id="status"></div>
     <div id="clock"></div>
+    <div id="status"></div>
   </div>
   
-  <div id="pinModal" class="modal" style="display:none;">
-    <div class="modal-content">
+  <div id="pinModal" class="iot-modal" style="display:none;">
+    <div class="iot-modal-content">
       <%= form_with url: update_quantity_iot_path(@inventory), method: :post, local: true do |form| %>
         <div class="pin-text">Enter Staff Pin:</div>
         <%= form.password_field :user_pin, required: true, id: "staff_pin_input", class:"pin-display" %>
@@ -141,9 +146,14 @@ document.addEventListener('turbo:load', function() {
 
   window.openPinModal = function() {
     // Validate job selection before opening modal
-    if (!jobSelect.value || jobSelect.value === "") {
-      alert("Please select a Job Reference before confirming.");
-      return; // stop here, do not open modal
+
+    if (operationDisplayHeader.textContent === "Dispense Item") {
+      if (!jobSelect.value || jobSelect.value === "") {
+        alert("Please select a Job Reference before confirming.");
+        return; // stop here, do not open modal
+      }
+    } else if (operationDisplayHeader.textContent === "Restock Item") {
+      jobSelect.value == "others"
     }
     // Set hidden job id field before submitting
     if (jobSelect.value == "others"){

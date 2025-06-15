@@ -37,10 +37,32 @@ Rails.application.routes.draw do
 
   # Jobs Route
   resources :jobs, only: [:show, :index, :new, :create, :edit, :update, :destroy]
+  post 'jobs/:id/create_first_job_process', to: 'jobs#create_first_job_process', as: 'create_first_job_process'
 
   # IoT routes for inventory management via IoT device
   resources :iot, only: [:index, :show] do
     post 'update_quantity', on: :member
   end
+
+  # IOT API
+  Rails.application.routes.draw do
+    namespace :iot do
+      scope :api do
+        get '/', to: 'iot_api#index'
+        post '/', to: 'iot_api#create'
+        patch '/:id', to: 'iot_api#update'
+      end
+    end
+  end
+
+  # Job Order route
+  resources :job_processes, only: [:index, :show] do
+    member do
+      post :update_measurements
+        post :log_process               # POST /job_processes/:id/log_process
+    end
+  end
+  get 'job_processes/:job_id', to: 'job_processes#show', as: 'show_job_processes'
+  post 'job_processes/:id/upload_photos', to: 'job_processes#upload_photos', as: 'upload_job_photos'
 
 end

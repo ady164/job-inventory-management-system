@@ -1,0 +1,742 @@
+    <style>
+        .full-input-box{
+            width: 100%;
+            font-size:16px;
+            height: 100%;
+            box-sizing: border-box; 
+            padding: 2px; 
+            margin:0px;
+            border: none !important;
+            text-align:center;
+        }
+      .jo-container {
+        width: 100%;
+        max-width: 1200px;
+        margin: 5px auto;
+        background: white;
+        min-height: 98vh;
+        padding: 20px;
+        box-sizing: border-box;
+        background:white;
+        box-shadow: 0px 0px 5px rgba(0, 0, 0, 0.3);
+      }
+
+      .row {
+        display: flex;
+        flex-wrap: wrap;
+        margin-bottom: 5px;
+      }
+
+      .field {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        flex: 1 1 100%;
+        margin: 5px 0;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      .field td{
+        text-align: left;
+        font-size: 20px;
+      }
+
+      label {
+        font-size: 16px;
+        font-weight: bold;
+      }
+
+      .input-box {
+        display: inline-block;
+        height: 30px;
+        text-align: left;
+        border: solid black 2px;
+        border-radius: 5px;
+        font-size: 16px;
+        padding: 2px 8px;
+        box-sizing: border-box;
+        flex: 1 1 auto;
+        min-width: 150px;
+      }
+
+      input[type="text"] {
+        height: 30px;
+        border: solid black 2px;
+        border-radius: 5px;
+        font-size: 16px;
+        padding: 2px 8px;
+        box-sizing: border-box;
+        min-width: 150px;
+      }
+
+      .photo-box {
+        border: 2px solid #000;
+        border-radius: 8px;
+        width: 48%;
+        min-height: 300px;
+        text-align: left;
+        background-color: #f9f9f9;
+        box-sizing: content-box;
+      }
+
+      .photo-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 18px;
+        padding: 10px 12px;
+        margin-bottom: 10px;
+        font-weight: bold;
+      }
+
+      .upload-btn {
+        background-color: #dbdada;
+        color: black;
+        padding: 6px 15px;
+        font-size: 14px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        display: inline-block;
+      }
+
+      .upload-btn:hover {
+        background-color: #8a8a8b;
+      }
+
+      table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 10px;
+        font-size: 16px;
+        table-layout: fixed;
+      }
+
+      table td,
+      table th {
+        border: 2px solid black;
+        padding: 4px;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      table th {
+        text-align: left;
+        background-color: #fcc520;
+        font-weight: bold;
+      }
+
+      table tr:nth-child(even) {
+        background-color: #f2f2f2;
+      }
+
+      .measurement-tables {
+        display: flex;
+        justify-content: space-between;
+        gap: 20px;
+        flex-wrap: wrap;
+      }
+
+      .table-box {
+        flex: 1 1 48%;
+      }
+
+      .btn {
+        background-color: #4caf50;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        font-size: 16px;
+        margin-top: 20px;
+      }
+      .process-box{
+        display: block;
+        border-radius: 15px;
+        border: 1px solid black;
+        padding: 15px;
+      }
+
+
+        .gallery-container {
+        max-width: 600px;
+        margin: 0 auto;
+        }
+        .main-image  {
+            height:300px;
+        }
+        .main-image img {
+        width: calc(100% - 4px);
+        height:auto;
+        max-height: 300px;
+        object-fit: contain;
+        margin-bottom: 10px;
+        }
+
+        .thumbnail-row {
+        display: flex;
+        gap: 8px;
+        overflow-x: auto;
+        }
+
+        .thumbnail-row img.thumbnail {
+        width: 80px;
+        height: 60px;
+        object-fit: cover;
+        cursor: pointer;
+        border: 2px solid transparent;
+        transition: border-color 0.3s;
+        }
+
+        .thumbnail-row img.thumbnail:hover {
+        border-color: #007bff;
+        }
+
+        .jo-modal {
+            display: none;
+            position: fixed;
+            z-index: 9999;
+            padding-top: 60px;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.9);
+        }
+        .jo-modal-content {
+            position:fixed;
+            margin: auto;
+            display: block;
+            max-width: 90vw;
+            max-height: 90vh;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+        }
+        .close {
+            position: fixed;
+            top: 20px;
+            right: 35px;
+            color: white;
+            font-size: 40px;
+            font-weight: bold;
+            cursor: pointer;
+            user-select: none;
+            z-index: 10000;
+        }
+        .close:hover {
+            color: #bbb;
+        }
+    </style>
+
+    <div class="jo-container">
+      <%= link_to 'Back to List', job_processes_path, class: 'btn-back' %>
+      <h1>JOB ORDER - <%= @job.part_type %></h1>
+
+      <div class="row">
+        <div class="field">
+          <label>Job Reference:</label>
+          <div class="input-box"><%= @job.job_reference_number %></div>
+          <label>Customer/Vessel:</label>
+          <div class="input-box">
+            <%= @job.customer.name %>
+            <% if @job.vessle_name.present? %>
+            &nbsp;/&nbsp;<%= @job.vessle_name %>
+            <% end %>            
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Part Model:</label>
+          <div class="input-box"><%= @job.part_model %></div>
+          <label>Start Date:</label>
+          <input type="text" value="" />
+          <label>Required Date:</label>
+          <input type="text" value="<%= @job.required_date.strftime('%-d/%-m/%Y') if @job.required_date.present? %>" />
+        </div>
+      </div>
+
+        <% job_ref = @job.job_reference_number %>
+        <% incoming_dir = Rails.root.join("public", "jobs", job_ref, "incoming") %>
+        <% drawing_dir = Rails.root.join("public", "jobs", job_ref, "drawings") %>
+
+        <%= form_with url: upload_job_photos_path(@job), method: :post, multipart: true, local: true do %>
+      <div class="row">
+        <div class="field">
+            <div class="photo-box">
+                <div class="photo-header">
+                <span>Incoming Photos</span>
+                <label class="upload-btn">
+                    Add Photos
+                    <input type="file" name="incoming_photos[]" multiple accept="image/*" hidden onchange="this.form.submit();" />
+                </label>
+                </div>
+                <div class="gallery-container">
+                    <% incoming_images = Dir.exist?(incoming_dir) ? Dir.glob("#{incoming_dir}/*.{jpg,jpeg,png,gif}") : [] %>
+                    <% if incoming_images.any? %>
+                        <div class="main-image">
+                        <img id="incoming-current-image" src="/jobs/<%= job_ref %>/incoming/<%= File.basename(incoming_images.first) %>" alt="Incoming Main Image" />
+                        </div>
+                        <div class="thumbnail-row">
+                        <% incoming_images.each do |img_path| %>
+                            <% filename = File.basename(img_path) %>
+                            <img
+                            src="/jobs/<%= job_ref %>/incoming/<%= filename %>"
+                            class="thumbnail"
+                            alt="Incoming Thumbnail"
+                            onclick="document.getElementById('incoming-current-image').src=this.src"
+                            />
+                        <% end %>
+                        </div>
+                    <% else %>
+                        <p>No incoming photos available.</p>
+                    <% end %>
+                </div>
+            </div>
+            <div class="photo-box">
+                <div class="photo-header">
+                    <span>Drawing Photos</span>
+                    <label class="upload-btn">
+                        Add Drawings
+                        <input type="file" name="drawing_photos[]" multiple accept="image/*" hidden onchange="this.form.submit();" />
+                    </label>
+                </div>
+                <div class="gallery-container">
+                    <% drawing_images = Dir.exist?(drawing_dir) ? Dir.glob("#{drawing_dir}/*.{jpg,jpeg,png,gif}") : [] %>
+                    <% if drawing_images.any? %>
+                        <div class="main-image">
+                        <img id="drawing-current-image" src="/jobs/<%= job_ref %>/drawings/<%= File.basename(drawing_images.first) %>" alt="Drawing Main Image" />
+                        </div>
+                        <div class="thumbnail-row">
+                        <% drawing_images.each do |img_path| %>
+                            <% filename = File.basename(img_path) %>
+                            <img
+                            src="/jobs/<%= job_ref %>/drawings/<%= filename %>"
+                            class="thumbnail"
+                            alt="Drawing Thumbnail"
+                            onclick="document.getElementById('drawing-current-image').src=this.src"
+                            />
+                        <% end %>
+                        </div>
+                    <% else %>
+                        <p>No drawing photos available.</p>
+                    <% end %>
+                <div>
+            </div>
+        </div>
+      </div>
+        <% end %>
+
+
+        <div id="jo-image-modal" class="jo-modal" onclick="closeJoModal()">
+        <span class="close" onclick="closeJoModal()">&times;</span>
+        <img class="jo-modal-content" id="jo-modal-image" />
+        </div>
+
+      <div class="row">
+        <div class="field">
+          <table>
+            <tr>
+              <td><b>Part Name:</b>
+              <% if @job.part_name.present? %>
+                    &nbsp;<%= @job.part_name %>
+              <% else %>
+                    &nbsp;<%= @job.part_model %> <%= @job.part_type %>
+              <% end %>
+              </td>
+              <td><b>Base Material:</b> <%= @job.base_material %></td>
+              <td><b>Filter Material:</b> 
+              <% if @job.filler_material.present? %>
+                    &nbsp;<%= @job.filler_material %>
+              <% else %>
+                    &nbsp;N/A
+              <% end %>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+      <div class="process-box" id="incoming">
+        <div class="row">
+          <div class="measurement-field">
+            <div class="measurement-field">
+              <h2>Incoming</h2>
+              <table>
+                <tr>
+                  <th colspan="4">Straightness/Runout Check</th>
+                </tr>
+                <tr>
+                  <td>Point</td>
+                  <td>A</td>
+                  <td>B</td>
+                  <td>C</td>
+                  <td>D</td>
+                  <td>E</td>
+                  <td>F</td>
+                  <td>G</td>
+                  <td>H</td>
+                  <td>I</td>
+                  <td>J</td>
+                  <td>K</td>
+                  <td>L</td>
+                  <td>M</td>
+                  <td>N</td>
+                  <td>O</td>
+                </tr>
+                <tr>
+                  <td>0&deg;</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>90&deg;</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>180&deg;</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>270&deg;</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>TIR</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="measurement-field measurement-tables">
+            <div class="table-box">
+              <table>
+                <tr>
+                  <th colspan="4">Diameter Measurement</th>
+                </tr>
+                <tr>
+                  <td>Point</td>
+                  <td>Standard/ Reference</td>
+                  <td>Incoming X-X</td>
+                  <td>Incoming Y-Y</td>
+                </tr>
+                <tr>
+                  <td>D01</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>D02</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>D03</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>D04</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>D05</td>
+                  <td></td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </table>
+            </div>
+            <div class="table-box">
+              <table>
+                <tr>
+                  <th colspan="3">Length Measurement</th>
+                </tr>
+                <tr>
+                  <td>Point</td>
+                  <td>Standard/ Reference</td>
+                  <td>Measurement</td>
+                </tr>
+                <tr>
+                  <td>L01</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>L02</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>L03</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>L04</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+                <tr>
+                  <td>L05</td>
+                  <td></td>
+                  <td></td>
+                </tr>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+<table id="runoutTable">
+  <thead>
+    <tr>
+      <th>Point</th>
+      <th>A</th>
+      <th>B</th>
+      <th>C</th>
+      <th>D</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr data-angle="0"><td>0&deg;</td></tr>
+    <tr data-angle="90"><td>90&deg;</td></tr>
+    <tr data-angle="180"><td>180&deg;</td></tr>
+    <tr data-angle="270"><td>270&deg;</td></tr>
+    <tr data-angle="TIR"><td>TIR</td></tr>
+  </tbody>
+</table>
+    </div>
+
+   
+<script>
+  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+  const table = document.getElementById("runoutTable");
+  const tbody = table.tBodies[0];
+  const thead = table.tHead;
+
+  // Initialize the table body rows with empty input cells for columns A-D
+  function initializeTable() {
+    const colCount = thead.rows[0].cells.length;
+
+    for (let rowIndex = 0; rowIndex < tbody.rows.length; rowIndex++) {
+      let row = tbody.rows[rowIndex];
+
+      // For rows 0-3 (0°, 90°, 180°, 270°), add inputs per column starting from second column (skip Point col)
+      if (rowIndex < 4) {
+        for (let col = 1; col < colCount; col++) {
+          const td = document.createElement("td");
+          const input = document.createElement("input");
+          input.type = "number";
+          input.className = "full-input-box";
+          input.step = "0.01";
+          input.setAttribute("data-col", col);
+          input.setAttribute("data-row", rowIndex);
+          input.addEventListener("input", onInputChange);
+          td.appendChild(input);
+          row.appendChild(td);
+        }
+      } else {
+        // TIR row - add empty cells for each data column (no inputs)
+        for (let col = 1; col < colCount; col++) {
+          const td = document.createElement("td");
+          td.textContent = "";
+          row.appendChild(td);
+        }
+      }
+    }
+  }
+
+  function calculateTIR(colIndex) {
+  let values = [];
+  for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
+    const cell = tbody.rows[rowIndex].cells[colIndex];
+    const input = cell.querySelector("input");
+    if (input && input.value !== "") {
+      const val = parseFloat(input.value);
+      if (!isNaN(val)) {
+        values.push(val); // use actual values, not absolute
+      }
+    }
+  }
+
+  if (values.length === 0) return "";
+
+  const maxVal = Math.max(...values);
+  const minVal = Math.min(...values);
+  const tir = maxVal - minVal;
+  return tir.toFixed(2); // rounded to 2 decimals
+}
+
+
+  // Update all TIR values for all columns
+  function updateTIR() {
+    const tirRow = tbody.rows[4];
+    const colCount = thead.rows[0].cells.length;
+    for (let col = 1; col < colCount; col++) {
+      tirRow.cells[col].textContent = calculateTIR(col);
+    }
+  }
+
+  // Check if all input cells in last column are filled (no empty)
+  function isLastColumnFilled() {
+    const colCount = thead.rows[0].cells.length;
+    const lastColIndex = colCount - 1;
+
+    for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
+      const cell = tbody.rows[rowIndex].cells[lastColIndex];
+      const input = cell.querySelector("input");
+      if (!input || input.value.trim() === "") return false;
+    }
+    return true;
+  }
+
+  // Add a new letter column to the right
+  function addColumn() {
+    const colCount = thead.rows[0].cells.length;
+    if (colCount > letters.length) {
+      // Reached max columns (Z)
+      return;
+    }
+
+    // Add TH header
+    const newLetter = letters[colCount - 1]; // Because col 0 = Point, col1 = A, ...
+    const th = document.createElement("th");
+    th.textContent = newLetter;
+    thead.rows[0].appendChild(th);
+
+    // Add new TD with inputs for rows 0-3, empty TD for TIR row
+    for (let rowIndex = 0; rowIndex < tbody.rows.length; rowIndex++) {
+      const row = tbody.rows[rowIndex];
+      const td = document.createElement("td");
+
+      if (rowIndex < 4) {
+        const input = document.createElement("input");
+        input.type = "number";
+        input.className = "full-input-box";
+        input.step = "0.01";
+        input.setAttribute("data-col", colCount);
+        input.setAttribute("data-row", rowIndex);
+        input.addEventListener("input", onInputChange);
+        td.appendChild(input);
+      } else {
+        td.textContent = "";
+      }
+
+      row.appendChild(td);
+    }
+  }
+
+  // On input change event
+  function onInputChange() {
+    updateTIR();
+
+    if (isLastColumnFilled()) {
+      addColumn();
+    }
+  }
+
+  // Initial setup
+  initializeTable();
+
+  // Open modal and show clicked main image
+  function openJoModal(src) {
+    const modal = document.getElementById('jo-image-modal');
+    const modalImg = document.getElementById('jo-modal-image');
+    modal.style.display = 'block';
+    modalImg.src = src;
+  }
+
+  // Close modal
+  function closeJoModal() {
+    document.getElementById('jo-image-modal').style.display = 'none';
+  }
+
+  // Add click event to main images after page load
+  document.addEventListener("DOMContentLoaded", function() {
+    const mainImages = document.querySelectorAll('.main-image img');
+    mainImages.forEach(img => {
+      img.style.cursor = 'pointer';
+      img.addEventListener('click', () => openJoModal(img.src));
+    });
+  });
+
+</script>

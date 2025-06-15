@@ -108,7 +108,10 @@ maintain_equipment = Permission.create!(
   name: "maintain_equipment",
   description: "Maintain equipment"
 )
-
+view_jobprocesses = Permission.create!(
+  name: "view_jobprocess",
+  description: "view_jobprocess"
+)
 
 # ================= LINK ROLES TO PERMISSIONS ================= 
 # ================= SUPER ADMIN permissions ================= 
@@ -205,6 +208,11 @@ RolePermission.create!(
   role_id: superadmin_role.id,
   permission_id: delete_job.id
 )
+RolePermission.create!(
+  role_id: superadmin_role.id,
+  permission_id: view_jobprocesses.id
+)
+
 # ================= ADMIN permissions ================= 
 RolePermission.create!(
   role_id: admin_role.id,
@@ -294,6 +302,10 @@ RolePermission.create!(
   role_id: admin_role.id,
   permission_id: delete_job.id
 )
+RolePermission.create!(
+  role_id: admin_role.id,
+  permission_id: view_jobprocesses.id
+)
 # ================= Technician permissions ================= 
 RolePermission.create!(
   role_id: technician_role.id,
@@ -317,10 +329,14 @@ RolePermission.create!(
   role_id: technician_role.id,
   permission_id: edit_job.id
 )
+RolePermission.create!(
+  role_id: technician_role.id,
+  permission_id: view_jobprocesses.id
+)
 
 
 # ================= CREATE USERS ================= 
-User.create!(
+user1 = User.create!(
   name: "deyao",
   email: "deyao@jims.com",
   password_hash: sha256("12345678"),
@@ -328,7 +344,7 @@ User.create!(
   role_id: superadmin_role.id
 )
 
-User.create!(
+user2 = User.create!(
   name: "Admin",
   email: "admin@jims.com",
   password_hash: sha256("admin123"),
@@ -336,7 +352,7 @@ User.create!(
   role_id: admin_role.id
 )
 
-User.create!(
+user3 = User.create!(
   name: "Technician 1",
   email: "tech1@jims.com",
   password_hash: sha256("tech123"),
@@ -459,27 +475,27 @@ Inventory.create!(
 
 
 # ================= CREATE CUSTOMERS ================= 
-Customer.create!(
+customer1 = Customer.create!(
   name: "Goltens Singapore",
   address: "6A Benoi Rd, Singapore 629881"
   )
-Customer.create!(
+customer2 = Customer.create!(
   name: "Raffles Shipmanagement Services",
   address: "28 Biopolis Rd, Singapore 138568"
   )
-Customer.create!(
+customer3 = Customer.create!(
   name: "Megawatts Engineering Services",
   address: "10 Kian Teck Wy, Singapore 628747"
   )
-Customer.create!(
+customer4 = Customer.create!(
   name: "Diethelm Marine Diesel",
   address: "59 & 61, Jln Alam Jaya 1, Taman Perindustrian Alam Jaya, 81500 Pekan Nanas, Johor, Malaysia"
   )
-Customer.create!(
+customer5 = Customer.create!(
   name: "Sulzer Singapore",
   address: "438 Alexandra Rd, #02-01/06 Alexandra Technopark, Singapore 119968"
   )
-Customer.create!(
+customer6 = Customer.create!(
   name: "Schottel Far East",
   address: "4 Tech Park Cres, Tech Park, Singapore 638128"
   )
@@ -641,3 +657,98 @@ Equipment.create!(
   last_calibration_date: Date.new(2024, 4, 18),
   calibration_frequency_days: 365
 )
+
+# ================= CREATE JOB_PROCESS_TYPE ================= 
+JobProcessType.create!(
+  name: "INCOMING",
+  sequence_index: 1
+)
+JobProcessType.create!(
+  name: "PRE-MACHINE",
+  sequence_index: 2
+)
+JobProcessType.create!(
+  name: "SAND-BLAStING",
+  sequence_index: 3
+)
+JobProcessType.create!(
+  name: "CLADDING",
+  sequence_index: 4
+)
+JobProcessType.create!(
+  name: "FINAL MAHCINE",
+  sequence_index: 5
+)
+
+# ================= CREATE JOBS ================= 
+Job.create!(
+  customer_id: customer1.id,
+  job_reference_number: "JIMS-PST-250614-001",
+  vessle_name: nil,
+  required_date: Date.new(2025, 6, 14),
+  part_type: "Piston",
+  part_model: "DK32",
+  part_name: nil,
+  base_material: "Cast Iron",
+  filler_material: "Stellite 21",
+  notes: nil,
+  status: "Pending",
+  created_by: user1.id
+)
+Job.create!(
+  customer_id: customer2.id,
+  job_reference_number: "JIMS-PST-250614-002",
+  vessle_name: "Melati 6",
+  required_date: Date.new(2025, 6, 14),
+  part_type: "Piston",
+  part_model: "N280",
+  part_name: nil,
+  base_material: "Cast Iron",
+  filler_material: "Stellite 21",
+  notes: nil,
+  status: "Confirmed",
+  created_by: user1.id
+)
+Job.create!(
+  customer_id: customer3.id,
+  job_reference_number: "JIMS-GNP-250614-001",
+  vessle_name: nil,
+  required_date: Date.new(2025, 6, 14),
+  part_type: "General Part",
+  part_model: nil,
+  part_name: "Housing DE",
+  base_material: "Cast Iron",
+  filler_material: "SS316L",
+  notes: "Allowed to use Inconel 625 as replacement filler material if base material condition is bad.",
+  status: "Confirmed",
+  created_by: user2.id
+)
+Job.create!(
+  customer_id: customer3.id,
+  job_reference_number: "JIMS-GNP-250614-002",
+  vessle_name: nil,
+  required_date: Date.new(2025, 6, 14),
+  part_type: "General Part",
+  part_model: nil,
+  part_name: "Housing NDE",
+  base_material: "Cast Iron",
+  filler_material: "SS316L",
+  notes: "Allowed to use Inconel 625 as replacement filler material if base material condition is bad.",
+  status: "Confirmed",
+  created_by: user2.id
+)
+Job.create!(
+  customer_id: customer4.id,
+  job_reference_number: "JIMS-TSS-250614-001",
+  vessle_name: nil,
+  required_date: Date.new(2025, 6, 14),
+  part_type: "Turbo Shaft",
+  part_model: "ST5",
+  part_name: nil,
+  base_material: "Steel",
+  filler_material: "Inconel 625, Stellite 21",
+  notes: "Inconel 625 for Seal Ring Groove and Stellite 21 for Bearing Journal.",
+  status: "Confirmed",
+  created_by: user2.id
+)
+

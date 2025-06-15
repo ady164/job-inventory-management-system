@@ -1,4 +1,9 @@
-  <div class="container">
+  <style>
+    body{
+      width:320px !important;
+    }
+  </style>
+  <div class="iot-container">
     <div id="item-list">
         <% @inventories.each do |inventory| %>
           <% if inventory.quantity > inventory.alert_quantity %>
@@ -25,8 +30,8 @@
         <% end %>
     </div>
     <div class="footer">
-      <div id="status"></div>
       <div id="clock"></div>
+      <div id="status"></div>
     </div>
   </div>
 

@@ -39,6 +39,10 @@
       <%= link_to 'Jobs', jobs_path, class: "nav-link #{'active' if current_page?(jobs_path)}" %>
     <% end %>
 
+    <% if current_user&.has_permission?('view_jobprocess') %>
+      <%= link_to 'Job Orders', job_processes_path, class: "nav-link #{'active' if current_page?(job_processes_path)}" %>
+    <% end %>
+
     <%= form_with url: logout_path, method: :delete, local: true, class: "inline-form" do %>
       <%= submit_tag "Logout", class: "logout-link nav-link", data: { disable_with: "Logging out..." } %>
     <% end %>

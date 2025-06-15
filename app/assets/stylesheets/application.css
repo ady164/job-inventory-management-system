@@ -495,9 +495,9 @@
  }
 
  /* Dispense page */
- .dispense-container{
+ .iot-container{
     display: block;
-    width: 100%;
+    width: 320px;
     min-height:calc(100vh - 30px);
     padding-bottom:30px;
     position: absolute;
@@ -637,11 +637,11 @@
 
 
 /* Pin Number Pad */
-.modal {
+.iot-modal {
     position: fixed;
     top: 0;
     left: 0;
-    width: 100%;
+    width: 320px;
     height: 100%;
     display: none;
     background: rgba(0, 0, 0, 0.7);
@@ -650,7 +650,7 @@
     z-index: 300;
 }
 
-.modal-content {
+.iot-modal-content {
     background: rgb(216, 216, 216);
     padding: 20px;
     border-radius: 15px;

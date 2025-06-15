@@ -76,31 +76,11 @@
     </tr>
 
     <tr>
-      <td><%= form.label :part_name %></td>
-      <td>
-        <%= form.text_field :part_name, class: "form-control" %>
-        <% if @job.errors[:part_name].any? %>
-          <div class="error-message"><%= @job.errors[:part_name].first %></div>
-        <% end %>
-      </td>
-    </tr>
-
-    <tr>
       <td><%= form.label :base_material %></td>
       <td>
         <%= form.text_field :base_material, class: "form-control" %>
         <% if @job.errors[:base_material].any? %>
           <div class="error-message"><%= @job.errors[:base_material].first %></div>
-        <% end %>
-      </td>
-    </tr>
-
-    <tr>
-      <td><%= form.label :filler_material %></td>
-      <td>
-        <%= form.text_field :filler_material, class: "form-control" %>
-        <% if @job.errors[:filler_material].any? %>
-          <div class="error-message"><%= @job.errors[:filler_material].first %></div>
         <% end %>
       </td>
     </tr>
@@ -118,7 +98,7 @@
     <tr>
       <td><%= form.label :status %></td>
       <td>
-        <%= form.select :status, ['Pending', 'Confirmed', 'Completed', 'Cancelled'], {}, class: "form-control" %>
+        <%= form.select :status, ['Pending', 'In Progress', 'Completed', 'Cancelled'], {}, class: "form-control" %>
         <% if @job.errors[:status].any? %>
           <div class="error-message"><%= @job.errors[:status].first %></div>
         <% end %>

@@ -1,0 +1,108 @@
+<!-- app/views/job_processes/_measurement_fields.html.erb -->
+
+<div class="measurement-section">
+  <h3><%= measurement_title %></h3>
+  <table class="table measurement-table" data-measurement-type-id="<%= measurement_type_id %>">
+    <thead>
+      <tr>
+        <% columns.each do |col| %>
+          <th><%= col %></th>
+        <% end %>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% rows.each_with_index do |row_name, idx| %>
+        <tr class="measurement-row">
+          <td><%= row_name %></td>
+          <% (columns.length - 1).times do |i| %>
+            <td>
+              <input type="number" step="0.01" class="form-control measurement-input"
+                     data-measurement-name="<%= row_name %>"
+                     data-measurement-index="<%= i %>"
+                     data-order-index="<%= idx %>"
+                     data-measurement-type="<%= measurement_type_id %>" />
+            </td>
+          <% end %>
+          <td><button type="button" class="btn btn-sm btn-danger remove-row">Remove</button></td>
+        </tr>
+      <% end %>
+
+      <!-- Extra empty row to allow new input -->
+      <tr class="measurement-row">
+        <td><input type="text" class="form-control new-point-name" placeholder="New point name" /></td>
+        <% (columns.length - 1).times do |i| %>
+          <td>
+            <input type="number" step="0.01" class="form-control measurement-input new-value"
+                   data-measurement-index="<%= i %>"
+                   data-measurement-type="<%= measurement_type_id %>" />
+          </td>
+        <% end %>
+        <td><button type="button" class="btn btn-sm btn-success add-row">Add</button></td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    document.querySelectorAll(".add-row").forEach(function(button) {
+      button.addEventListener("click", function() {
+        const row = button.closest("tr");
+        const pointNameInput = row.querySelector(".new-point-name");
+        const valueInputs = row.querySelectorAll(".new-value");
+
+        const pointName = pointNameInput.value.trim();
+        if (!pointName) return;
+
+        const hasValue = Array.from(valueInputs).some(input => input.value.trim() !== "");
+        if (!hasValue) return;
+
+        const newRow = document.createElement("tr");
+        newRow.classList.add("measurement-row");
+
+        const firstCell = document.createElement("td");
+        firstCell.textContent = pointName;
+        newRow.appendChild(firstCell);
+
+        valueInputs.forEach((input, index) => {
+          const cell = document.createElement("td");
+          const newInput = document.createElement("input");
+          newInput.type = "number";
+          newInput.step = "0.01";
+          newInput.className = "form-control measurement-input";
+          newInput.value = input.value;
+          newInput.setAttribute("data-measurement-name", pointName);
+          newInput.setAttribute("data-measurement-index", input.dataset.measurementIndex);
+          newInput.setAttribute("data-order-index", document.querySelectorAll(".measurement-row").length - 1);
+          newInput.setAttribute("data-measurement-type", input.dataset.measurementType);
+          cell.appendChild(newInput);
+          newRow.appendChild(cell);
+        });
+
+        const actionCell = document.createElement("td");
+        const removeBtn = document.createElement("button");
+        removeBtn.type = "button";
+        removeBtn.className = "btn btn-sm btn-danger remove-row";
+        removeBtn.textContent = "Remove";
+        removeBtn.addEventListener("click", function() {
+          newRow.remove();
+        });
+        actionCell.appendChild(removeBtn);
+        newRow.appendChild(actionCell);
+
+        row.parentNode.insertBefore(newRow, row);
+
+        pointNameInput.value = "";
+        valueInputs.forEach(input => input.value = "");
+      });
+    });
+
+    document.querySelectorAll(".remove-row").forEach(function(button) {
+      button.addEventListener("click", function() {
+        const row = button.closest("tr");
+        row.remove();
+      });
+    });
+  });
+</script>
