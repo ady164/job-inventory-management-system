@@ -63,6 +63,7 @@ aliases:
   shell: app exec --interactive --reuse "bash"
   logs: app logs -f
   dbc: app exec --interactive --reuse "bin/rails dbconsole"
+  reset: app exec --interactive --reuse "bin/rails db:drop db:create db:migrate db:seed"
   seed: app exec --interactive --reuse "bin/rails db:seed"
 
 
