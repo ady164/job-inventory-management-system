@@ -1,8 +1,4 @@
-  <style>
-    body{
-      width:320px !important;
-    }
-  </style>
+
   <div class="iot-container">
     <div id="item-list">
         <% @inventories.each do |inventory| %>
@@ -17,13 +13,13 @@
               </div>
             </a>
           <% else %>
-            <a class="item item-status-low" href="/iot/<%= inventory.id %>">
+            <a class="item" href="/iot/<%= inventory.id %>">
               <div class="item-index"><%= inventory.id %></div>
               <%= image_tag "#{inventory.image_path}", alt: 'Image', class: 'item-img' %>
               <div class="details">
                   <h3><%= inventory.name %> </h3>
                   <p>PID: <%= inventory.product_number %> </p>
-                  <p>Available: <%= inventory.quantity %> </p>
+                  <p style="font-weight:bold;color:red;">Available: <%= inventory.quantity %> (RESTOCK!) </p>
               </div>
             </a>
           <% end %>

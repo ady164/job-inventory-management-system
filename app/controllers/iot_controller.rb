@@ -43,7 +43,6 @@ class IotController < ApplicationController
 
         # Update inventory
         if op_type == "Dispense"
-            @inventory.update(quantity: @inventory.quantity - qty)
             update_status = "Requested"
         elsif op_type == "Restock"
             @inventory.update(quantity: @inventory.quantity + qty)
@@ -66,7 +65,7 @@ class IotController < ApplicationController
         elsif op_type == "Restock"
             opname = "restocked"
         end
-        flash[:notice] = "#{inventoryname} #{opname} quantity: #{qty}.\nThank you #{user.name}!"
+        flash[:notice] = "#{inventoryname} #{opname} #{update_status} quantity: #{qty}.\nThank you #{user.name}!"
         redirect_to iot_path(@inventory)
     end
 

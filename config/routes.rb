@@ -44,6 +44,15 @@ Rails.application.routes.draw do
     post 'update_quantity', on: :member
   end
 
+  # API for Inventory Log Route
+  namespace :api do
+    resources :inventory_logs, only: [:index, :create, :update] do
+      member do
+        patch :update_inventory
+      end
+    end
+  end
+
   # IOT API
   Rails.application.routes.draw do
     namespace :iot do

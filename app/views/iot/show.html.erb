@@ -1,8 +1,4 @@
-<style>
-  body{
-    width:320px !important;
-  }
-</style>
+
 <div class="iot-container">
   <% if flash[:notice] %>
     <div id="flash-message" class="flash flash-notice"><%= flash[:notice] %></div>
@@ -25,11 +21,11 @@
     </div>
   </div>
   
-  <div class="job-select">
+  <div class="job-select" id="job-select-box">
     <label for="job_id">Job Reference:</label>
     <%= select_tag "inventory_log[job_id]",
       options_for_select(
-        Job.all.map { |job| [job.job_reference_number, job.id] }+ [["Others", "others"]],
+        Job.where(status: "Confirmed").map { |job| [job.job_reference_number, job.id] }+ [["Others", "others"]],
         selected: nil
       ),
       prompt: "Select Job",
@@ -154,6 +150,7 @@ document.addEventListener('turbo:load', function() {
       }
     } else if (operationDisplayHeader.textContent === "Restock Item") {
       jobSelect.value == "others"
+      hiddenJobField.value = "";
     }
     // Set hidden job id field before submitting
     if (jobSelect.value == "others"){
@@ -209,19 +206,21 @@ document.addEventListener('turbo:load', function() {
   }
   flashmsg();
 
-  // Operation type toggle
+  // Toggle page between Dispense and Restock
   const operationTypeButon = document.getElementById("ops-button");
   const operationHeader = document.getElementById("dispense-header");
-
+  const jobselect = document.getElementById("job-select-box");
   window.setOpsType = function() {
     if (operationTypeButon.textContent === "Dispense") {
       operationTypeButon.textContent = "Restock";
       operationDisplayHeader.textContent = "Dispense Item";
       operationHeader.style.backgroundColor = "Blue";
+      jobselect.style.display = "block";
     } else if (operationTypeButon.textContent === "Restock") {
       operationTypeButon.textContent = "Dispense";
       operationDisplayHeader.textContent = "Restock Item";
       operationHeader.style.backgroundColor = "Red";
+      jobselect.style.display = "none";
     }
   };
 
