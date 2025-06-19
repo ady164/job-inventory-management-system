@@ -229,6 +229,24 @@
         .close:hover {
             color: #bbb;
         }
+
+        .process-header {
+          display:flex;
+          justify-content: space-between;
+        }
+
+        .process-time-flex{
+          text-align:right;
+        }
+        
+        .process-time-input{
+          font-size: 16px;
+          padding:5px;
+        }
+
+        .process-time-input input{
+          font-size: 16px;
+        }
     </style>
 
     <div class="jo-container">
@@ -360,6 +378,32 @@
           </table>
         </div>
       </div>
+       <div class="process-box" id="incoming">
+        <div class="process-header">
+          <h2>Incoming</h2>
+          <div class="process-time-flex">
+            <div class="process-time-input">Start Time: <input type="datetime-local" id="start-time" name="Start Time"></div>
+            <div class="process-time-input">End Time: <input type="datetime-local" id="end-time" name="End Time"></div>
+          </div>
+        </div>
+        <div class="process-measurements">
+          <div class="table-box">
+            <table id="diameter-table">
+              <thead>
+                <tr><th colspan="4">Diameter Measurement</th></tr>
+                <tr>
+                  <td>Point</td>
+                  <td>Standard / Reference</td>
+                  <td>Incoming X-X</td>
+                  <td>Incoming Y-Y</td>
+                </tr>
+              </thead>
+              <tbody id="diameter-body"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
       <div class="process-box" id="incoming">
         <div class="row">
           <div class="measurement-field">
@@ -566,177 +610,151 @@
           </div>
         </div>
       </div>
-<table id="runoutTable">
-  <thead>
-    <tr>
-      <th>Point</th>
-      <th>A</th>
-      <th>B</th>
-      <th>C</th>
-      <th>D</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr data-angle="0"><td>0&deg;</td></tr>
-    <tr data-angle="90"><td>90&deg;</td></tr>
-    <tr data-angle="180"><td>180&deg;</td></tr>
-    <tr data-angle="270"><td>270&deg;</td></tr>
-    <tr data-angle="TIR"><td>TIR</td></tr>
-  </tbody>
-</table>
     </div>
 
-   
-<script>
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const table = document.getElementById("runoutTable");
-  const tbody = table.tBodies[0];
-  const thead = table.tHead;
+  <script>
+  const diameterReferenceTable = [
+    { point: "D01", minimum: 50.00, maximum: 51.05},
+    { point: "D02", minimum: 50.00, maximum: 51.05},
+    { point: "D03", minimum: 50.00, maximum: 51.05},
+    { point: "D04", minimum: 50.00, maximum: 51.05},
+    { point: "D05", minimum: 0, maximum: 0},
+    { point: "D05", minimum: 0, maximum: 0},
+    { point: "D05", minimum: 0, maximum: 0}
+  ];
 
-  // Initialize the table body rows with empty input cells for columns A-D
-  function initializeTable() {
-    const colCount = thead.rows[0].cells.length;
+  const measurementData = [
+    { point: "D01", x: "50.05", y: "50.03" },
+    { point: "D02", x: "49.48", y: "49.51" }
+  ];
 
-    for (let rowIndex = 0; rowIndex < tbody.rows.length; rowIndex++) {
-      let row = tbody.rows[rowIndex];
+  const tbody = document.getElementById("diameter-body");
 
-      // For rows 0-3 (0°, 90°, 180°, 270°), add inputs per column starting from second column (skip Point col)
-      if (rowIndex < 4) {
-        for (let col = 1; col < colCount; col++) {
-          const td = document.createElement("td");
-          const input = document.createElement("input");
-          input.type = "number";
-          input.className = "full-input-box";
-          input.step = "0.01";
-          input.setAttribute("data-col", col);
-          input.setAttribute("data-row", rowIndex);
-          input.addEventListener("input", onInputChange);
-          td.appendChild(input);
-          row.appendChild(td);
-        }
-      } else {
-        // TIR row - add empty cells for each data column (no inputs)
-        for (let col = 1; col < colCount; col++) {
-          const td = document.createElement("td");
-          td.textContent = "";
-          row.appendChild(td);
-        }
-      }
-    }
-  }
+  function createRow(ref, measurement = {}) {
+    const row = document.createElement("tr");
 
-  function calculateTIR(colIndex) {
-  let values = [];
-  for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
-    const cell = tbody.rows[rowIndex].cells[colIndex];
-    const input = cell.querySelector("input");
-    if (input && input.value !== "") {
-      const val = parseFloat(input.value);
-      if (!isNaN(val)) {
-        values.push(val); // use actual values, not absolute
-      }
-    }
-  }
+    // Point cell
+    const pointCell = document.createElement("td");
+    pointCell.textContent = ref.point;
+    row.appendChild(pointCell);
 
-  if (values.length === 0) return "";
+   // Standard Reference Minimum ~ Maximum
+    const stdCell = document.createElement("td");
 
-  const maxVal = Math.max(...values);
-  const minVal = Math.min(...values);
-  const tir = maxVal - minVal;
-  return tir.toFixed(2); // rounded to 2 decimals
-}
+    const minInput = document.createElement("input");
+    minInput.type = "text";
+    minInput.placeholder = "Min";
+    minInput.classList.add("min-input");
+    minInput.value = ref.minimum || "";
+
+    const separator = document.createTextNode(" ~ ");
+
+    const maxInput = document.createElement("input");
+    maxInput.type = "text";
+    maxInput.placeholder = "Max";
+    maxInput.classList.add("max-input");
+    maxInput.value = ref.maximum || "";
+
+    stdCell.appendChild(minInput);
+    stdCell.appendChild(separator);
+    stdCell.appendChild(maxInput);
+    row.appendChild(stdCell);
 
 
-  // Update all TIR values for all columns
-  function updateTIR() {
-    const tirRow = tbody.rows[4];
-    const colCount = thead.rows[0].cells.length;
-    for (let col = 1; col < colCount; col++) {
-      tirRow.cells[col].textContent = calculateTIR(col);
-    }
-  }
-
-  // Check if all input cells in last column are filled (no empty)
-  function isLastColumnFilled() {
-    const colCount = thead.rows[0].cells.length;
-    const lastColIndex = colCount - 1;
-
-    for (let rowIndex = 0; rowIndex < 4; rowIndex++) {
-      const cell = tbody.rows[rowIndex].cells[lastColIndex];
-      const input = cell.querySelector("input");
-      if (!input || input.value.trim() === "") return false;
-    }
-    return true;
-  }
-
-  // Add a new letter column to the right
-  function addColumn() {
-    const colCount = thead.rows[0].cells.length;
-    if (colCount > letters.length) {
-      // Reached max columns (Z)
-      return;
-    }
-
-    // Add TH header
-    const newLetter = letters[colCount - 1]; // Because col 0 = Point, col1 = A, ...
-    const th = document.createElement("th");
-    th.textContent = newLetter;
-    thead.rows[0].appendChild(th);
-
-    // Add new TD with inputs for rows 0-3, empty TD for TIR row
-    for (let rowIndex = 0; rowIndex < tbody.rows.length; rowIndex++) {
-      const row = tbody.rows[rowIndex];
+    // X and Y Inputs
+    ["x", "y"].forEach(key => {
       const td = document.createElement("td");
-
-      if (rowIndex < 4) {
-        const input = document.createElement("input");
-        input.type = "number";
-        input.className = "full-input-box";
-        input.step = "0.01";
-        input.setAttribute("data-col", colCount);
-        input.setAttribute("data-row", rowIndex);
-        input.addEventListener("input", onInputChange);
-        td.appendChild(input);
-      } else {
-        td.textContent = "";
-      }
-
+      const input = document.createElement("input");
+      input.type = "text";
+      input.name = `${ref.point}_${key}`;
+      input.value = measurement[key] || "";
+      input.addEventListener("input", handleInputChange);
+      td.appendChild(input);
       row.appendChild(td);
-    }
-  }
-
-  // On input change event
-  function onInputChange() {
-    updateTIR();
-
-    if (isLastColumnFilled()) {
-      addColumn();
-    }
-  }
-
-  // Initial setup
-  initializeTable();
-
-  // Open modal and show clicked main image
-  function openJoModal(src) {
-    const modal = document.getElementById('jo-image-modal');
-    const modalImg = document.getElementById('jo-modal-image');
-    modal.style.display = 'block';
-    modalImg.src = src;
-  }
-
-  // Close modal
-  function closeJoModal() {
-    document.getElementById('jo-image-modal').style.display = 'none';
-  }
-
-  // Add click event to main images after page load
-  document.addEventListener("DOMContentLoaded", function() {
-    const mainImages = document.querySelectorAll('.main-image img');
-    mainImages.forEach(img => {
-      img.style.cursor = 'pointer';
-      img.addEventListener('click', () => openJoModal(img.src));
     });
-  });
 
+    tbody.appendChild(row);
+  }
+
+  function getNextReference() {
+    const renderedPoints = Array.from(tbody.querySelectorAll("tr td:first-child"))
+      .map(td => td.textContent);
+    return diameterReferenceTable.find(r => !renderedPoints.includes(r.point));
+  }
+
+  function handleInputChange() {
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+    let emptyCount = 0;
+    let shouldTrim = false;
+
+    for (let i = 0; i < rows.length; i++) {
+      const inputs = rows[i].querySelectorAll("input:not([readonly])");
+      const isEmpty = Array.from(inputs).every(input => input.value.trim() === "");
+
+      if (isEmpty) {
+        emptyCount++;
+        if (emptyCount >= 2) {
+          shouldTrim = true;
+          trimRows(i);
+          break;
+        }
+      } else {
+        emptyCount = 0;
+      }
+    }
+
+    const lastRow = rows[rows.length - 1];
+    const lastInputs = lastRow.querySelectorAll("input:not([readonly])");
+    const isLastFilled = Array.from(lastInputs).some(input => input.value.trim() !== "");
+
+    if (isLastFilled) {
+      const nextRef = getNextReference();
+      if (nextRef) createRow(nextRef);
+    }
+  }
+
+  function trimRows(startIndex) {
+    const rows = Array.from(tbody.querySelectorAll("tr"));
+    for (let i = rows.length - 1; i >= startIndex; i--) {
+      tbody.removeChild(rows[i]);
+    }
+  }
+
+  function loadMeasurements() {
+    tbody.innerHTML = "";
+
+    const dataMap = {};
+    measurementData.forEach(m => dataMap[m.point] = m);
+
+    diameterReferenceTable.forEach(ref => {
+      if (dataMap[ref.point]) {
+        createRow(ref, dataMap[ref.point]);
+      }
+    });
+
+    // Add the next empty reference point row
+    const nextRef = getNextReference();
+    if (nextRef) createRow(nextRef);
+  }
+
+  function submitMeasurements() {
+    const result = [];
+
+    const rows = tbody.querySelectorAll("tr");
+    rows.forEach(row => {
+      const point = row.children[0].textContent;
+      const standard = row.querySelector(".standard-input").value;
+      const x = row.children[2].querySelector("input").value.trim();
+      const y = row.children[3].querySelector("input").value.trim();
+
+      if (x !== "" || y !== "") {
+        result.push({ point, standard, x, y });
+      }
+    });
+
+    document.getElementById("output").textContent = JSON.stringify(result, null, 2);
+  }
+
+  // Initialize table on page load
+  loadMeasurements();
 </script>

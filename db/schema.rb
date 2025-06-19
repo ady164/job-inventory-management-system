@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_14_090203) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_19_143849) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -93,20 +93,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_14_090203) do
     t.index ["user_id"], name: "index_inventory_logs_on_user_id"
   end
 
-  create_table "job_measurements", force: :cascade do |t|
-    t.bigint "job_process_id", null: false
-    t.bigint "measurement_type_id", null: false
-    t.integer "order_index"
-    t.integer "measurement_index"
-    t.string "name"
-    t.decimal "value"
-    t.string "remarks"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.index ["job_process_id"], name: "index_job_measurements_on_job_process_id"
-    t.index ["measurement_type_id"], name: "index_job_measurements_on_measurement_type_id"
-  end
-
   create_table "job_process_logs", force: :cascade do |t|
     t.bigint "job_process_id", null: false
     t.bigint "user_id", null: false
@@ -136,6 +122,9 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_14_090203) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.bigint "equipment_id", null: false
+    t.datetime "start_time"
+    t.datetime "end_time"
+    t.json "measurements"
     t.index ["equipment_id"], name: "index_job_processes_on_equipment_id"
     t.index ["job_id"], name: "index_job_processes_on_job_id"
     t.index ["job_process_type_id"], name: "index_job_processes_on_job_process_type_id"
@@ -163,12 +152,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_14_090203) do
     t.string "name"
     t.string "model"
     t.string "remarks"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "measurement_types", force: :cascade do |t|
-    t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
@@ -222,8 +205,6 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_14_090203) do
   add_foreign_key "inventory_logs", "inventories"
   add_foreign_key "inventory_logs", "jobs"
   add_foreign_key "inventory_logs", "users"
-  add_foreign_key "job_measurements", "job_processes"
-  add_foreign_key "job_measurements", "measurement_types"
   add_foreign_key "job_process_logs", "job_processes"
   add_foreign_key "job_process_logs", "users"
   add_foreign_key "job_processes", "equipments"

@@ -1,13 +1,209 @@
-<h1>Inventory Details</h1>
+<style>
+.item-log-main-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 30px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fafafa;
+}
 
-<p>
-  <strong>Name:</strong>
-  <%= @inventory.name %>
-</p>
+.item-log-header {
+  text-align:left;
+}
 
-<p>
-  <strong>Description:</strong>
-  <%= @inventory.description %>
-</p>
+.item-log-header h1,
+.item-log-main-content h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
 
-<%= link_to 'Back to list', inventories_path %>
+.item-log-hr {
+  margin: 40px 0 20px;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+.item-log-btn-back {
+  background: none;
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.item-log-btn {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.item-log-btn:hover {
+  background-color: #0056b3;
+}
+
+.item-log-btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 14px;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+.item-log-btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+
+.item-log-info-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.item-log-image-container {
+  flex: 0 0 auto;
+}
+
+.item-log-info-image {
+  width: 250px;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 4px;
+  background-color: #fff;
+}
+
+.item-log-info-table {
+  flex: 1;
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.item-log-info-table th,
+.item-log-info-table td {
+  padding: 12px 16px;
+ border: 1px solid #878787;
+  text-align: left;
+}
+
+.item-log-info-table th {
+  background-color: #f5f5f5;
+  width: 200px;
+  color: #555;
+}
+
+.item-log-filter-form {
+  margin-bottom: 20px;
+}
+
+.item-log-form-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.item-log-form-select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.item-log-logs-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+
+.item-log-logs-table th,
+.item-log-logs-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #878787;
+  text-align:center;
+}
+
+.item-log-logs-table th {
+  background-color: #f1f1f1;
+  color: #555;
+}
+
+
+
+</style>
+<div class="main-content">
+  <div class="item-log-header">
+    <div><%= link_to '← Back to list', inventories_path, class: 'item-log-btn-back' %></div>
+    <h1>Inventory Details</h1>
+  </div>
+
+<div class="item-log-info-wrapper">
+  <table class="item-log-info-table">
+    <tr><th>Name</th><td><%= @inventory.name %></td></tr>
+    <tr><th>Product Number</th><td><%= @inventory.product_number %></td></tr>
+    <tr><th>Brand</th><td><%= @inventory.brand %></td></tr>
+    <tr><th>Description</th><td><%= @inventory.description %></td></tr>
+    <tr><th>Category</th><td><%= @inventory.category %></td></tr>
+    <tr><th>Balance Quantity</th><td><%= @inventory.quantity %></td></tr>
+    <tr><th>Alert Quantity</th><td><%= @inventory.alert_quantity %></td></tr>
+    <tr><th>Status</th><td><%= @inventory.status %></td></tr>
+  </table>
+
+  <div class="item-log-image-container">
+    <%= image_tag(@inventory.image_path, class: 'item-log-info-image') if @inventory.image_path.present? %>
+  </div>
+</div>
+
+
+
+
+  <hr>
+
+  <h2>Stock Issue Logs</h2>
+
+  <div class="item-log-filter-form">
+    <%= form_with url: inventory_path(@inventory), method: :get, local: true do %>
+      <div class="item-log-form-row">
+        <label for="month">Month:</label>
+        <%= select_tag :month, options_for_select((1..12).map { |m| [Date::MONTHNAMES[m], m] }, params[:month]), include_blank: 'All', class: 'item-log-form-select' %>
+
+        <label for="year">Year:</label>
+        <%= select_tag :year, options_for_select((2022..Date.today.year).to_a.reverse, params[:year]), include_blank: 'All', class: 'item-log-form-select' %>
+
+        <%= submit_tag 'Filter', class: 'item-log-btn' %>
+        <%= link_to 'Show All', inventory_path(@inventory), class: 'item-log-btn-secondary' %>
+      </div>
+    <% end %>
+  </div>
+
+  <table class="item-log-logs-table">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Quantity</th>
+        <th>Operation Type</th>
+        <th>Status</th>
+        <th>User</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @inventory_logs.each do |log| %>
+        <tr>
+          <td><%= log.created_at.strftime("%d %b %Y") %></td>
+          <td><%= log.quantity %></td>
+          <td><%= log.operation_type %></td>
+          <td><%= log.status %></td>
+          <td><%= log.user&.name %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -1,7 +1,7 @@
 class InventoriesController < ApplicationController
   before_action :require_login
   before_action -> { require_permission("view_inventory") }
-  before_action :set_inventory, only: [:edit, :update, :destroy]
+  before_action :set_inventory, only: [:show, :edit, :update, :destroy]
   before_action -> { require_permission("edit_inventory") }, only: [:edit, :update]
   before_action -> { require_permission("delete_inventory") }, only: [:destroy]
   before_action -> { require_permission("create_inventory") }, only: [:new, :create]
@@ -12,6 +12,15 @@ class InventoriesController < ApplicationController
 
   def show
     @inventory = Inventory.find(params[:id])
+
+    # Filter by month/year
+    if params[:month].present? && params[:year].present?
+      start_date = Date.new(params[:year].to_i, params[:month].to_i, 1)
+      end_date = start_date.end_of_month
+      @inventory_logs = @inventory.inventory_logs.where(status: "Completed", created_at: start_date..end_date)
+    else
+      @inventory_logs = @inventory.inventory_logs.where(status: "Completed").order(created_at: :desc)
+    end
   end
 
   def new

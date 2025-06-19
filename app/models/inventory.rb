@@ -1,4 +1,5 @@
 class Inventory < ApplicationRecord
+  has_many :inventory_logs
   has_one_attached :image
 
   validates :name, :product_number, :brand, :category, :alert_quantity, :status, presence: true

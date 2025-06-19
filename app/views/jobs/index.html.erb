@@ -20,6 +20,7 @@
     { label: 'Part Type', sortable: true, value: ->(job) { job.part_type } },
     { label: 'Part Model', sortable: true, value: ->(job) { job.part_model } },
     { label: 'Required Date', sortable: true, value: ->(job) { job.required_date } },
+    { label: 'Status', sortable: true, value: ->(job) { job.status } },
     { label: 'Created By', sortable: true, value: ->(job) { job.creator&.name || 'N/A' } }
   ],
   actions: actions

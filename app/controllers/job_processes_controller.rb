@@ -14,37 +14,13 @@ class JobProcessesController < ApplicationController
   def show
     @job = Job.find(params[:id])
     @job_processes = @job.job_processes.includes(:machine, :process_type)
-    @measurement_types = MeasurementType.where(name: ["Runout", "Diameter", "Length"])
   end
 
 
   def update_measurements
     @job_process = JobProcess.find(params[:id])
-    @measurement_types = MeasurementType.where(name: ["Runout", "Diameter", "Length"]).index_by(&:name)
+    
 
-    measurements = params[:measurements] || {}
-
-    JobMeasurement.transaction do
-      measurements.each do |type_name, rows|
-        rows.each do |index, data|
-          next if data[:name].blank? && data[:value].blank?
-
-          JobMeasurement.create!(
-            job_process: @job_process,
-            measurement_type: @measurement_types[type_name],
-            order_index: index.to_i,
-            measurement_index: index.to_i,
-            name: data[:name],
-            value: data[:value],
-            remarks: data[:remarks]
-          )
-        end
-      end
-    end
-
-    redirect_to job_process_path(@job_process), notice: "Measurements saved successfully."
-  rescue => e
-    redirect_to job_process_path(@job_process), alert: "Failed to save measurements: #{e.message}"
   end
   
   def upload_photos

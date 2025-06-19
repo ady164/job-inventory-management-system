@@ -1,5 +1,13 @@
 <% actions = [] %>
 
+
+<% if current_user&.has_permission?('view_inventory') %>
+  <% actions << {
+    label: 'View',
+    path: ->(i) { inventory_path(i) },
+    options: { class: 'btn-edit' }
+  } %>
+<% end %>
 <% if current_user&.has_permission?('edit_inventory') %>
   <% actions << {
     label: 'Edit',
