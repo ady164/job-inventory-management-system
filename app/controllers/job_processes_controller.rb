@@ -13,41 +13,89 @@ class JobProcessesController < ApplicationController
     # @job = Job.find(params[:id])
   def show
     @job = Job.find(params[:id])
-    @job_processes = @job.job_processes.includes(:machine, :process_type)
+    @job_processes = @job.job_processes.includes(:equipment)
+    @job_process_types = JobProcessType.where.not(name: "INCOMING")
+    @reference = JobMeasurementReference.find_by(job_id: @job.id)
   end
 
+  def create_process
+    job_id = params[:job_id]
+    job_process_type_id = params[:job_process_type_id]
 
-  def update_measurements
-    @job_process = JobProcess.find(params[:id])
-    
+    max_order_index = JobProcess.where(job_id: job_id).maximum(:order_index) || 0
+    order_index = max_order_index + 1
 
+    @job_process = JobProcess.new(
+      job_id: job_id,
+      job_process_type_id: job_process_type_id,
+      order_index: order_index
+    )
+
+    respond_to do |format|
+      if @job_process.save
+        format.json { render json: @job_process, status: :created }
+        format.html { render plain: "Created", status: :created } # fallback
+      else
+        format.json { render json: @job_process.errors, status: :unprocessable_entity }
+        format.html { render plain: "Error", status: :unprocessable_entity }
+      end
+    end
+  end
+
+  def update
+    @job_process = JobProcess.find_by(job_id:params[:id])
+
+    if @job_process.update(measurements: params[:measurement_data].present? ? JSON.parse(params[:measurement_data]) : {})
+      render json: { status: "ok" }
+    else
+      render json: { status: "error", errors: @job_process.errors }, status: :unprocessable_entity
+    end
+  end
+  
+  def create_log
   end
   
   def upload_photos
-  job = Job.find(params[:id])
-  folder = Rails.root.join("public", "jobs", job.job_reference_number)
+    job = Job.find(params[:id])
+    folder = Rails.root.join("public", "jobs", job.job_reference_number)
 
-  FileUtils.mkdir_p("#{folder}/incoming")
-  FileUtils.mkdir_p("#{folder}/drawings")
+    FileUtils.mkdir_p("#{folder}/incoming")
+    FileUtils.mkdir_p("#{folder}/drawings")
 
-  if params[:incoming_photos]
-    params[:incoming_photos].each do |photo|
-      File.open("#{folder}/incoming/#{photo.original_filename}", "wb") do |file|
-        file.write(photo.read)
+    if params[:incoming_photos]
+      params[:incoming_photos].each do |photo|
+        File.open("#{folder}/incoming/#{photo.original_filename}", "wb") do |file|
+          file.write(photo.read)
+        end
       end
     end
-  end
 
-  if params[:drawing_photos]
-    params[:drawing_photos].each do |photo|
-      File.open("#{folder}/drawings/#{photo.original_filename}", "wb") do |file|
-        file.write(photo.read)
+    if params[:drawing_photos]
+      params[:drawing_photos].each do |photo|
+        File.open("#{folder}/drawings/#{photo.original_filename}", "wb") do |file|
+          file.write(photo.read)
+        end
       end
     end
+
+    redirect_back fallback_location: job_processes_path, notice: 'Photos uploaded successfully.'
   end
 
-  redirect_back fallback_location: job_processes_path, notice: 'Photos uploaded successfully.'
-end
+  private
+
+  def set_job_process_log
+    @job_process_log = JobProcessLog.find(params[:id])
+  end
+
+  def job_process_log_params
+    params.require(:job_process_log).permit(
+      :job_process_id,
+      :start_time,
+      :end_time,
+      :status,
+      :measurement_data
+    )
+  end
 end
 
 

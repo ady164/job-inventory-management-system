@@ -190,7 +190,7 @@
         <th>Date</th>
         <th>Quantity</th>
         <th>Operation Type</th>
-        <th>Status</th>
+        <th>Job Reference</th>
         <th>User</th>
       </tr>
     </thead>
@@ -200,7 +200,7 @@
           <td><%= log.created_at.strftime("%d %b %Y") %></td>
           <td><%= log.quantity %></td>
           <td><%= log.operation_type %></td>
-          <td><%= log.status %></td>
+          <td><%= log.job&.job_reference_number%></td>
           <td><%= log.user&.name %></td>
         </tr>
       <% end %>

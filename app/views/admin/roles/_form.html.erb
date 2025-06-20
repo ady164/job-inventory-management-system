@@ -6,20 +6,6 @@
   </style>
 
   <table class="details-form-table">
-    <% if role.errors.any? %>
-      <tr>
-        <td colspan="2">
-          <div class="alert alert-danger">
-            <h4><%= pluralize(role.errors.count, "error") %> prohibited this role from being saved:</h4>
-            <ul>
-              <% role.errors.full_messages.each do |msg| %>
-                <li><%= msg %></li>
-              <% end %>
-            </ul>
-          </div>
-        </td>
-      </tr>
-    <% end %>
 
     <tr>
       <td><%= f.label :name %></td>
@@ -45,6 +31,20 @@
         <td><%= label_tag "permission_#{permission.description}", permission.description %></td>
         <td>
           <%= check_box_tag 'role[permission_ids][]', permission.id, role.permissions.include?(permission), id: "permission_#{permission.id}", class: "permission-checkbox" %>
+        </td>
+      </tr>
+    <% end %>
+
+    <% if role.errors.any? %>
+      <tr>
+        <td colspan="2">
+          <div class="alert alert-danger">
+            <ul>
+              <% role.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
         </td>
       </tr>
     <% end %>

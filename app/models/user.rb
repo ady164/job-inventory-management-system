@@ -4,6 +4,11 @@ class User < ApplicationRecord
   belongs_to :role
   has_many :user_logs
 
+  # validate fields for form
+  validates :email, presence: true, uniqueness: true
+  validates :password_hash, presence: true
+  validates :pin_hash, presence: true, uniqueness: true
+
   # Store SHA256 password hash in password_hash column
   def password=(plain_password)
     self.password_hash = Digest::SHA256.hexdigest(plain_password)

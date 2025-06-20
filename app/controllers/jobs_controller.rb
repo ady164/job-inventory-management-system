@@ -24,6 +24,7 @@ class JobsController < ApplicationController
     @job.created_by = current_user.id  # Assign creator here, not from params
 
     if @job.save
+      create_incoming_process(@job)
       redirect_to jobs_path, notice: 'Job created successfully.'
     else
       render :new
@@ -69,5 +70,34 @@ class JobsController < ApplicationController
       :notes,
       :status
     )
+  end
+
+  # Helper method to create the initial JobProcess
+  def create_incoming_process(job)
+    # Find the JobProcessType for "INCOMING" - ensure it exists and get its ID
+    incoming_process_type = JobProcessType.find_by(name: "INCOMING")
+
+    unless incoming_process_type
+      # This is a critical error if "INCOMING" process type isn't set up
+      job.errors.add(:base, "Error: 'INCOMING' job process type not found. Please configure system.")
+      raise ActiveRecord::Rollback # Trigger transaction rollback
+    end
+
+    # Create the JobProcess, using the association for job_id assignment
+    @job_process = JobProcess.new(
+      job_process_type: incoming_process_type, # Assign the object, Rails handles the ID
+      job: job,                                 # Assign the job object, Rails handles job_id
+      order_index: 1,
+      status: "Not Completed"
+    )
+
+    unless @job_process.save
+      # If JobProcess saving fails, transfer its errors to the Job object
+      # and trigger a rollback of the entire transaction.
+      @job_process.errors.full_messages.each do |msg|
+        job.errors.add(:base, "Initial process creation failed: #{msg}")
+      end
+      raise ActiveRecord::Rollback # Trigger transaction rollback
+    end
   end
 end

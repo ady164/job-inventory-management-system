@@ -1,0 +1,13 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  job: one
+  diameter: 
+  length: 
+  runout: 
+
+two:
+  job: two
+  diameter: 
+  length: 
+  runout: 

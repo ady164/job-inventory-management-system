@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_19_143849) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_19_190905) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -93,6 +93,16 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_143849) do
     t.index ["user_id"], name: "index_inventory_logs_on_user_id"
   end
 
+  create_table "job_measurement_references", force: :cascade do |t|
+    t.bigint "job_id", null: false
+    t.json "diameter"
+    t.json "length"
+    t.json "height"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["job_id"], name: "index_job_measurement_references_on_job_id"
+  end
+
   create_table "job_process_logs", force: :cascade do |t|
     t.bigint "job_process_id", null: false
     t.bigint "user_id", null: false
@@ -121,7 +131,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_143849) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.bigint "equipment_id", null: false
+    t.bigint "equipment_id"
     t.datetime "start_time"
     t.datetime "end_time"
     t.json "measurements"
@@ -205,6 +215,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_143849) do
   add_foreign_key "inventory_logs", "inventories"
   add_foreign_key "inventory_logs", "jobs"
   add_foreign_key "inventory_logs", "users"
+  add_foreign_key "job_measurement_references", "jobs"
   add_foreign_key "job_process_logs", "job_processes"
   add_foreign_key "job_process_logs", "users"
   add_foreign_key "job_processes", "equipments"

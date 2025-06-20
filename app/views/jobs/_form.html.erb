@@ -1,19 +1,5 @@
 <%= form_with(model: @job, local: true, id: "job-form", html: { multipart: true }) do |form| %>
   <table class="details-form-table">
-    <% if @job.errors.any? %>
-      <tr>
-        <td colspan="2">
-          <div class="alert alert-danger">
-            <h4><%= pluralize(@job.errors.count, "error") %> prohibited this job from being saved:</h4>
-            <ul>
-              <% @job.errors.full_messages.each do |msg| %>
-                <li><%= msg %></li>
-              <% end %>
-            </ul>
-          </div>
-        </td>
-      </tr>
-    <% end %>
 
     <tr>
       <td><%= form.label :customer_id, "Customer" %></td>
@@ -125,6 +111,19 @@
       </td>
     </tr>
 
+    <% if @job.errors.any? %>
+      <tr>
+        <td colspan="2">
+          <div class="alert alert-danger">
+            <ul>
+              <% @job.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        </td>
+      </tr>
+    <% end %>
 
     <tr>
       <td colspan="2" style="text-align: right; padding-top: 15px;">
@@ -138,7 +137,7 @@
       </td>
     </tr>
 
-    <% if action_name == 'edit' && current_user&.has_permission?('delete_job') %>
+    <% if action_name == 'edit' && current_user&.has_permission?('delete_job') && @job.status != "Completed" %>
       <tr>
         <td colspan="2" style="text-align: right; padding-top: 35px;">
           <%= link_to 'Delete', job_path(@job), method: :delete, data: { turbo: false, confirm: 'Are you sure?' }, class: 'btn-delete' %>

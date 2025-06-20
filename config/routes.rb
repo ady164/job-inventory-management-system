@@ -65,13 +65,19 @@ Rails.application.routes.draw do
   end
 
   # Job Order route
-  resources :job_processes, only: [:index, :show] do
+  resources :job_processes, only: [:index, :show, :update] do
     member do
-      post :update_measurements
+      post :create_log
         post :log_process               # POST /job_processes/:id/log_process
+    end
+    collection do
+      post :create_process
     end
   end
   get 'job_processes/:job_id', to: 'job_processes#show', as: 'show_job_processes'
   post 'job_processes/:id/upload_photos', to: 'job_processes#upload_photos', as: 'upload_job_photos'
+  
+
+  # Job process log route
 
 end

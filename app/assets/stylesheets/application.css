@@ -53,6 +53,15 @@
 .hidden{
     display: none;
 }
+.text-align-center{
+   text-align: center;
+}
+.text-align-left{
+   text-align: left;
+}
+.alert-danger {
+   color:red;
+}
 
  /* LOGIN PAGE CSS */
  .login-container{
