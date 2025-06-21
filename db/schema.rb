@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_19_190905) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_21_214149) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -113,6 +113,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_190905) do
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "order_index"
     t.index ["job_process_id"], name: "index_job_process_logs_on_job_process_id"
     t.index ["user_id"], name: "index_job_process_logs_on_user_id"
   end
@@ -135,9 +136,11 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_190905) do
     t.datetime "start_time"
     t.datetime "end_time"
     t.json "measurements"
+    t.bigint "user_id"
     t.index ["equipment_id"], name: "index_job_processes_on_equipment_id"
     t.index ["job_id"], name: "index_job_processes_on_job_id"
     t.index ["job_process_type_id"], name: "index_job_processes_on_job_process_type_id"
+    t.index ["user_id"], name: "index_job_processes_on_user_id"
   end
 
   create_table "jobs", force: :cascade do |t|
@@ -221,6 +224,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_19_190905) do
   add_foreign_key "job_processes", "equipments"
   add_foreign_key "job_processes", "job_process_types"
   add_foreign_key "job_processes", "jobs"
+  add_foreign_key "job_processes", "users"
   add_foreign_key "jobs", "customers"
   add_foreign_key "role_permissions", "permissions"
   add_foreign_key "role_permissions", "roles"

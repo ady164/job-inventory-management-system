@@ -17,6 +17,7 @@ class JobProcessesController < ApplicationController
     @job_process_types = JobProcessType.where.not(name: "INCOMING")
     @reference = JobMeasurementReference.find_by(job_id: @job.id)
     @equipment = Equipment.where(equipment_type: "Machine")
+    @user = User.order(name: :asc)
     @jobstart = JobProcessLog.where.not(job_process_id: 1).order(start_time: :asc).first
   end
 
@@ -56,11 +57,9 @@ class JobProcessesController < ApplicationController
     equipment_id = params[:equipment_id]
     start_time = params[:start_time]
     end_time = params[:end_time]
-    # diameter_reference = params[diameter_reference]
-    # length_reference = params[length_reference]
-    # measurements = params[measurements]
     measurement_data = params[:measurement_data]
-    user_id = 1
+    order_index = params[:order_index]
+    user_id = params[:user_id]
     reference_keys = %w[point minimum maximum]
 
     diameter_reference = []
@@ -97,6 +96,7 @@ class JobProcessesController < ApplicationController
       equipment_id: equipment_id,
       start_time: start_time,
       end_time: end_time,
+      user_id: user_id,
       measurements: measurements,
       status: "Completed"
     )
@@ -113,6 +113,7 @@ class JobProcessesController < ApplicationController
         user_id: user_id,
         start_time: start_time,
         end_time: end_time,
+        order_index: order_index,
         measurement_data: measurement_data,
         status: "Completed"
       )

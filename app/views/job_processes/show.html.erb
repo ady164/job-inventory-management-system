@@ -322,6 +322,31 @@
       .job-process-container{
         width:100%;
       }
+      .jo-header-invert{
+        background:#CCC;
+      }
+      .jo-process-footer{
+        display:flex;
+        justify-content:space-between;
+        align-items:center;
+      }
+      .machine-user-select-container{
+        display:inline-block;
+        font-size:18px;
+      }
+      .machine-user-select-container select{
+        padding: 5px 12px;
+        font-size: 16px;
+      }
+      .submit-process-button{
+        padding: 6px 15px;
+        font-size: 20px;
+        color: black;
+        font-weight: bold;
+        background: #00ff00;
+        border: 1px solid #5ee95e;
+      }
+      
     </style>
 
     <div class="jo-container">
@@ -452,26 +477,23 @@
           </table>
         </div>
       </div>
-      <!--
-      <div id="jo-image-modal" class="jo-modal" onclick="closeJoModal()">
-        <span class="close" onclick="closeJoModal()">&times;</span>
-        <img class="jo-modal-content" id="jo-modal-image" />
-      </div>-->
 
       <div id="job_processes_list" class="job-process-container">
         <% @job_processes.each_with_index do |process, i| %>
           <%= render partial: 'job_processes/process_form', locals: { process: process, i: process.order_index, reference: @reference } %>
         <% end %>
       </div>
-      
-      <select id="job_process_type_select">
-        <%= options_from_collection_for_select(@job_process_types, :id, :name) %>
-      </select>
-      <input type="hidden" id="job_id" value="<%= @job.id %>">
-      <button id="create_process_btn">Add Job Process</button>
+      <div class="create-process-container">
+        <select id="job_process_type_select">
+          <%= options_from_collection_for_select(@job_process_types, :id, :name) %>
+        </select>
+        <input type="hidden" id="job_id" value="<%= @job.id %>">
+        <button class="add-measurement-button" id="create_process_btn">Add Job Process</button>
+      <div>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {
+
   document.getElementById("create_process_btn").addEventListener("click", (e) => {
     e.preventDefault();
 
@@ -517,6 +539,19 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 });
+
+  function openJoModal(imageSrc) {
+    const modal = document.getElementById("jo-image-modal");
+    const modalImage = document.getElementById("jo-modal-image");
+
+    modalImage.src = imageSrc;
+    modal.classList.add("show");
+  }
+
+  function closeJoModal() {
+    const modal = document.getElementById("jo-image-modal");
+    modal.classList.remove("show");
+  }
 </script>
 
 
@@ -524,6 +559,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 <script>
+
 function validateInput(input) {
   const value = parseFloat(input.value);
   const min = parseFloat(input.dataset.min);
@@ -686,4 +722,5 @@ function collectMeasurements(type, tbodyId) {
   });
   return result;
 }
+
 </script>
