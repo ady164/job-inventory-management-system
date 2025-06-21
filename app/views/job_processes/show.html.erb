@@ -31,7 +31,7 @@
         display: flex;
         align-items: center;
         gap: 10px;
-        flex: 1 1 100%;
+        flex: 1 100%;
         margin: 5px 0;
         flex-wrap: wrap;
         justify-content: space-between;
@@ -104,7 +104,7 @@
         background-color: #8a8a8b;
       }
 
-      table {
+      .name-material-table {
         width: 100%;
         border-collapse: collapse;
         margin-top: 10px;
@@ -156,141 +156,172 @@
         border-radius: 15px;
         border: 1px solid black;
         padding: 15px;
+        margin-bottom:20px;
       }
 
-
-        .gallery-container {
+      .gallery-container {
         max-width: 600px;
+        padding: 0 10px;
         margin: 0 auto;
-        }
-        .main-image  {
-            height:300px;
-        }
-        .main-image img {
+      }
+      .main-image  {
+          height:300px;
+      }
+      .main-image img {
         width: calc(100% - 4px);
         height:auto;
         max-height: 300px;
         object-fit: contain;
         margin-bottom: 10px;
-        }
+      }
 
-        .thumbnail-row {
+      .thumbnail-row {
         display: flex;
         gap: 8px;
         overflow-x: auto;
-        }
+      }
 
-        .thumbnail-row img.thumbnail {
+      .thumbnail-row img.thumbnail {
         width: 80px;
         height: 60px;
         object-fit: cover;
         cursor: pointer;
         border: 2px solid transparent;
         transition: border-color 0.3s;
-        }
+      }
 
-        .thumbnail-row img.thumbnail:hover {
+      .thumbnail-row img.thumbnail:hover {
         border-color: #007bff;
-        }
+      }
 
-        .jo-modal {
-            display: none;
-            position: fixed;
-            z-index: 9999;
-            padding-top: 60px;
-            left: 0;
-            top: 0;
-            width: 100vw;
-            height: 100vh;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.9);
-        }
-        .jo-modal-content {
-            position:fixed;
-            margin: auto;
-            display: block;
-            max-width: 90vw;
-            max-height: 90vh;
-            left: 50%;
-            top: 50%;
-            transform: translate(-50%, -50%);
-        }
-        .close {
-            position: fixed;
-            top: 20px;
-            right: 35px;
-            color: white;
-            font-size: 40px;
-            font-weight: bold;
-            cursor: pointer;
-            user-select: none;
-            z-index: 10000;
-        }
-        .close:hover {
-            color: #bbb;
-        }
+      .jo-modal {
+          display: none;
+          position: fixed;
+          z-index: 9999;
+          padding-top: 60px;
+          left: 0;
+          top: 0;
+          width: 100vw;
+          height: 100vh;
+          overflow: auto;
+          background-color: rgba(0,0,0,0.9);
+      }
+      .jo-modal-content {
+          position:fixed;
+          margin: auto;
+          display: block;
+          max-width: 90vw;
+          max-height: 90vh;
+          left: 50%;
+          top: 50%;
+          transform: translate(-50%, -50%);
+      }
+      .close {
+          position: fixed;
+          top: 20px;
+          right: 35px;
+          color: white;
+          font-size: 40px;
+          font-weight: bold;
+          cursor: pointer;
+          user-select: none;
+          z-index: 10000;
+      }
+      .close:hover {
+          color: #bbb;
+      }
+      .process-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-bottom: 15px;
+        font-size: 16px;
+      }
+      .process-header {
+        display:flex;
+        justify-content: space-between;
+        align-items: top;
+        padding-bottom:10px;
+      }
 
-        .process-header {
-          display:flex;
-          justify-content: space-between;
-          align-items: top;
-          padding-bottom:10px;
-        }
+      .process-title{
+        flex:1;
+        font-size: 30px;
+        font-weight:bold;
+      }
+      .process-time-flex{
+        flex:1;
+        text-align:right;
+      }
+      
+      .process-time-input{
+        display: inline-block;
+        font-size: 16px;
+        padding:5px;
+      }
 
-        .process-title{
-          font-size: 30px;
-          font-weight:bold;
-        }
-        .process-time-flex{
-          text-align:right;
-        }
-        
-        .process-time-input{
-          display: inline-block;
-          font-size: 16px;
-          padding:5px;
-        }
+      .process-time-input input{
+        font-size: 16px;
+      }
+      .process-measurements{
+        padding-top:10px;
+        padding-bottom:10px;
+      }
+      .process-measurement-title{
+        font-size:18px;
+        font-weight:bold;
+      }
+      .min-input{
+        font-size:16px;
+        width: 40%;
+        border:1px solid #EEE;
+        text-align:center;
+      }
+      .max-input{
+        font-size:16px;
+        width: 40%;
+        border:1px solid #EEE;
+        text-align:center;
+      }
+      .measurement-input{
+        font-size:16px;
+        width: calc(100% - 8px);
+        border:none;  
+        text-align:center;
+      }
+      .remarks-input{
+        font-size:16px;
+        width: calc(100% - 8px);
+        border:none;  
+        text-align:left;
+      }
 
-        .process-time-input input{
-          font-size: 16px;
-        }
-        .process-measurements{
-          padding-top:10px;
-          padding-bottom:10px;
-        }
-        .process-measurement-title{
-          font-size:18px;
-          font-weight:bold;
-        }
-        .min-input{
-          font-size:16px;
-          width: 40%;
-          border:1px solid #EEE;
-          text-align:center;
-        }
-        .max-input{
-          font-size:16px;
-          width: 40%;
-          border:1px solid #EEE;
-          text-align:center;
-        }
-        .measurement-input{
-          font-size:16px;
-          width: calc(100% - 8px);
-          border:none;  
-          text-align:center;
-        }
-        .remarks-input{
-          font-size:16px;
-          width: calc(100% - 8px);
-          border:none;  
-          text-align:left;
-        }
-
-        .out-of-spec {
-          border: 2px solid red;
-          background-color: #ffe5e5;
-        }
+      .out-of-spec {
+        border: 2px solid red;
+        background-color: #ffe5e5;
+      }
+      .remove-td{
+        width:30px;
+      }
+      .process-remove-btn{
+        font-size: 20px;
+        width: 30px;
+        height: 30px;
+        text-align: center;
+        color: white;
+        background: red;
+        border: 1px solid #cccccc;
+      }
+      .add-measurement-row{
+        text-align:right;
+        margin-bottom:15px;
+      }
+      .add-measurement-button{
+        padding: 5px 12px;
+        font-size: 16px;
+      }
+      .job-process-container{
+        width:100%;
+      }
     </style>
 
     <div class="jo-container">
@@ -316,17 +347,17 @@
           <label>Part Model:</label>
           <div class="input-box"><%= @job.part_model %></div>
           <label>Start Date:</label>
-          <input type="text" value="" />
+          <input type="text" value="<%= @jobstart.start_time.strftime('%-d/%-m/%Y') if @jobstart.start_time.present? %>" />
           <label>Required Date:</label>
           <input type="text" value="<%= @job.required_date.strftime('%-d/%-m/%Y') if @job.required_date.present? %>" />
         </div>
       </div>
 
-        <% job_ref = @job.job_reference_number %>
-        <% incoming_dir = Rails.root.join("public", "jobs", job_ref, "incoming") %>
-        <% drawing_dir = Rails.root.join("public", "jobs", job_ref, "drawings") %>
+      <% job_ref = @job.job_reference_number %>
+      <% incoming_dir = Rails.root.join("public", "jobs", job_ref, "incoming") %>
+      <% drawing_dir = Rails.root.join("public", "jobs", job_ref, "drawings") %>
 
-        <%= form_with url: upload_job_photos_path(@job), method: :post, multipart: true, local: true do %>
+      <%= form_with url: upload_job_photos_path(@job), method: :post, multipart: true, local: true do %>
       <div class="row">
         <div class="field">
             <div class="photo-box">
@@ -391,16 +422,16 @@
             </div>
         </div>
       </div>
-        <% end %>
+      <% end %>
 
       <div id="jo-image-modal" class="jo-modal" onclick="closeJoModal()">
-      <span class="close" onclick="closeJoModal()">&times;</span>
-      <img class="jo-modal-content" id="jo-modal-image" />
+        <span class="close" onclick="closeJoModal()">&times;</span>
+        <img class="jo-modal-content" id="jo-modal-image" />
       </div>
 
       <div class="row">
         <div class="field">
-          <table>
+          <table class="name-material-table">
             <tr>
               <td><b>Part Name:</b>
               <% if @job.part_name.present? %>
@@ -421,14 +452,16 @@
           </table>
         </div>
       </div>
-
+      <!--
       <div id="jo-image-modal" class="jo-modal" onclick="closeJoModal()">
-      <span class="close" onclick="closeJoModal()">&times;</span>
-      <img class="jo-modal-content" id="jo-modal-image" />
-      </div>
+        <span class="close" onclick="closeJoModal()">&times;</span>
+        <img class="jo-modal-content" id="jo-modal-image" />
+      </div>-->
 
-      <div id="job_processes_list">
-        <!-- Existing job processes here -->
+      <div id="job_processes_list" class="job-process-container">
+        <% @job_processes.each_with_index do |process, i| %>
+          <%= render partial: 'job_processes/process_form', locals: { process: process, i: process.order_index, reference: @reference } %>
+        <% end %>
       </div>
       
       <select id="job_process_type_select">
@@ -436,35 +469,221 @@
       </select>
       <input type="hidden" id="job_id" value="<%= @job.id %>">
       <button id="create_process_btn">Add Job Process</button>
-      <div id="job_processes_list"></div>
 
 <script>
-  // Manual javascript based Ajax submission for creating Job Process
-  document.addEventListener("DOMContentLoaded", () => {
-    document.getElementById("create_process_btn").addEventListener("click", (e) => {
-      e.preventDefault();
+document.addEventListener("DOMContentLoaded", () => {
+  document.getElementById("create_process_btn").addEventListener("click", (e) => {
+    e.preventDefault();
 
-      const jobId = document.getElementById("job_id").value;
-      const jobProcessTypeId = document.getElementById("job_process_type_select").value;
+    const jobId = document.getElementById("job_id").value;
+    const jobProcessTypeId = document.getElementById("job_process_type_select").value;
 
-      fetch("/job_processes/create_process.json", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-        },
-        body: JSON.stringify({
-          job_id: jobId,
-          job_process_type_id: jobProcessTypeId
-        })
+    fetch("/job_processes/create_process.json", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify({
+        job_id: jobId,
+        job_process_type_id: jobProcessTypeId
       })
-      .then(res => res.json())
-      .then(data => {
-        console.log(`Added Job Process Type ID ${data.job_process_type_id} with order_index ${data.order_index}`);
-      })
-      .catch(error => {
-        console.error("Error:", error);
-      });
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        const container = document.getElementById("job_processes_list");
+        container.insertAdjacentHTML("beforeend", data.html);
+
+        // Parse and inject dynamic row content
+        const index = data.order_index;
+
+        const diameterRef = JSON.parse(data.diameter_reference || "[]");
+        const lengthRef = JSON.parse(data.length_reference || "[]");
+        const measurementData = JSON.parse(data.measurement_data || "{}");
+        console.log(`diameter-body-${index}`)
+        requestAnimationFrame(() => {
+          loadMeasurements("diameter", diameterRef, `diameter-body-${index}`, measurementData?.diameter || []);
+          loadMeasurements("length", lengthRef, `length-body-${index}`, measurementData?.length || []);
+        });
+
+        console.log(`✅ Added Job Process Type ID ${data.job_process_type_id} with order_index ${data.order_index}`);
+      } else {
+        alert("⚠️ Failed to create process.");
+      }
+    })
+    .catch(error => {
+      console.error("❌ Error:", error);
     });
   });
+});
+</script>
+
+
+
+
+
+<script>
+function validateInput(input) {
+  const value = parseFloat(input.value);
+  const min = parseFloat(input.dataset.min);
+  const max = parseFloat(input.dataset.max);
+  if (isNaN(value) || input.classList.contains("min-input") || input.classList.contains("max-input")) {
+    input.classList.remove("out-of-spec");
+    input.title = "";
+    return;
+  }
+  if (value < min || value > max) {
+    input.classList.add("out-of-spec");
+    input.title = `Out of spec! (${min} - ${max})`;
+  } else {
+    input.classList.remove("out-of-spec");
+    input.title = "";
+  }
+}
+
+function incrementPoint(label) {
+  const prefix = label[0];
+  const num = parseInt(label.slice(1), 10) + 1;
+  return prefix + String(num).padStart(2, '0');
+}
+
+function createRow(type, ref, m = {}, orderIndex = 0) {
+  const tr = document.createElement('tr');
+  tr.innerHTML = `<td>${ref.point}</td>`;
+
+  const refTd = document.createElement('td');
+  const min = document.createElement('input');
+  const max = document.createElement('input');
+
+  min.addEventListener('keydown', e => e.key === 'Enter' && e.preventDefault());
+  max.addEventListener('keydown', e => e.key === 'Enter' && e.preventDefault());
+
+  min.type = max.type = "number";
+  min.step = max.step = "0.001";
+  min.className = "min-input";
+  max.className = "max-input";
+  min.value = ref.minimum || "";
+  max.value = ref.maximum || "";
+  refTd.appendChild(min);
+  refTd.appendChild(document.createTextNode(" ~ "));
+  refTd.appendChild(max);
+  tr.appendChild(refTd);
+
+  if (type === 'diameter') {
+    ['x', 'y'].forEach(axis => {
+      const td = document.createElement('td');
+      const input = document.createElement('input');
+      input.classList = "measurement-input";
+      input.type = 'number';
+      input.step = '0.001';
+      input.value = m[axis] || '';
+
+      function updateMinMax() {
+        input.dataset.min = parseFloat(min.value) || 0;
+        input.dataset.max = parseFloat(max.value) || 0;
+        validateInput(input);
+      }
+
+      updateMinMax();
+      input.addEventListener('input', () => validateInput(input));
+      min.addEventListener('input', updateMinMax);
+      max.addEventListener('input', updateMinMax);
+
+      td.appendChild(input);
+      tr.appendChild(td);
+    });
+  } else {
+    const td = document.createElement('td');
+    const input = document.createElement('input');
+    input.classList = "measurement-input";
+    input.type = 'number';
+    input.step = '0.001';
+    input.value = m.value || '';
+
+    function updateMinMax() {
+      input.dataset.min = parseFloat(min.value) || 0;
+      input.dataset.max = parseFloat(max.value) || 0;
+      validateInput(input);
+    }
+
+    updateMinMax();
+    input.addEventListener('input', () => validateInput(input));
+    min.addEventListener('input', updateMinMax);
+    max.addEventListener('input', updateMinMax);
+
+    td.appendChild(input);
+    tr.appendChild(td);
+  }
+
+  const remarks = document.createElement('td');
+  const remarksInput = document.createElement('input');
+  remarksInput.classList = "measurement-input";
+  remarksInput.type = 'text';
+  remarksInput.value = m.remarks || '';
+  remarks.appendChild(remarksInput);
+  tr.appendChild(remarks);
+
+  const removeTd = document.createElement('td');
+  removeTd.className = "remove-td";
+  const removeBtn = document.createElement('button');
+  removeBtn.type = 'button';
+  removeBtn.textContent = '✖';
+  removeBtn.className = "process-remove-btn";
+  removeBtn.onclick = () => tr.remove();
+  removeTd.appendChild(removeBtn);
+  tr.appendChild(removeTd);
+
+  return tr;
+}
+
+function rowHasData(row) {
+  return [...row.querySelectorAll('input')].some(inp => inp.value.trim() !== '');
+}
+
+function addManualRow(type, index) {
+  const tbodyId = `${type}-body-${index}`;
+  const tbody = document.getElementById(tbodyId);
+  const rows = tbody.querySelectorAll('tr');
+  const lastPoint = rows.length ? rows[rows.length - 1].children[0].textContent : (type === 'diameter' ? 'D00' : 'L00');
+  const newPoint = incrementPoint(lastPoint);
+  const ref = { point: newPoint, minimum: "", maximum: "" };
+
+  const orderIndex = parseInt(document.getElementById(`form-${index}`)?.dataset.orderIndex || "0");
+  const row = createRow(type, ref, {}, orderIndex);
+  tbody.appendChild(row);
+}
+
+function loadMeasurements(type, refs, tbodyId, dataList = [], orderIndex = 0) {
+  console.log(tbodyId)
+  const tbody = document.getElementById(tbodyId);
+  tbody.innerHTML = '';
+  refs.forEach((ref, idx) => {
+    const row = createRow(type, ref, dataList[idx] || {}, orderIndex);
+    tbody.appendChild(row);
+  });
+}
+
+function collectMeasurements(type, tbodyId) {
+  const rows = document.getElementById(tbodyId).querySelectorAll('tr');
+  const result = [];
+  rows.forEach(row => {
+    // if (!rowHasData(row)) return;
+    const cells = row.children;
+    const point = cells[0]?.textContent?.trim();
+    const min = cells[1].querySelector('.min-input')?.value || '';
+    const max = cells[1].querySelector('.max-input')?.value || '';
+    const data = { point, minimum: min, maximum: max };
+    if (type === 'diameter') {
+      data.x = cells[2]?.querySelector('input')?.value ?? '';
+      data.y = cells[3]?.querySelector('input')?.value ?? '';
+      data.remarks = cells[4]?.querySelector('input')?.value ?? '';
+    } else {
+      data.value = cells[2]?.querySelector('input')?.value ?? '';
+      data.remarks = cells[3]?.querySelector('input')?.value ?? '';
+    }
+    result.push(data);
+  });
+  return result;
+}
 </script>

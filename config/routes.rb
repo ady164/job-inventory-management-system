@@ -72,6 +72,7 @@ Rails.application.routes.draw do
     end
     collection do
       post :create_process
+      patch :update_process
     end
   end
   get 'job_processes/:job_id', to: 'job_processes#show', as: 'show_job_processes'

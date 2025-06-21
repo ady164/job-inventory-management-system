@@ -1,0 +1,135 @@
+<% reference ||= {
+  diameter: [{ point: "D01", minimum: "", maximum: "" }],
+  length: [{ point: "L01", minimum: "", maximum: "" }]
+} %>
+
+<div class="process-box" id="process-container-<%= i %>">
+  <form id="form-<%= i %>" data-index="<%= i %>" data-process-id="<%= process.id %>" class="job-process-form">
+    <div class="process-header">
+      <div class="process-title"><%= process.job_process_type.name %></div>
+      <div class="process-time-flex">
+        <div class="process-time-input">
+          Start Time:
+          <input type="datetime-local" name="start_time" value="<%= process.start_time&.strftime('%Y-%m-%dT%H:%M') %>">
+        </div>
+        <div class="process-time-input">
+          End Time:
+          <input type="datetime-local" name="end_time" value="<%= process.end_time&.strftime('%Y-%m-%dT%H:%M') %>">
+        </div>
+      </div>
+    </div>
+
+    <div class="process-measurements">
+      <div class="table-box">
+        <table class="process-table" id="diameter-table-<%= i %>">
+          <thead>
+            <tr><th colspan="6">Diameter Measurement (mm)</th></tr>
+            <tr><td>Point</td><td>Reference</td><td>X-X</td><td>Y-Y</td><td>Remarks</td><td></td></tr>
+          </thead>
+          <tbody id="diameter-body-<%= i %>"></tbody>
+        </table>
+        <% if process.order_index == 1 %>
+          <div class="add-measurement-row">
+            <button class="add-measurement-button" type="button" onclick="addManualRow('diameter', <%= i %>)">+ Add Diameter</button>
+          </div>
+        <% end %>
+      </div>
+      <div class="table-box">
+        <table class="process-table" id="length-table-<%= i %>">
+          <thead>
+            <tr><th colspan="5">Length Measurement (mm)</th></tr>
+            <tr><td>Point</td><td>Reference</td><td>Measurement</td><td>Remarks</td><td></td></tr>
+          </thead>
+          <tbody id="length-body-<%= i %>"></tbody>
+        </table>
+        <% if process.order_index == 1 %>
+          <div class="add-measurement-row">
+            <button class="add-measurement-button" type="button" onclick="addManualRow('length', <%= i %>)">+ Add Length</button>
+          </div>
+        <% end %>
+      </div>
+    </div>
+    <div>
+        <input type="hidden" name="measurement_data" id="measurement-data-<%= i %>">
+        <select id="job_process_machine_select">
+            <%= options_from_collection_for_select(@equipment, :id, :tag, process.equipment_id) %>
+        </select>
+        <button type="submit">Save</button>
+        <button type="button" onclick="logMeasurementData(<%= i %>)">Log Measurement</button>
+        <span id="status-<%= i %>" class="status-label"></span>
+    </div>
+  </form>
+</div>
+
+<script>
+  const diameterReference_<%= i %> = <%= reference[:diameter].to_json.html_safe %>;
+  const lengthReference_<%= i %> = <%= reference[:length].to_json.html_safe %>;
+  const measurementData_<%= i %> = <%= process.measurements.to_json.html_safe %>;
+  const order_index_<%= i %> = parseInt(<%= process.order_index %>, 10);
+
+  // Unique variable names per iteration
+  const rawDiameterData_<%= i %> = measurementData_<%= i %>?.diameter;
+  const diameterData_<%= i %> = Array.isArray(rawDiameterData_<%= i %>)
+    ? rawDiameterData_<%= i %>
+    : rawDiameterData_<%= i %> ? [rawDiameterData_<%= i %>] : [];
+
+  const rawLengthData_<%= i %> = measurementData_<%= i %>?.length;
+  const lengthData_<%= i %> = Array.isArray(rawLengthData_<%= i %>)
+    ? rawLengthData_<%= i %>
+    : rawLengthData_<%= i %> ? [rawLengthData_<%= i %>] : [];
+    // console.log(lengthData_<%= i %> )
+    //console.log(diameterData_<%= i %> )
+
+  document.addEventListener("DOMContentLoaded", () => {
+    loadMeasurements("diameter", diameterReference_<%= i %>, `diameter-body-<%= i %>`, diameterData_<%= i %>);
+    loadMeasurements("length", lengthReference_<%= i %>, `length-body-<%= i %>`, lengthData_<%= i %>);
+  });
+
+  document.getElementById("form-<%= i %>").addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const jobId = document.getElementById("job_id").value;
+    console.log(jobId);
+    const index = form.dataset.index;
+    const processId = form.dataset.processId;
+    console.log(processId)
+    const diameter = collectMeasurements("diameter", `diameter-body-${index}`);
+    const length = collectMeasurements("length", `length-body-${index}`);
+    const equipmentId = document.getElementById("job_process_machine_select").value;
+    console.log(equipmentId);
+    const measurements = {};
+    const measurementData = { diameter, length };
+    form.querySelector(`#measurement-data-${index}`).value = JSON.stringify(measurementData);
+
+    fetch("/job_processes/update_process.json", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            job_id: jobId,
+            job_process_id: processId,
+            start_time: form.querySelector('[name="start_time"]').value,
+            end_time: form.querySelector('[name="end_time"]').value,
+            equipment_id: equipmentId,
+            measurement_data: measurementData
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success){
+                console.log("Job process " + processId + " updated successfully");
+                if (processId == 1) {
+                    window.location.reload();  // Reload the page if processId == 1
+                }
+            } else{
+                alert("⚠️ Failed to update process.");
+            }
+        })
+        .catch(error => {
+            console.error("❌ Error:", error);
+        })
+    });
+
+</script>

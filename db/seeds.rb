@@ -664,11 +664,11 @@ JobProcessType.create!(
   sequence_index: 1
 )
 JobProcessType.create!(
-  name: "PRE-MACHINE",
+  name: "PRE-MACHINING",
   sequence_index: 2
 )
 JobProcessType.create!(
-  name: "SAND-BLAStING",
+  name: "SAND-BLASTING",
   sequence_index: 3
 )
 JobProcessType.create!(
@@ -676,7 +676,7 @@ JobProcessType.create!(
   sequence_index: 4
 )
 JobProcessType.create!(
-  name: "FINAL MAHCINE",
+  name: "FINAL MACHINING",
   sequence_index: 5
 )
 
