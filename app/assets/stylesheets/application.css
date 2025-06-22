@@ -362,6 +362,7 @@
     width: 50%;
     text-align: center;
     margin: 5px auto;
+    min-width:34px;
   }
 
   .btn-edit:hover {

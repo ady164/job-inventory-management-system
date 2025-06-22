@@ -25,7 +25,7 @@
   <thead>
     <tr>
       <% columns.each_with_index do |col, idx| %>
-        <th <% if col[:sortable] %> onclick="sortTable('<%= id_prefix %>', <%= idx %>)" <% end %>>
+        <th class="<%= col[:class] %>" <% if col[:sortable] %> onclick="sortTable('<%= id_prefix %>', <%= idx %>)" <% end %>>
           <%= col[:label] %> <% if col[:sortable] %><span class="sort-indicator"></span><% end %>
         </th>
       <% end %>
@@ -33,20 +33,28 @@
     </tr>
   </thead>
   <tbody>
-    <% rows.each do |row| %>
-      <tr data-visible="true">
-        <% columns.each do |col| %>
-          <td><%= col[:value].call(row) %></td>
-        <% end %>
-        <% if actions.present? %>
-          <td>
-            <% actions.each do |action| %>
-              <% if action[:if].nil? || action[:if].call(row) %>
-                <%= link_to action[:label], action[:path].call(row), **(action[:options] || {}) %>
+    <% if rows.any? %>
+      <% rows.each do |row| %>
+        <tr data-visible="true">
+          <% columns.each do |col| %>
+            <td class="<%= col[:class] %>"><%= col[:value].call(row) %></td>
+          <% end %>
+          <% if actions.present? %>
+            <td>
+              <% actions.each do |action| %>
+                <% if action[:if].nil? || action[:if].call(row) %>
+                  <%= link_to action[:label], action[:path].call(row), **(action[:options] || {}) %>
+                <% end %>
               <% end %>
-            <% end %>
-          </td>
-        <% end %>
+            </td>
+          <% end %>
+        </tr>
+      <% end %>
+    <% else %>
+      <tr>
+        <td colspan="<%= columns.size + (actions.present? ? 1 : 0) %>" class="empty-message">
+          <%= empty_msg %>
+        </td>
       </tr>
     <% end %>
   </tbody>

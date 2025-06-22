@@ -16,13 +16,14 @@
       { label: 'ID', sortable: true, value: ->(job) { job.id } },
       { label: 'Job Reference Number', sortable: true, value: ->(job) { job.job_reference_number } },
       { label: 'Customer', sortable: true, value: ->(job) { job.customer.name } },
-      { label: 'Vessel Name', sortable: true, value: ->(job) { job.vessle_name || '-' } },
+      { label: 'Vessel Name', sortable: true, value: ->(job) { job.vessle_name || '-' }, class:"hide-under-1000" },
       { label: 'Part Type', sortable: true, value: ->(job) { job.part_type || '-' } },
-      { label: 'Part Model', sortable: true, value: ->(job) { job.part_model || '-' } },
+      { label: 'Part Model', sortable: true, value: ->(job) { job.part_model || '-' }, class:"hide-under-1000" },
       { label: 'Required Date', sortable: true, value: ->(job) { job.required_date.strftime('%-d/%-m/%Y') || '-' } },
       { label: 'Current Process', value: ->(job) { job.current_process&.job_process_type&.name || 'N/A' } }
     ],
-    actions: job_actions
+    actions: job_actions,
+      empty_msg: "No confirmed job orders available."
   } %>
 </div>
 
@@ -39,16 +40,17 @@
 
     <%= render 'listing', {
       dom_id_prefix: 'inventories',
-      title: 'Inventory Status',
+      title: 'Inventory Restock Status',
       rows: @inventories,
       columns: [
         { label: 'ID', sortable: true, value: ->(inventory) { inventory.id } },
         { label: 'Product Number', sortable: true, value: ->(inventory) { inventory.product_number } },
         { label: 'Category', sortable: true, value: ->(inventory) { inventory.category } },
         { label: 'Quantity', sortable: true, value: ->(inventory) { inventory.quantity } },
-        { label: 'Status', sortable: true, value: ->(inventory) { inventory.quantity < 1 ? "Out of stock." : "Restock required." } }
+        { label: 'Status', sortable: true, value: ->(inventory) { inventory.quantity < 1 ? "Out of Stock." : "Low Stock." } }
       ],
-      actions: inventory_actions
+      actions: inventory_actions,
+      empty_msg: "No inventory restock required."
     } %>
   </div>
   <div class="dashboard-flex-display-box">
@@ -72,14 +74,15 @@
         { label: 'Days to duedate', sortable: true, value: ->(equipment) {
               diff = equipment.days_since_last - equipment.calibration_frequency_days
               if diff > 0
-              "Maintenance overdue: #{diff} Days"
+              "Overdue: #{diff} Days"
               else
               "Due in: #{diff.abs} Days"
               end
               }
           }
       ],
-      actions: equipment_actions
+      actions: equipment_actions,
+      empty_msg: "No equipments due for maintainence."
     } %>
   </div>
 </div>
