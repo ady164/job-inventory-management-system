@@ -135,7 +135,7 @@
     }
   }
 
-  document.addEventListener("DOMContentLoaded", () => {
+  document.addEventListener("turbo:load", () => {
     // Mark all rows visible on first load
     const rows = document.getElementById("sortTable").tBodies[0].rows;
     for (let row of rows) row.dataset.visible = "true";

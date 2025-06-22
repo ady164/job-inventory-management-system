@@ -8,9 +8,9 @@
   } %>
 <% end %>
 
-<%= render 'shared/listing', {
-  title: 'Job Orders',
-  rows: @jobs,
+<%= render 'listing', {
+  title: 'Confirmed Job Orders',
+  rows: @confirmed_jobs,
   columns: [
     { label: 'ID', sortable: true, value: ->(job) { job.id } },
     { label: 'Job Reference Number', sortable: true, value: ->(job) { job.job_reference_number } },
@@ -23,3 +23,21 @@
   ],
   actions: actions
 } %>
+
+
+<%= render 'listing', {
+  title: 'Inspection Job Orders',
+  rows: @pending_jobs,
+  columns: [
+    { label: 'ID', sortable: true, value: ->(job) { job.id } },
+    { label: 'Job Reference Number', sortable: true, value: ->(job) { job.job_reference_number } },
+    { label: 'Customer', sortable: true, value: ->(job) { job.customer.name } },
+    { label: 'Vessel Name', sortable: true, value: ->(job) { job.vessle_name } },
+    { label: 'Part Type', sortable: true, value: ->(job) { job.part_type } },
+    { label: 'Part Model', sortable: true, value: ->(job) { job.part_model } },
+    { label: 'Required Date', sortable: true, value: ->(job) { job.required_date } },
+    { label: 'Status', sortable: true, value: ->(job) { job.status || 'N/A' } }
+  ],
+  actions: actions
+} %>
+

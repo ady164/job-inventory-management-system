@@ -7,7 +7,8 @@ class JobProcessesController < ApplicationController
   # before_action -> { require_permission("create_jobprocess") }, only: [:new, :create]
 
   def index
-    @jobs = Job.where(status: 'Confirmed').order(created_at: :desc)
+    @confirmed_jobs = Job.where(status: 'Confirmed').order(created_at: :desc)
+    @pending_jobs = Job.where(status: 'Pending').order(created_at: :desc)
   end
 
     # @job = Job.find(params[:id])
@@ -17,7 +18,7 @@ class JobProcessesController < ApplicationController
     @job_process_types = JobProcessType.where.not(name: "INCOMING")
     @reference = JobMeasurementReference.find_by(job_id: @job.id)
     @equipment = Equipment.where(equipment_type: "Machine")
-    @user = User.order(name: :asc)
+    @users = User.order(name: :asc)
     @jobstart = JobProcessLog.where.not(job_process_id: 1).order(start_time: :asc).first
   end
 

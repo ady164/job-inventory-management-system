@@ -346,6 +346,22 @@
         background: #00ff00;
         border: 1px solid #5ee95e;
       }
+      .create-process-container{
+        display:block;
+        width: calc(100% - 30px);
+        font-size:18px;
+        text-align:center;
+        border-radius: 15px;
+        border: 1px solid black;
+        padding: 15px;
+        margin-bottom: 20px;
+        margin:0 auto;
+      }
+      .create-process-container select{
+        padding: 5px 12px;
+        font-size: 16px;
+        margin-right:20px;
+      }
       
     </style>
 
@@ -372,9 +388,10 @@
           <label>Part Model:</label>
           <div class="input-box"><%= @job.part_model %></div>
           <label>Start Date:</label>
-          <input type="text" value="<%= @jobstart.start_time.strftime('%-d/%-m/%Y') if @jobstart.start_time.present? %>" />
+          <input type="text" value="<%= @jobstart.present? ? @jobstart.start_time.strftime('%-d/%-m/%Y') : ''  %>" />
           <label>Required Date:</label>
-          <input type="text" value="<%= @job.required_date.strftime('%-d/%-m/%Y') if @job.required_date.present? %>" />
+          <input type="text" value="<%= @job.required_date.present? ? @job.required_date.strftime('%-d/%-m/%Y') : '' %>" />
+
         </div>
       </div>
 
@@ -483,13 +500,15 @@
           <%= render partial: 'job_processes/process_form', locals: { process: process, i: process.order_index, reference: @reference } %>
         <% end %>
       </div>
+      <% if @job.status == "Confirmed" %>
       <div class="create-process-container">
         <select id="job_process_type_select">
           <%= options_from_collection_for_select(@job_process_types, :id, :name) %>
         </select>
         <input type="hidden" id="job_id" value="<%= @job.id %>">
-        <button class="add-measurement-button" id="create_process_btn">Add Job Process</button>
+        <button class="add-measurement-button" id="create_process_btn">+ New Job Process</button>
       <div>
+      <% end %>
 
 <script>
 document.addEventListener("DOMContentLoaded", () => {

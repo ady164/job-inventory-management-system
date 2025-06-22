@@ -85,8 +85,8 @@ class JobsController < ApplicationController
 
     # Create the JobProcess, using the association for job_id assignment
     @job_process = JobProcess.new(
-      job_process_type: incoming_process_type, # Assign the object, Rails handles the ID
-      job: job,                                 # Assign the job object, Rails handles job_id
+      job_process_type: incoming_process_type, # Assign Job Process type object
+      job: job,                                 # Assign Job object
       order_index: 1,
       status: "Not Completed"
     )

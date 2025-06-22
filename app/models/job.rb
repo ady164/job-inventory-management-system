@@ -8,4 +8,10 @@ class Job < ApplicationRecord
   validates :customer_id, presence: true
   validates :job_reference_number, presence: true, uniqueness: true
   validates :status, presence: true
+  
+  def current_process
+    processes = job_processes.sort_by(&:order_index)
+    processes.find { |p| p.status == 'Not Completed' } ||
+      processes.reverse.find { |p| p.status == 'Completed' }
+  end
 end

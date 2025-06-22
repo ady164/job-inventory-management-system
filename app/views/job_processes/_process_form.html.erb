@@ -64,7 +64,7 @@
             Completed By: 
             <select id="job_process_user_select">
                 <option value="">Select a user</option>
-                <%= options_from_collection_for_select(@user, :id, :name, process.user_id) %>
+                <%= options_from_collection_for_select(@users || [], :id, :name, process.user_id) %>
             </select>
         </div>
         <button type="submit" class="submit-process-button">Save</button>
@@ -161,9 +161,9 @@
         .then(data => {
             if (data.success){
                 console.log("Job process " + processId + " updated successfully");
+                alert("Process updated and saved.");
                 if (processId == 1) {
                     window.location.reload();  // Reload the page if processId == 1
-                    alert("Process updated and saved.");
                 }
             } else{
                 alert("⚠️ Failed to update process.");

@@ -681,7 +681,7 @@ JobProcessType.create!(
 )
 
 # ================= CREATE JOBS ================= 
-Job.create!(
+job1 = Job.create!(
   customer_id: customer1.id,
   job_reference_number: "JIMS-PST-250614-001",
   vessle_name: nil,
@@ -695,7 +695,7 @@ Job.create!(
   status: "Pending",
   created_by: user1.id
 )
-Job.create!(
+job2 = Job.create!(
   customer_id: customer2.id,
   job_reference_number: "JIMS-PST-250614-002",
   vessle_name: "Melati 6",
@@ -709,7 +709,7 @@ Job.create!(
   status: "Confirmed",
   created_by: user1.id
 )
-Job.create!(
+job3 = Job.create!(
   customer_id: customer3.id,
   job_reference_number: "JIMS-GNP-250614-001",
   vessle_name: nil,
@@ -723,7 +723,7 @@ Job.create!(
   status: "Confirmed",
   created_by: user2.id
 )
-Job.create!(
+job4 = Job.create!(
   customer_id: customer3.id,
   job_reference_number: "JIMS-GNP-250614-002",
   vessle_name: nil,
@@ -737,7 +737,7 @@ Job.create!(
   status: "Confirmed",
   created_by: user2.id
 )
-Job.create!(
+job5 = Job.create!(
   customer_id: customer4.id,
   job_reference_number: "JIMS-TSS-250614-001",
   vessle_name: nil,
@@ -752,3 +752,35 @@ Job.create!(
   created_by: user2.id
 )
 
+# ================= CREATE JOB PROCESS ================= 
+
+JobProcess.create!(
+  job_process_type_id: 1,
+  job_id: job1.id,
+  order_index: 1,
+  status: "Not Completed"
+)
+JobProcess.create!(
+  job_process_type_id: 1,
+  job_id: job2.id,
+  order_index: 1,
+  status: "Not Completed"
+)
+JobProcess.create!(
+  job_process_type_id: 1,
+  job_id: job3.id,
+  order_index: 1,
+  status: "Not Completed"
+)
+JobProcess.create!(
+  job_process_type_id: 1,
+  job_id: job4.id,
+  order_index: 1,
+  status: "Not Completed"
+)
+JobProcess.create!(
+  job_process_type_id: 1,
+  job_id: job5.id,
+  order_index: 1,
+  status: "Not Completed"
+)

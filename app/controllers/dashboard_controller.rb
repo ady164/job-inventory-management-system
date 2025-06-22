@@ -4,6 +4,12 @@ class DashboardController < ApplicationController
   before_action -> { require_permission("view_dashboard") }
 
   def index
-    # Show dashboard content
+    @confirmed_jobs = Job.includes(job_processes: :job_process_type).where(status: 'Confirmed').order(required_date: :asc)
+    @inventories = Inventory.where("quantity <= alert_quantity")
+    @inventories = Inventory.where("quantity <= alert_quantity")
+
+    @equipments = Equipment.all.select do |e|
+      (e.days_since_last - e.calibration_frequency_days) >= -7
+    end
   end
 end

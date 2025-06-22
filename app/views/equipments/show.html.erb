@@ -1,9 +1,168 @@
+<style>
+style>
+.item-log-main-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 30px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fafafa;
+}
+
+.item-log-header {
+  text-align:left;
+}
+
+.item-log-header h1,
+.item-log-main-content h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
+
+.item-log-hr {
+  margin: 40px 0 20px;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+.item-log-btn-back {
+  background: none;
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.item-log-btn {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.item-log-btn:hover {
+  background-color: #0056b3;
+}
+
+.item-log-btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 14px;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+.item-log-btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+
+.item-log-info-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.item-log-image-container {
+  flex: 0 0 auto;
+}
+
+.item-log-info-image {
+  width: 250px;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 4px;
+  background-color: #fff;
+}
+
+.item-log-info-table {
+  flex: 1;
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.item-log-info-table th,
+.item-log-info-table td {
+  padding: 12px 16px;
+ border: 1px solid #878787;
+  text-align: left;
+}
+
+.item-log-info-table th {
+  background-color: #f5f5f5;
+  width: 200px;
+  color: #555;
+}
+
+.item-log-filter-form {
+  margin-bottom: 20px;
+}
+
+.item-log-form-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.item-log-form-select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.item-log-logs-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+
+.item-log-logs-table th,
+.item-log-logs-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #878787;
+  text-align:center;
+}
+
+.item-log-logs-table th {
+  background-color: #f1f1f1;
+  color: #555;
+}
+
+</style>
 <div class="main-content">
-    <h1>User Details</h1>
+  <div class="item-log-header">
+    <div><%= link_to '← Back to list', equipments_path, class: 'item-log-btn-back' %></div>
+    <div style="display:flex; justify-content:space-between;align-items: baseline;">
+    <h1>Equipment Details</h1>
+    <div><%= link_to 'Edit', edit_equipment_path(@equipment), class: 'item-log-btn' %></div>
+    </div>
+  </div>
 
-    <p><strong>Name:</strong> <%= @user.name %></p>
-    <p><strong>Email:</strong> <%= @user.email %></p>
-    <p><strong>Role:</strong> <%= @user.role.name %></p>
+  <div class="item-log-info-wrapper">
+    <table class="item-log-info-table">
+      <tr><th>Name</th><td><%= @equipment.name %></td></tr>
+      <tr><th>Tag</th><td><%= @equipment.tag %></td></tr>
+      <tr><th>Brand</th><td><%= @equipment.brand %></td></tr>
+      <tr><th>Model</th><td><%= @equipment.model %></td></tr>
+      <tr><th>Serial Number</th><td><%= @equipment.serial_number %></td></tr>
+      <tr><th>Equipment Type</th><td><%= @equipment.equipment_type %></td></tr>
+      <tr><th>Purchase Date</th><td><%= @equipment.purchase_date&.strftime("%Y-%m-%d") %></td></tr>
+      <tr><th>Remarks</th><td><%= @equipment.remarks %></td></tr>
+      <tr><th>Last Calibration Date</th><td><%= @equipment.last_calibration_date&.strftime("%Y-%m-%d") %></td></tr>
+      <tr><th>Calibration Frequency (Days)</th><td><%= @equipment.calibration_frequency_days %></td></tr>
+    </table>
 
-    <%= link_to 'Back', admin_users_path, class: "btn btn-secondary" %>
+    <div class="item-log-image-container">
+    </div>
+  </div>
+
 </div>

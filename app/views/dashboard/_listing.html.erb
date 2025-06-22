@@ -1,0 +1,143 @@
+<% id_prefix = local_assigns[:dom_id_prefix] || 'listing' %>
+
+<h2><%= title %></h2>
+
+<% if defined?(new_path) && new_path.present? %>
+  <div class="header-add-new">
+    <%= link_to "Add New #{title.singularize}", new_path, class: 'btn-save' %>
+  </div>
+<% end %>
+
+<div class="listing-header">
+  <div>
+    <label for="<%= "#{id_prefix}-rowsPerPage" %>">Show:</label>
+    <select id="<%= "#{id_prefix}-rowsPerPage" %>" onchange="paginateTable('<%= id_prefix %>')">
+      <option value="5" selected>5</option>
+      <option value="10">10</option>
+      <option value="20">20</option>
+      <option value="50">50</option>
+    </select>
+  </div>
+  <input type="text" id="<%= "#{id_prefix}-tableSearch" %>" onkeyup="searchTable('<%= id_prefix %>')" placeholder="Search..." class="search-input">
+</div>
+
+<table class="listing-table" id="<%= "#{id_prefix}-sortTable" %>" data-sort-col="-1" data-sort-order="">
+  <thead>
+    <tr>
+      <% columns.each_with_index do |col, idx| %>
+        <th <% if col[:sortable] %> onclick="sortTable('<%= id_prefix %>', <%= idx %>)" <% end %>>
+          <%= col[:label] %> <% if col[:sortable] %><span class="sort-indicator"></span><% end %>
+        </th>
+      <% end %>
+      <% if actions.present? %><th></th><% end %>
+    </tr>
+  </thead>
+  <tbody>
+    <% rows.each do |row| %>
+      <tr data-visible="true">
+        <% columns.each do |col| %>
+          <td><%= col[:value].call(row) %></td>
+        <% end %>
+        <% if actions.present? %>
+          <td>
+            <% actions.each do |action| %>
+              <% if action[:if].nil? || action[:if].call(row) %>
+                <%= link_to action[:label], action[:path].call(row), **(action[:options] || {}) %>
+              <% end %>
+            <% end %>
+          </td>
+        <% end %>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<div id="<%= "#{id_prefix}-pagination" %>" class="pagination-controls" data-current-page="1"></div>
+
+<script>
+  function sortTable(idPrefix, n) {
+    const table = document.getElementById(`${idPrefix}-sortTable`);
+    const dir = table.dataset.sortCol == n && table.dataset.sortOrder === "asc" ? "desc" : "asc";
+    table.dataset.sortCol = n;
+    table.dataset.sortOrder = dir;
+
+    const rows = Array.from(table.tBodies[0].rows).filter(row => row.dataset.visible === "true");
+
+    rows.sort((a, b) => {
+      let x = a.cells[n].innerText.toLowerCase();
+      let y = b.cells[n].innerText.toLowerCase();
+
+      const isNumeric = !isNaN(parseFloat(x)) && isFinite(x);
+      if (isNumeric) {
+        x = parseFloat(x);
+        y = parseFloat(y);
+      }
+
+      return (x < y ? -1 : x > y ? 1 : 0) * (dir === "asc" ? 1 : -1);
+    });
+
+    rows.forEach(row => table.tBodies[0].appendChild(row));
+    document.getElementById(`${idPrefix}-pagination`).dataset.currentPage = 1;
+    paginateTable(idPrefix);
+  }
+
+  function searchTable(idPrefix) {
+    const input = document.getElementById(`${idPrefix}-tableSearch`).value.toLowerCase();
+    const rows = document.getElementById(`${idPrefix}-sortTable`).tBodies[0].rows;
+
+    for (let row of rows) {
+      const rowText = row.innerText.toLowerCase();
+      row.dataset.visible = rowText.includes(input) ? "true" : "false";
+    }
+
+    document.getElementById(`${idPrefix}-pagination`).dataset.currentPage = 1;
+    paginateTable(idPrefix);
+  }
+
+  function paginateTable(idPrefix) {
+    const table = document.getElementById(`${idPrefix}-sortTable`);
+    const rowsPerPage = parseInt(document.getElementById(`${idPrefix}-rowsPerPage`).value);
+    const allRows = Array.from(table.tBodies[0].rows);
+    const visibleRows = allRows.filter(row => row.dataset.visible !== "false");
+
+    const pagination = document.getElementById(`${idPrefix}-pagination`);
+    let currentPage = parseInt(pagination.dataset.currentPage || 1);
+    const totalPages = Math.ceil(visibleRows.length / rowsPerPage);
+
+    if (currentPage > totalPages) currentPage = 1;
+
+    const startIdx = (currentPage - 1) * rowsPerPage;
+    const endIdx = startIdx + rowsPerPage;
+
+    allRows.forEach(row => row.style.display = "none");
+    visibleRows.forEach((row, idx) => {
+      row.style.display = (idx >= startIdx && idx < endIdx) ? "" : "none";
+    });
+
+    pagination.innerHTML = "";
+    pagination.dataset.currentPage = currentPage;
+
+    if (totalPages > 1) {
+      for (let i = 1; i <= totalPages; i++) {
+        const btn = document.createElement("button");
+        btn.innerText = i;
+        btn.classList.toggle("active", i === currentPage);
+        btn.addEventListener("click", () => {
+          pagination.dataset.currentPage = i;
+          paginateTable(idPrefix);
+        });
+        pagination.appendChild(btn);
+      }
+    }
+  }
+
+  document.addEventListener("turbo:load", () => {
+    const tables = document.querySelectorAll(".listing-table");
+    tables.forEach(table => {
+      const prefix = table.id.replace(/-sortTable$/, '');
+      const rows = table.tBodies[0].rows;
+      for (let row of rows) row.dataset.visible = "true";
+      paginateTable(prefix);
+    });
+  });
+</script>
