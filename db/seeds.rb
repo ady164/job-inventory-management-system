@@ -657,6 +657,32 @@ Equipment.create!(
   last_calibration_date: Date.new(2024, 4, 18),
   calibration_frequency_days: 365
 )
+Equipment.create!(
+  name: "Auto Sandblasting Machine",
+  tag: "Sandblast #1 (A)",
+  brand: "Clemco",
+  model: "AutoBlast X500",
+  serial_number: "X500A762AUTO01",
+  equipment_type: "Machine",
+  purchase_date: Date.new(2023, 7, 10),
+  remarks: "Automated sandblasting system with programmable blasting cycles",
+  last_calibration_date: Date.new(2025, 5, 10),
+  calibration_frequency_days: 180
+)
+
+Equipment.create!(
+  name: "Sandblasting Machine",
+  tag: "Sandblast #2 (M)",
+  brand: "Graco",
+  model: "BlastPro BP500",
+  serial_number: "BP500SNJ1234"
+  equipment_type: "Machine",
+  purchase_date: Date.new(2022, 11, 5),
+  remarks: "Manual pressure-feed sandblasting machine for small to medium surfaces",
+  last_calibration_date: Date.new(2025, 2, 5),
+  calibration_frequency_days: 180
+)
+
 
 # ================= CREATE JOB_PROCESS_TYPE ================= 
 JobProcessType.create!(
