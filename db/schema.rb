@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[8.0].define(version: 2025_06_21_214149) do
+ActiveRecord::Schema[8.0].define(version: 2025_06_22_142732) do
   # These are extensions that must be enabled in order to support this database
   enable_extension "pg_catalog.plpgsql"
 
@@ -76,6 +76,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_214149) do
     t.datetime "updated_at", null: false
     t.string "brand"
     t.string "image_path"
+    t.decimal "unit_cost"
   end
 
   create_table "inventory_logs", force: :cascade do |t|
@@ -210,6 +211,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_06_21_214149) do
     t.bigint "role_id", null: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.decimal "man_hour_rate"
     t.index ["role_id"], name: "index_users_on_role_id"
   end
 

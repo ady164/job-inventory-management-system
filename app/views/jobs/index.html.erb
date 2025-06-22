@@ -1,5 +1,11 @@
 <% actions = [] %>
 
+  <% actions << {
+    label: 'View',
+    path: ->(job) { job_path(job) },
+    options: { class: 'btn-edit' }
+  } %>
+
 <% if current_user&.has_permission?('edit_job') %>
   <% actions << {
     label: 'Edit',

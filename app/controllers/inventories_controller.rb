@@ -70,7 +70,7 @@ class InventoriesController < ApplicationController
   end
 
   def inventory_params
-    params.require(:inventory).permit(:name, :product_number, :brand, :description, :category, :quantity, :alert_quantity, :status)
+    params.require(:inventory).permit(:name, :product_number, :brand, :description, :category, :quantity, :alert_quantity, :status, :unit_cost)
   end
 
   def save_uploaded_image(inventory, uploaded_file)

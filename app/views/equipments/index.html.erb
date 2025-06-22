@@ -1,5 +1,11 @@
 <% actions = [] %>
 
+  <% actions << {
+    label: 'View',
+    path: ->(equipment) { equipment_path(equipment) },
+    options: { class: 'btn-edit' }
+  } %>
+
 <% if current_user&.has_permission?('edit_equipment') %>
   <% actions << {
     label: 'Edit',

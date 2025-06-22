@@ -12,7 +12,24 @@ class JobsController < ApplicationController
   end
 
   def show
-    @job = Job.find(params[:id])
+    @job = Job.find(params[:id])  
+    @grouped_inventory = InventoryLog.where(job_id: params[:id],operation_type: "Dispense").group(:inventory_id).sum(:quantity)
+    @inventories = Inventory.where(id: @grouped_inventory.keys).index_by(&:id)
+    
+    @processes = JobProcess
+      .includes(:user)
+      .where(job_id: @job.id)
+      .where.not(start_time: nil, end_time: nil, user_id: nil)
+    @user_costs = {}
+    @processes.each do |process|
+      user = process.user
+      next unless user
+
+      hours = ((process.end_time - process.start_time) / 3600.0).round(2)
+
+      @user_costs[user] ||= { hours: 0.0, rate: user.man_hour_rate.to_f }
+      @user_costs[user][:hours] += hours
+    end
   end
 
   def new

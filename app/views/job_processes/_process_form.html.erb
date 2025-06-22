@@ -55,16 +55,16 @@
         <input type="hidden" name="order_index_data" id="order-index-data-<%= i %>" value="<%= process.order_index %>">
         <div class="machine-user-select-container">
             Machine Used: 
-            <select id="job_process_machine_select">
+            <select id="job_process_machine_select-<%= i %>">
                 <option value="">Not Required</option>
                 <%= options_from_collection_for_select(@equipment, :id, :tag, process.equipment_id) %>
             </select>
         </div>
         <div class="machine-user-select-container">
             Completed By: 
-            <select id="job_process_user_select">
+            <select id="job_process_user_select-<%= i %>">
                 <option value="">Select a user</option>
-                <%= options_from_collection_for_select(@users || [], :id, :name, process.user_id) %>
+                <%= options_from_collection_for_select(@users || [], :id, :name, process.user_id.to_i) %>
             </select>
         </div>
         <button type="submit" class="submit-process-button">Save</button>
@@ -110,8 +110,9 @@
     const orderIndex = form.querySelector('[name="order_index_data"]').value;
     const startTime = form.querySelector('[name="start_time"]').value;
     const endTime = form.querySelector('[name="end_time"]').value;
-    const equipmentId = document.getElementById("job_process_machine_select").value;
-    const userId = document.getElementById("job_process_user_select").value;
+    const equipmentId = document.getElementById(`job_process_machine_select-${index}`).value;
+    console.log("machine id: " + equipmentId);
+    const userId = document.getElementById(`job_process_user_select-${index}`).value;
     console.log("user id: " + userId);
     const diameter = collectMeasurements("diameter", `diameter-body-${index}`);
     const length = collectMeasurements("length", `length-body-${index}`);

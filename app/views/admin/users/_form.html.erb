@@ -54,6 +54,16 @@
         </td>
       </tr>
 
+      <tr>
+        <td><%= f.label :man_hour_rate %></td>
+        <td>
+          <%= f.number_field :man_hour_rate, step: 0.01 %>
+          <% if @user.errors[:man_hour_rate].any? %>
+            <div class="error"><%= @user.errors[:man_hour_rate].join(', ') %></div>
+          <% end %>
+        </td>
+      </tr>
+
       <%= f.hidden_field :password_hash, id: "password_hash" %>
       <%= f.hidden_field :pin_hash, id: "pin_hash" %>
 

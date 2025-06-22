@@ -64,6 +64,16 @@
       </tr>
 
       <tr>
+        <td><%= form.label :unit_cost %></td>
+        <td>
+          <%= form.number_field :unit_cost, step: 0.01  %>
+          <% if @inventory.errors[:unit_cost].any? %>
+            <div class="error-message"><%= @inventory.errors[:unit_cost].first %></div>
+          <% end %>
+        </td>
+      </tr>
+
+      <tr>
         <td><%= form.label :status %></td>
         <td>
           <%= form.select :status, ['Available', 'Out of Stock', 'Discontinued'], {}, class: "form-select" %>

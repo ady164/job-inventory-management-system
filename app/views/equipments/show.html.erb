@@ -1,6 +1,6 @@
 <style>
 style>
-.item-log-main-content {
+.equipment-show-main-content {
   max-width: 1000px;
   margin: 0 auto;
   padding: 30px;
@@ -8,44 +8,45 @@ style>
   background-color: #fafafa;
 }
 
-.item-log-header {
+.equipment-show-header {
   text-align:left;
 }
 
-.item-log-header h1,
-.item-log-main-content h2 {
+.equipment-show-header h1,
+.equipment-show-main-content h2 {
   color: #333;
   margin-bottom: 20px;
 }
 
-.item-log-hr {
+.equipment-show-hr {
   margin: 40px 0 20px;
   border: none;
   border-top: 1px solid #ddd;
 }
 
-.item-log-btn-back {
+.equipment-show-btn-back {
   background: none;
   color: #0066cc;
   text-decoration: none;
   font-weight: bold;
 }
 
-.item-log-btn {
+.equipment-show-btn {
   background-color: #007bff;
   border: none;
   color: white;
   padding: 8px 16px;
   margin-left: 10px;
+  text-decoration: none;
   border-radius: 4px;
   cursor: pointer;
 }
 
-.item-log-btn:hover {
+.equipment-show-btn:hover {
   background-color: #0056b3;
 }
 
-.item-log-btn-secondary {
+.equipment-show-btn-secondary {
   background-color: #6c757d;
   color: white;
   padding: 8px 14px;
@@ -54,23 +55,23 @@ style>
   margin-left: 10px;
 }
 
-.item-log-btn-secondary:hover {
+.equipment-show-btn-secondary:hover {
   background-color: #5a6268;
 }
 
 
-.item-log-info-wrapper {
+.equipment-show-info-wrapper {
   display: flex;
   gap: 20px;
   align-items: flex-start;
   margin-bottom: 30px;
 }
 
-.item-log-image-container {
+.equipment-show-image-container {
   flex: 0 0 auto;
 }
 
-.item-log-info-image {
+.equipment-show-info-image {
   width: 250px;
   height: auto;
   border: 1px solid #ddd;
@@ -79,7 +80,7 @@ style>
   background-color: #fff;
 }
 
-.item-log-info-table {
+.equipment-show-info-table {
   flex: 1;
   width: 100%;
   border-collapse: collapse;
@@ -87,68 +88,70 @@ style>
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
 }
 
-.item-log-info-table th,
-.item-log-info-table td {
+.equipment-show-info-table th,
+.equipment-show-info-table td {
   padding: 12px 16px;
  border: 1px solid #878787;
   text-align: left;
 }
 
-.item-log-info-table th {
+.equipment-show-info-table th {
   background-color: #f5f5f5;
   width: 200px;
   color: #555;
 }
 
-.item-log-filter-form {
+.equipment-show-filter-form {
   margin-bottom: 20px;
 }
 
-.item-log-form-row {
+.equipment-show-form-row {
   display: flex;
   gap: 10px;
   align-items: center;
   flex-wrap: wrap;
 }
 
-.item-log-form-select {
+.equipment-show-form-select {
   padding: 6px 10px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
-.item-log-logs-table {
+.equipment-show-logs-table {
   width: 100%;
   border-collapse: collapse;
   background: white;
   box-shadow: 0 0 4px rgba(0,0,0,0.1);
 }
 
-.item-log-logs-table th,
-.item-log-logs-table td {
+.equipment-show-logs-table th,
+.equipment-show-logs-table td {
   padding: 12px 16px;
   text-align: left;
   border: 1px solid #878787;
   text-align:center;
 }
 
-.item-log-logs-table th {
+.equipment-show-logs-table th {
   background-color: #f1f1f1;
   color: #555;
 }
 
 </style>
 <div class="main-content">
-  <div class="item-log-header">
-    <div><%= link_to '← Back to list', equipments_path, class: 'item-log-btn-back' %></div>
+  <div class="equipment-show-header">
+    <div><%= link_to '← Back to list', equipments_path, class: 'equipment-show-btn-back' %></div>
     <div style="display:flex; justify-content:space-between;align-items: baseline;">
     <h1>Equipment Details</h1>
-    <div><%= link_to 'Edit', edit_equipment_path(@equipment), class: 'item-log-btn' %></div>
+    <% if current_user&.has_permission?('edit_equipment') %>
+      <div><%= link_to 'Edit', edit_equipment_path(@equipment), class: 'equipment-show-btn' %></div>
+    <% end %>
     </div>
   </div>
 
-  <div class="item-log-info-wrapper">
-    <table class="item-log-info-table">
+  <div class="equipment-show-info-wrapper">
+    <table class="equipment-show-info-table">
       <tr><th>Name</th><td><%= @equipment.name %></td></tr>
       <tr><th>Tag</th><td><%= @equipment.tag %></td></tr>
       <tr><th>Brand</th><td><%= @equipment.brand %></td></tr>
@@ -161,7 +164,7 @@ style>
       <tr><th>Calibration Frequency (Days)</th><td><%= @equipment.calibration_frequency_days %></td></tr>
     </table>
 
-    <div class="item-log-image-container">
+    <div class="equipment-show-image-container">
     </div>
   </div>
 

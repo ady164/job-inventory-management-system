@@ -1,13 +1,253 @@
-<h1>Inventory Details</h1>
+<style>
+.job-show-main-content {
+  max-width: 1000px;
+  margin: 0 auto;
+  padding: 30px;
+  font-family: 'Segoe UI', sans-serif;
+  background-color: #fafafa;
+}
 
-<p>
-  <strong>Name:</strong>
-  <%= @inventory.name %>
-</p>
+.job-show-header {
+  text-align:left;
+}
 
-<p>
-  <strong>Description:</strong>
-  <%= @inventory.description %>
-</p>
+.job-show-header h1,
+.job-show-main-content h2 {
+  color: #333;
+  margin-bottom: 20px;
+}
 
-<%= link_to 'Back to list', inventories_path %>
+.job-show-hr {
+  margin: 40px 0 20px;
+  border: none;
+  border-top: 1px solid #ddd;
+}
+
+.job-show-btn-back {
+  background: none;
+  color: #0066cc;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.job-show-btn {
+  background-color: #007bff;
+  border: none;
+  color: white;
+  padding: 8px 16px;
+  margin-left: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.job-show-btn:hover {
+  background-color: #0056b3;
+}
+
+.job-show-btn-secondary {
+  background-color: #6c757d;
+  color: white;
+  padding: 8px 14px;
+  text-decoration: none;
+  border-radius: 4px;
+  margin-left: 10px;
+}
+
+.job-show-btn-secondary:hover {
+  background-color: #5a6268;
+}
+
+
+.job-show-info-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+  margin-bottom: 30px;
+}
+
+.job-show-image-container {
+  flex: 0 0 auto;
+}
+
+.job-show-info-image {
+  width: 250px;
+  height: auto;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 4px;
+  background-color: #fff;
+}
+
+.job-show-info-table {
+  flex: 1;
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+}
+
+.job-show-info-table th,
+.job-show-info-table td {
+  padding: 12px 16px;
+ border: 1px solid #878787;
+  text-align: left;
+}
+
+.job-show-info-table th {
+  background-color: #f5f5f5;
+  width: 200px;
+  color: #555;
+}
+
+.job-show-filter-form {
+  margin-bottom: 20px;
+}
+
+.job-show-form-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.job-show-form-select {
+  padding: 6px 10px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.job-show-logs-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 0 4px rgba(0,0,0,0.1);
+}
+
+.job-show-logs-table th,
+.job-show-logs-table td {
+  padding: 12px 16px;
+  text-align: left;
+  border: 1px solid #878787;
+  text-align:center;
+}
+
+.job-show-logs-table th {
+  background-color: #f1f1f1;
+  color: #555;
+}
+.job-show-cost-wrapper{
+  margin-bottom: 30px;
+}
+
+.job-show-cost-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: white;
+  box-shadow: 0 0 4px rgba(0, 0, 0, 0.1);
+  margin-bottom:20px;
+}
+
+.job-show-cost-table th,
+.job-show-cost-table td {
+  padding: 12px 16px;
+  border: 1px solid #878787;
+  text-align: center;
+}
+
+.job-show-cost-table th {
+  background-color: #f5f5f5;
+  color: #555;
+}
+
+
+</style>
+<div class="main-content">
+  <div class="job-show-header">
+    <div><%= link_to '← Back to list', jobs_path, class: 'job-show-btn-back' %></div>
+    <h1>Job Details</h1>
+  </div>
+
+  <div class="job-show-info-wrapper">
+    <table class="job-show-info-table">
+      <tr><th>Customer</th><td><%= @job.customer.name %></td><th>Part Type</th><td><%= @job.part_type || "-"  %></td></tr>
+      <tr><th>Job Reference Number</th><td><%= @job.job_reference_number %></td><th>Part Model</th><td><%= @job.part_model || "-"  %></td></tr>
+      <tr><th>Vessel</th><td><%= @job.vessle_name || "-"  %></td><th>Part Name</th><td><%= @job.part_name || "-" %></td></tr>
+      <tr><th>Required Date</th><td><%= @job.required_date %></td><th>Base Material</th><td><%= @job.base_material  || "-" %></td></tr>
+      <tr><th>Status</th><td><%= @job.status %></td><th>Filler Material</th><td><%= @job.base_material || "-"  %></td></tr>
+      <tr><th>Notes</th><td colspan="3"><%= @job.notes || "-"  %></td></tr>
+    </table>
+  </div>
+
+  <div class="job-show-cost-wrapper">
+    <h2>Cost Summary</h2>
+    <table class="job-show-cost-table">
+      <tr>
+        <th colspan="6" style="font-weight:bold;color:black; font-size:18px;">Cost of Consumables</th>
+      </tr>
+      <tr>
+        <th>Category</th>
+        <th>Product Number</th>
+        <th>Brand</th>
+        <th>Unit Cost</th>
+        <th>Total Quantity Used</th>
+        <th>Total Cost</th>
+      </tr>
+      <% total_cost = 0 %>
+      <% @grouped_inventory.each do |inventory_id, total_qty| %>
+        <% inventory = @inventories[inventory_id] %>
+        <% total_cost += total_qty * inventory.unit_cost.to_f %>
+        <tr>
+          <td><%= inventory.category %></td>
+          <td><%= inventory.product_number %></td>
+          <td><%= inventory.brand %></td>
+          <td>$<%= inventory.unit_cost.to_f%></td>
+          <td><%= total_qty %></td>
+          <td>$<%= total_qty * inventory.unit_cost.to_f%></td>
+        </tr>
+      <% end %>
+      <% if total_cost == 0 %>
+        <tr>
+          <td colspan="6" style="font-weight:bold;color:grey; ">No consumables used.</th>
+        </tr>
+      <% end %>
+      <tr>
+        <th colspan="5" style="font-weight:bold;color:black; text-align:right;">Total Cost:</th>
+        <th style="font-weight:bold;color:black;">$<%= total_cost %></th>
+      </tr>
+    </table>
+    <table class="job-show-cost-table">
+      <tr>
+        <th colspan="4" style="font-weight:bold;color:black; font-size:18px;">Cost of Labour</th>
+      </tr>
+      <tr>
+        <th>Name</th>
+        <th>Man Hour Cost</th>
+        <th>Total Hours Used</th>
+        <th>Total Cost</th>
+      </tr>
+      <% total_man_cost = 0 %>
+      <% @user_costs.each do |user, data| %>
+        <% hours = data[:hours].round(2) %>
+        <% rate = data[:rate] %>
+        <% cost = (hours * rate).round(2) %>
+        <% total_man_cost += cost %>
+
+        <tr>
+          <td><%= user.name %></td>
+          <td><%= number_to_currency(rate) %></td>
+          <td><%= hours %> hrs</td>
+          <td><%= number_to_currency(cost) %></td>
+        </tr>
+      <% end %>
+      <% if total_man_cost == 0 %>
+        <tr>
+          <td colspan="6" style="font-weight:bold;color:grey; ">No labour used.</th>
+        </tr>
+      <% end %>
+      <tr>
+        <th colspan="3" style="font-weight:bold;color:black; text-align:right;">Total Cost:</th>
+        <th style="font-weight:bold;color:black;">$<%= sprintf('%.2f', total_man_cost) %></th>
+      </tr>
+    </table>
+  </div>
+</div>

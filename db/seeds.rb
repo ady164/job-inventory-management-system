@@ -370,7 +370,8 @@ Inventory.create!(
   quantity: 0,
   alert_quantity: 5,
   status: "Available",
-  image_path: "/uploads/e82eb792-6814-4e44-9f67-141b7d6e24a3_Sanvik DNMG.png"
+  image_path: "/uploads/e82eb792-6814-4e44-9f67-141b7d6e24a3_Sanvik DNMG.png",
+  unit_cost: 13.56
   )
 Inventory.create!(
   name: "DNMG 15 06 04-MF 1115",
@@ -381,7 +382,8 @@ Inventory.create!(
   quantity: 0,
   alert_quantity: 5,
   status: "Available",
-  image_path: "/uploads/e82eb792-6814-4e44-9f67-141b7d6e24a3_Sanvik DNMG.png"
+  image_path: "/uploads/e82eb792-6814-4e44-9f67-141b7d6e24a3_Sanvik DNMG.png",
+  unit_cost: 13.56
   )
 Inventory.create!(
   name: "VBMT 16 04 08-UM 1125",
@@ -392,7 +394,8 @@ Inventory.create!(
   quantity: 0,
   alert_quantity: 5,
   status: "Available",
-  image_path: "/uploads/075ec22a-c8c0-42cb-bc86-7953f91c4442_Sanvik VBMT.png"
+  image_path: "/uploads/075ec22a-c8c0-42cb-bc86-7953f91c4442_Sanvik VBMT.png",
+  unit_cost: 16.58
   )
 Inventory.create!(
   name: "VBMT 16 04 04-UM 1125",
@@ -403,7 +406,8 @@ Inventory.create!(
   quantity: 0,
   alert_quantity: 5,
   status: "Available",
-  image_path: "/uploads/075ec22a-c8c0-42cb-bc86-7953f91c4442_Sanvik VBMT.png"
+  image_path: "/uploads/075ec22a-c8c0-42cb-bc86-7953f91c4442_Sanvik VBMT.png",
+  unit_cost: 16.58
   )
 
 Inventory.create!(
@@ -415,7 +419,8 @@ Inventory.create!(
   quantity: 0,
   alert_quantity: 5,
   status: "Available",
-  image_path: "/uploads/78312b93-1bce-4aa6-a4f4-ccfa6dfda370_KM DNMG.jpg"
+  image_path: "/uploads/78312b93-1bce-4aa6-a4f4-ccfa6dfda370_KM DNMG.jpg",
+  unit_cost: 16.58
   )
 Inventory.create!(
   name: "DNMG 150404 RP",
@@ -426,7 +431,8 @@ Inventory.create!(
   quantity: 0,
   alert_quantity: 5,
   status: "Available",
-  image_path: "/uploads/78312b93-1bce-4aa6-a4f4-ccfa6dfda370_KM DNMG.jpg"
+  image_path: "/uploads/78312b93-1bce-4aa6-a4f4-ccfa6dfda370_KM DNMG.jpg",
+  unit_cost: 16.58
   )
 Inventory.create!(
   name: "DNMG 1",
@@ -437,7 +443,8 @@ Inventory.create!(
   quantity: 0,
   alert_quantity: 5,
   status: "Available",
-  image_path: "/uploads/78312b93-1bce-4aa6-a4f4-ccfa6dfda370_KM DNMG.jpg"
+  image_path: "/uploads/78312b93-1bce-4aa6-a4f4-ccfa6dfda370_KM DNMG.jpg",
+  unit_cost: 16.58
   )
 Inventory.create!(
   name: "DNMG 2",
@@ -448,7 +455,8 @@ Inventory.create!(
   quantity: 0,
   alert_quantity: 5,
   status: "Available",
-  image_path: "/uploads/78312b93-1bce-4aa6-a4f4-ccfa6dfda370_KM DNMG.jpg"
+  image_path: "/uploads/78312b93-1bce-4aa6-a4f4-ccfa6dfda370_KM DNMG.jpg",
+  unit_cost: 16.58
   )
 Inventory.create!(
   name: "VBMT 1",
@@ -459,7 +467,8 @@ Inventory.create!(
   quantity: 0,
   alert_quantity: 5,
   status: "Available",
-  image_path: "/uploads/075ec22a-c8c0-42cb-bc86-7953f91c4442_Sanvik VBMT.png"
+  image_path: "/uploads/075ec22a-c8c0-42cb-bc86-7953f91c4442_Sanvik VBMT.png",
+  unit_cost: 16.58
   )
 Inventory.create!(
   name: "VBMT 1",
@@ -470,7 +479,8 @@ Inventory.create!(
   quantity: 0,
   alert_quantity: 5,
   status: "Available",
-  image_path: "/uploads/075ec22a-c8c0-42cb-bc86-7953f91c4442_Sanvik VBMT.png"
+  image_path: "/uploads/075ec22a-c8c0-42cb-bc86-7953f91c4442_Sanvik VBMT.png",
+  unit_cost: 16.58
   )
 
 
