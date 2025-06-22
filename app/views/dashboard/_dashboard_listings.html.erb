@@ -1,0 +1,85 @@
+<div>
+  <% job_actions = [] %>
+  <% if current_user&.has_permission?('view_dashboard') %>
+    <% job_actions << {
+      label: 'Start',
+      path: ->(job) { show_job_processes_path(job) },
+      options: { class: 'btn-edit' }
+    } %>
+  <% end %>
+
+  <%= render 'listing', {
+    dom_id_prefix: 'jobs',
+    title: 'Confirmed Job Orders',
+    rows: @confirmed_jobs,
+    columns: [
+      { label: 'ID', sortable: true, value: ->(job) { job.id } },
+      { label: 'Job Reference Number', sortable: true, value: ->(job) { job.job_reference_number } },
+      { label: 'Customer', sortable: true, value: ->(job) { job.customer.name } },
+      { label: 'Vessel Name', sortable: true, value: ->(job) { job.vessle_name || '-' } },
+      { label: 'Part Type', sortable: true, value: ->(job) { job.part_type || '-' } },
+      { label: 'Part Model', sortable: true, value: ->(job) { job.part_model || '-' } },
+      { label: 'Required Date', sortable: true, value: ->(job) { job.required_date.strftime('%-d/%-m/%Y') || '-' } },
+      { label: 'Current Process', value: ->(job) { job.current_process&.job_process_type&.name || 'N/A' } }
+    ],
+    actions: job_actions
+  } %>
+</div>
+
+<div class="dashboard-inventory-equipment-container">
+  <div class="dashboard-flex-display-box">
+    <% inventory_actions = [] %>
+    <% if current_user&.has_permission?('view_inventory') %>
+      <% inventory_actions << {
+        label: 'View',
+        path: ->(inventory) { inventory_path(inventory) },
+        options: { class: 'btn-edit' }
+      } %>
+    <% end %>
+
+    <%= render 'listing', {
+      dom_id_prefix: 'inventories',
+      title: 'Inventory Status',
+      rows: @inventories,
+      columns: [
+        { label: 'ID', sortable: true, value: ->(inventory) { inventory.id } },
+        { label: 'Product Number', sortable: true, value: ->(inventory) { inventory.product_number } },
+        { label: 'Category', sortable: true, value: ->(inventory) { inventory.category } },
+        { label: 'Quantity', sortable: true, value: ->(inventory) { inventory.quantity } },
+        { label: 'Status', sortable: true, value: ->(inventory) { inventory.quantity < 1 ? "Out of stock." : "Restock required." } }
+      ],
+      actions: inventory_actions
+    } %>
+  </div>
+  <div class="dashboard-flex-display-box">
+    <% equipment_actions = [] %>
+    <% if current_user&.has_permission?('view_equipment') %>
+      <% equipment_actions << {
+        label: 'View',
+        path: ->(equipment) { equipment_path(equipment) },
+        options: { class: 'btn-edit' }
+      } %>
+    <% end %>
+
+    <%= render 'listing', {
+      dom_id_prefix: 'equipments',
+      title: 'Equipment Maintainence',
+      rows: @equipments,
+      columns: [
+        { label: 'ID', sortable: true, value: ->(equipment) { equipment.id } },
+        { label: 'Name', sortable: true, value: ->(equipment) { equipment.name } },
+        { label: 'Type', sortable: true, value: ->(equipment) { equipment.equipment_type } },
+        { label: 'Days to duedate', sortable: true, value: ->(equipment) {
+              diff = equipment.days_since_last - equipment.calibration_frequency_days
+              if diff > 0
+              "Maintenance overdue: #{diff} Days"
+              else
+              "Due in: #{diff.abs} Days"
+              end
+              }
+          }
+      ],
+      actions: equipment_actions
+    } %>
+  </div>
+</div>

@@ -19,6 +19,7 @@ Rails.application.routes.draw do
 
   # Dashboard Route
   get "/dashboard", to: "dashboard#index"
+  get 'dashboard/refresh', to: 'dashboard#refresh'
 
   # Admin Route (User & Roles)
   namespace :admin do
