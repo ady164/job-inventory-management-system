@@ -517,7 +517,7 @@
     padding-bottom:30px;
     background-color: white;
     margin: 0 auto;
-    box-shadow: rgb(195, 195, 195) 0px 0px 5px 2px;
+    /* box-shadow: rgb(195, 195, 195) 0px 0px 5px 2px; */
  }
  .dispense-header{
     display: flex;
@@ -649,13 +649,31 @@
     border-radius: 5px;
     cursor: pointer;
     font-size: 20px;
-    transition: background-color 0.3sease;
+    transition: background-color 0.3s ease;
     margin: 0 auto;
     font-weight: bold;
 }
 
 #dispense-button:active{
     background-color: #007904;
+}
+
+.outofstock-button{
+    width: 90%;
+    max-width: 300px;
+    height: 50px;
+    background-color: #999999;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor:not-allowed;
+    font-size: 20px;
+    margin: 0 auto;
+    font-weight: bold;
+}
+
+.outofstock-button:active{
+    background-color: #999999;
 }
 
 
@@ -739,6 +757,15 @@
 
 .pin-submit-button:active{
     background-color: #007904;
+}
+.out-of-stock{
+    background-color: #787878;
+}
+.out-of-stock:hover{
+    background-color: #787878;
+}
+.out-of-stock:active{
+    background-color: #787878;
 }
 
 

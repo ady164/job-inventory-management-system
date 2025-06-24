@@ -78,6 +78,7 @@
   var lengthReference_<%= i %> = <%= reference[:length].to_json.html_safe %>;
   var measurementData_<%= i %> = <%= process.measurements.to_json.html_safe %>;
   var order_index_<%= i %> = parseInt(<%= process.order_index %>, 10);
+  console.log("Process Order Index <%= i %>:" + order_index_<%= i %>);
 
   // Unique variable names per iteration
   var rawDiameterData_<%= i %> = measurementData_<%= i %>?.diameter;
@@ -93,12 +94,12 @@
     //console.log(diameterData_<%= i %> )
 
   document.addEventListener("DOMContentLoaded", () => {
-    loadMeasurements("diameter", diameterReference_<%= i %>, `diameter-body-<%= i %>`, diameterData_<%= i %>);
-    loadMeasurements("length", lengthReference_<%= i %>, `length-body-<%= i %>`, lengthData_<%= i %>);
+    loadMeasurements("diameter", diameterReference_<%= i %>, `diameter-body-<%= i %>`, diameterData_<%= i %>, order_index_<%= i %>);
+    loadMeasurements("length", lengthReference_<%= i %>, `length-body-<%= i %>`, lengthData_<%= i %>, order_index_<%= i %>);
   });
     document.addEventListener("turbo:load", function () {
-    loadMeasurements("diameter", diameterReference_<%= i %>, `diameter-body-<%= i %>`, diameterData_<%= i %>);
-    loadMeasurements("length", lengthReference_<%= i %>, `length-body-<%= i %>`, lengthData_<%= i %>);
+    loadMeasurements("diameter", diameterReference_<%= i %>, `diameter-body-<%= i %>`, diameterData_<%= i %>, order_index_<%= i %>);
+    loadMeasurements("length", lengthReference_<%= i %>, `length-body-<%= i %>`, lengthData_<%= i %>, order_index_<%= i %>);
     });
 
   document.getElementById("form-<%= i %>").addEventListener("submit", async (e) => {

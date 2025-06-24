@@ -73,7 +73,7 @@
         border: 2px solid #000;
         border-radius: 8px;
         width: 48%;
-        min-height: 300px;
+        min-height: 423px;
         text-align: left;
         background-color: #f9f9f9;
         box-sizing: content-box;
@@ -603,7 +603,7 @@ function incrementPoint(label) {
   return prefix + String(num).padStart(2, '0');
 }
 
-function createRow(type, ref, m = {}, orderIndex = 0) {
+function createRow(type, ref, m = {}, process_index, orderIndex = 0) {
   const tr = document.createElement('tr');
   tr.innerHTML = `<td>${ref.point}</td>`;
 
@@ -620,6 +620,12 @@ function createRow(type, ref, m = {}, orderIndex = 0) {
   max.className = "max-input";
   min.value = ref.minimum || "";
   max.value = ref.maximum || "";
+  if (process_index != 1){
+    min.readOnly = true;
+    min.style.pointerEvents = 'none';
+    max.readOnly = true;
+    max.style.pointerEvents = 'none';
+  }
   refTd.appendChild(min);
   refTd.appendChild(document.createTextNode(" ~ "));
   refTd.appendChild(max);
@@ -681,12 +687,14 @@ function createRow(type, ref, m = {}, orderIndex = 0) {
 
   const removeTd = document.createElement('td');
   removeTd.className = "remove-td";
-  const removeBtn = document.createElement('button');
-  removeBtn.type = 'button';
-  removeBtn.textContent = '✖';
-  removeBtn.className = "process-remove-btn";
-  removeBtn.onclick = () => tr.remove();
-  removeTd.appendChild(removeBtn);
+  if (process_index == 1){
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.textContent = '✖';
+    removeBtn.className = "process-remove-btn";
+    removeBtn.onclick = () => tr.remove();
+    removeTd.appendChild(removeBtn);
+  }
   tr.appendChild(removeTd);
 
   return tr;
@@ -705,16 +713,16 @@ function addManualRow(type, index) {
   const ref = { point: newPoint, minimum: "", maximum: "" };
 
   const orderIndex = parseInt(document.getElementById(`form-${index}`)?.dataset.orderIndex || "0");
-  const row = createRow(type, ref, {}, orderIndex);
+  const row = createRow(type, ref, {}, process_index, orderIndex);
   tbody.appendChild(row);
 }
 
-function loadMeasurements(type, refs, tbodyId, dataList = [], orderIndex = 0) {
+function loadMeasurements(type, refs, tbodyId, dataList = [], process_index, orderIndex = 0) {
   console.log(tbodyId)
   const tbody = document.getElementById(tbodyId);
   tbody.innerHTML = '';
   refs.forEach((ref, idx) => {
-    const row = createRow(type, ref, dataList[idx] || {}, orderIndex);
+    const row = createRow(type, ref, dataList[idx] || {}, process_index, orderIndex);
     tbody.appendChild(row);
   });
 }

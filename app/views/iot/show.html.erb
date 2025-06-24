@@ -72,14 +72,16 @@
           <button type="button" onclick="addDigit('0')">0</button>
           <button type="button" onclick="deleteDigit()">←</button>
         </div>
-        <%= form.submit "Submit", class:"pin-submit-button" %>
+        <%= form.submit "Submit", class: "pin-submit-button" %>
       <% end %>
     </div>
   </div>
 </div>
 
 <script>
+
 document.addEventListener('turbo:load', function() {
+
   // Clock update
   function updateClock() {
     const now = new Date();
@@ -88,7 +90,7 @@ document.addEventListener('turbo:load', function() {
     document.getElementById('clock').textContent = `${date} ${time}`;
   }
   updateClock();
-  setInterval(updateClock, 1000);
+  setInterval(updateClock, 1000);  
 
   // Quantity buttons setup
   const increaseButton = document.getElementById("increase-button");
@@ -101,8 +103,9 @@ document.addEventListener('turbo:load', function() {
     displayQuantity.textContent = currentQuantity;
   }
   function increaseQuantity() {
-    const operationTypeInput = document.getElementById("operation_type_input");
-    if (operationTypeInput.value === "Dispense") {
+    setOpHeader()
+    const operationTypeInput = document.getElementById("operation_type_input").value;
+    if (operationTypeInput == "Dispense") {
       if (currentQuantity < maxQuantity) {
         currentQuantity++;
         updateQuantityDisplay();
@@ -130,6 +133,13 @@ document.addEventListener('turbo:load', function() {
   const jobSelect = document.getElementById("job_select");
   const hiddenJobField = document.getElementById("job_id_hidden");
 
+  function setOpHeader(){
+    if (operationDisplayHeader.textContent === "Dispense Item") {
+      operationTypeInput.value = "Dispense";
+    } else if (operationDisplayHeader.textContent === "Restock Item") {
+      operationTypeInput.value = "Restock";
+    }
+  }
   // Sync hidden job id field on change
   jobSelect.addEventListener("change", function () {
     hiddenJobField.value = jobSelect.value;
@@ -225,4 +235,5 @@ document.addEventListener('turbo:load', function() {
   };
 
 });
+
 </script>

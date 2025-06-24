@@ -3,7 +3,6 @@ import "@hotwired/turbo-rails"
 import "controllers"
 import "@rails/ujs"
 
-Rails.start()
 
 // Preview Image JS
 document.addEventListener("DOMContentLoaded", () => {
