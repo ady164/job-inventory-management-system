@@ -17,7 +17,8 @@
     <%= image_tag "#{@inventory.image_path}", alt: 'Image', class: 'dispense-item-img' %>
     <div class="dispense-details">
       <p>PID: <%= @inventory.id %> </p>
-      <p class="dispense-details-aval-qty">Available: <span id='available-max-qty'><%= @inventory.quantity %></span></p>
+      <p class="dispense-details-aval-qty"><%= @inventory.quantity < 1 ? "" : "Available: " %><span id='available-max-qty'><%= @inventory.quantity < 1 ? "Out of Stock!" : @inventory.quantity %>
+</span></p>
     </div>
   </div>
   

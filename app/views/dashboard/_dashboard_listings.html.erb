@@ -65,7 +65,7 @@
 
     <%= render 'listing', {
       dom_id_prefix: 'equipments',
-      title: 'Equipment Maintainence',
+      title: 'Equipment Maintenance',
       rows: @equipments,
       columns: [
         { label: 'ID', sortable: true, value: ->(equipment) { equipment.id } },
@@ -82,7 +82,7 @@
           }
       ],
       actions: equipment_actions,
-      empty_msg: "No equipments due for maintainence."
+      empty_msg: "No equipments due for maintenance."
     } %>
   </div>
 </div>
