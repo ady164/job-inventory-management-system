@@ -504,7 +504,7 @@ function addManualRow(type, index) {
   const ref = { point: newPoint, minimum: "", maximum: "" };
 
   const orderIndex = parseInt(document.getElementById(`form-${index}`)?.dataset.orderIndex || "0");
-  const row = createRow(type, ref, {}, process_index, orderIndex);
+  const row = createRow(type, ref, {}, index, orderIndex);
   tbody.appendChild(row);
 }
 
