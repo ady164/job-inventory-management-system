@@ -230,6 +230,9 @@
       .close:hover {
           color: #bbb;
       }
+      .show{
+        display:block !important;
+      }
       .process-table {
         width: 100%;
         border-collapse: collapse;
@@ -364,218 +367,6 @@
       }
       
     </style>
-
-    <div class="jo-container">
-      <%= link_to 'Back to List', job_processes_path, class: 'btn-back' %>
-      <h1>JOB ORDER - <%= @job.part_type %></h1>
-
-      <div class="row">
-        <div class="field">
-          <label>Job Reference:</label>
-          <div class="input-box"><%= @job.job_reference_number %></div>
-          <label>Customer/Vessel:</label>
-          <div class="input-box">
-            <%= @job.customer.name %>
-            <% if @job.vessle_name.present? %>
-            &nbsp;/&nbsp;<%= @job.vessle_name %>
-            <% end %>            
-          </div>
-        </div>
-      </div>
-
-      <div class="row">
-        <div class="field">
-          <label>Part Model:</label>
-          <div class="input-box"><%= @job.part_model %></div>
-          <label>Start Date:</label>
-          <input type="text" value="<%= @jobstart.present? ? @jobstart.start_time.strftime('%-d/%-m/%Y') : ''  %>" />
-          <label>Required Date:</label>
-          <input type="text" value="<%= @job.required_date.present? ? @job.required_date.strftime('%-d/%-m/%Y') : '' %>" />
-
-        </div>
-      </div>
-
-      <% job_ref = @job.job_reference_number %>
-      <% incoming_dir = Rails.root.join("public", "jobs", job_ref, "incoming") %>
-      <% drawing_dir = Rails.root.join("public", "jobs", job_ref, "drawings") %>
-
-      <%= form_with url: upload_job_photos_path(@job), method: :post, multipart: true, local: true do %>
-      <div class="row">
-        <div class="field">
-            <div class="photo-box">
-                <div class="photo-header">
-                <span>Incoming Photos</span>
-                <label class="upload-btn">
-                    Add Photos
-                    <input type="file" name="incoming_photos[]" multiple accept="image/*" hidden onchange="this.form.submit();" />
-                </label>
-                </div>
-                <div class="gallery-container">
-                    <% incoming_images = Dir.exist?(incoming_dir) ? Dir.glob("#{incoming_dir}/*.{jpg,jpeg,png,gif}") : [] %>
-                    <% if incoming_images.any? %>
-                        <div class="main-image">
-                        <img id="incoming-current-image" src="/jobs/<%= job_ref %>/incoming/<%= File.basename(incoming_images.first) %>" alt="Incoming Main Image" />
-                        </div>
-                        <div class="thumbnail-row">
-                        <% incoming_images.each do |img_path| %>
-                            <% filename = File.basename(img_path) %>
-                            <img
-                            src="/jobs/<%= job_ref %>/incoming/<%= filename %>"
-                            class="thumbnail"
-                            alt="Incoming Thumbnail"
-                            onclick="document.getElementById('incoming-current-image').src=this.src"
-                            />
-                        <% end %>
-                        </div>
-                    <% else %>
-                        <p>No incoming photos available.</p>
-                    <% end %>
-                </div>
-            </div>
-            <div class="photo-box">
-                <div class="photo-header">
-                    <span>Drawing Photos</span>
-                    <label class="upload-btn">
-                        Add Drawings
-                        <input type="file" name="drawing_photos[]" multiple accept="image/*" hidden onchange="this.form.submit();" />
-                    </label>
-                </div>
-                <div class="gallery-container">
-                    <% drawing_images = Dir.exist?(drawing_dir) ? Dir.glob("#{drawing_dir}/*.{jpg,jpeg,png,gif}") : [] %>
-                    <% if drawing_images.any? %>
-                        <div class="main-image">
-                        <img id="drawing-current-image" src="/jobs/<%= job_ref %>/drawings/<%= File.basename(drawing_images.first) %>" alt="Drawing Main Image" />
-                        </div>
-                        <div class="thumbnail-row">
-                        <% drawing_images.each do |img_path| %>
-                            <% filename = File.basename(img_path) %>
-                            <img
-                            src="/jobs/<%= job_ref %>/drawings/<%= filename %>"
-                            class="thumbnail"
-                            alt="Drawing Thumbnail"
-                            onclick="document.getElementById('drawing-current-image').src=this.src"
-                            />
-                        <% end %>
-                        </div>
-                    <% else %>
-                        <p>No drawing photos available.</p>
-                    <% end %>
-                <div>
-            </div>
-        </div>
-      </div>
-      <% end %>
-
-      <div id="jo-image-modal" class="jo-modal" onclick="closeJoModal()">
-        <span class="close" onclick="closeJoModal()">&times;</span>
-        <img class="jo-modal-content" id="jo-modal-image" />
-      </div>
-
-      <div class="row">
-        <div class="field">
-          <table class="name-material-table">
-            <tr>
-              <td><b>Part Name:</b>
-              <% if @job.part_name.present? %>
-                    &nbsp;<%= @job.part_name %>
-              <% else %>
-                    &nbsp;<%= @job.part_model %> <%= @job.part_type %>
-              <% end %>
-              </td>
-              <td><b>Base Material:</b> <%= @job.base_material %></td>
-              <td><b>Filter Material:</b> 
-              <% if @job.filler_material.present? %>
-                    &nbsp;<%= @job.filler_material %>
-              <% else %>
-                    &nbsp;N/A
-              <% end %>
-              </td>
-            </tr>
-          </table>
-        </div>
-      </div>
-
-      <div id="job_processes_list" class="job-process-container">
-        <% @job_processes.each_with_index do |process, i| %>
-          <%= render partial: 'job_processes/process_form', locals: { process: process, i: process.order_index, reference: @reference } %>
-        <% end %>
-      </div>
-      <% if @job.status == "Confirmed" %>
-      <div class="create-process-container">
-        <select id="job_process_type_select">
-          <%= options_from_collection_for_select(@job_process_types, :id, :name) %>
-        </select>
-        <input type="hidden" id="job_id" value="<%= @job.id %>">
-        <button class="add-measurement-button" id="create_process_btn">+ New Job Process</button>
-      <div>
-      <% end %>
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-
-  document.getElementById("create_process_btn").addEventListener("click", (e) => {
-    e.preventDefault();
-
-    const jobId = document.getElementById("job_id").value;
-    const jobProcessTypeId = document.getElementById("job_process_type_select").value;
-
-    fetch("/job_processes/create_process.json", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
-      },
-      body: JSON.stringify({
-        job_id: jobId,
-        job_process_type_id: jobProcessTypeId
-      })
-    })
-    .then(res => res.json())
-    .then(data => {
-      if (data.success) {
-        const container = document.getElementById("job_processes_list");
-        container.insertAdjacentHTML("beforeend", data.html);
-
-        // Parse and inject dynamic row content
-        const index = data.order_index;
-
-        const diameterRef = JSON.parse(data.diameter_reference || "[]");
-        const lengthRef = JSON.parse(data.length_reference || "[]");
-        const measurementData = JSON.parse(data.measurement_data || "{}");
-        console.log(`diameter-body-${index}`)
-        requestAnimationFrame(() => {
-          loadMeasurements("diameter", diameterRef, `diameter-body-${index}`, measurementData?.diameter || []);
-          loadMeasurements("length", lengthRef, `length-body-${index}`, measurementData?.length || []);
-        });
-
-        console.log(`✅ Added Job Process Type ID ${data.job_process_type_id} with order_index ${data.order_index}`);
-      } else {
-        alert("⚠️ Failed to create process.");
-      }
-    })
-    .catch(error => {
-      console.error("❌ Error:", error);
-    });
-  });
-});
-
-  function openJoModal(imageSrc) {
-    const modal = document.getElementById("jo-image-modal");
-    const modalImage = document.getElementById("jo-modal-image");
-
-    modalImage.src = imageSrc;
-    modal.classList.add("show");
-  }
-
-  function closeJoModal() {
-    const modal = document.getElementById("jo-image-modal");
-    modal.classList.remove("show");
-  }
-</script>
-
-
-
-
 
 <script>
 
@@ -718,7 +509,7 @@ function addManualRow(type, index) {
 }
 
 function loadMeasurements(type, refs, tbodyId, dataList = [], process_index, orderIndex = 0) {
-  console.log(tbodyId)
+  console.log("Measurements Loaded:" + tbodyId)
   const tbody = document.getElementById(tbodyId);
   tbody.innerHTML = '';
   refs.forEach((ref, idx) => {
@@ -750,4 +541,339 @@ function collectMeasurements(type, tbodyId) {
   return result;
 }
 
+  async function handleFormSubmit(e, index) {
+    e.preventDefault();
+    const form = document.getElementById(`form-${index}`);
+    const jobId = document.getElementById("job_id").value;
+    const processId = form.dataset.processId;
+    const orderIndex = form.querySelector('[name="order_index_data"]').value;
+    const startTime = form.querySelector('[name="start_time"]').value;
+    const endTime = form.querySelector('[name="end_time"]').value;
+    const equipmentId = document.getElementById(`job_process_machine_select-${index}`).value;
+    console.log("machine id: " + equipmentId);
+    const userId = document.getElementById(`job_process_user_select-${index}`).value;
+    console.log("user id: " + userId);
+    const diameter = collectMeasurements("diameter", `diameter-body-${index}`);
+    const length = collectMeasurements("length", `length-body-${index}`);
+    const measurements = {};
+    const measurementData = { diameter, length };
+    form.querySelector(`#measurement-data-${index}`).value = JSON.stringify(measurementData);
+
+    // 🚨 Validate inputs
+    if (!startTime) {
+      alert("Please enter a valid start time.");
+      return;
+    }
+
+    if (!endTime) {
+      alert("Please enter a valid end time.");
+      return;
+    }
+
+    if (new Date(startTime) > new Date(endTime)) {
+      alert("Start time must be before end time.");
+      return;
+    }
+
+    if (!userId) {
+      alert("Please select a user.");
+      return;
+    }
+
+    fetch("/job_processes/update_process.json", {
+        method: "PATCH",
+        headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+        },
+        body: JSON.stringify({
+            job_id: jobId,
+            job_process_id: processId,
+            start_time: startTime,
+            end_time: endTime,
+            equipment_id: equipmentId,
+            order_index: orderIndex,
+            user_id: userId,
+            measurement_data: measurementData
+            })
+        })
+        .then(res => res.json())
+        .then(data => {
+            if (data.success){
+                console.log("Job process " + processId + " updated successfully");
+                alert("Process updated and saved.");
+                if (processId == 1) {
+                    window.location.reload();  // Reload the page if processId == 1
+                }
+            } else{
+                alert("⚠️ Failed to update process.");
+            }
+        })
+        .catch(error => {
+            console.error("❌ Error:", error);
+        })
+    };
+
+</script>
+
+    <div class="jo-container">
+      <%= link_to 'Back to List', job_processes_path, class: 'btn-back' %>
+      <h1>JOB ORDER - <%= @job.part_type %></h1>
+
+      <div class="row">
+        <div class="field">
+          <label>Job Reference:</label>
+          <div class="input-box"><%= @job.job_reference_number %></div>
+          <label>Customer/Vessel:</label>
+          <div class="input-box">
+            <%= @job.customer.name %>
+            <% if @job.vessle_name.present? %>
+            &nbsp;/&nbsp;<%= @job.vessle_name %>
+            <% end %>            
+          </div>
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Part Model:</label>
+          <div class="input-box"><%= @job.part_model %></div>
+          <label>Start Date:</label>
+          <input type="text" value="<%= @jobstart.present? ? @jobstart.start_time.strftime('%-d/%-m/%Y') : ''  %>" />
+          <label>Required Date:</label>
+          <input type="text" value="<%= @job.required_date.present? ? @job.required_date.strftime('%-d/%-m/%Y') : '' %>" />
+
+        </div>
+      </div>
+
+      <% job_ref = @job.job_reference_number %>
+      <% incoming_dir = Rails.root.join("public", "jobs", job_ref, "incoming") %>
+      <% drawing_dir = Rails.root.join("public", "jobs", job_ref, "drawings") %>
+
+      <%= form_with url: upload_job_photos_path(@job), method: :post, multipart: true, local: true do %>
+      <div class="row">
+        <div class="field">
+            <div class="photo-box">
+                <div class="photo-header">
+                <span>Incoming Photos</span>
+                <label class="upload-btn">
+                    Add Photos
+                    <input type="file" name="incoming_photos[]" multiple accept="image/*" hidden onchange="this.form.submit();" />
+                </label>
+                </div>
+                <div class="gallery-container">
+                    <% incoming_images = Dir.exist?(incoming_dir) ? Dir.glob("#{incoming_dir}/*.{jpg,jpeg,png,gif}") : [] %>
+                    <% if incoming_images.any? %>
+                      <% first_filename = File.basename(incoming_images.first) %>
+
+                      <!-- Main Image -->
+                      <div class="main-image">
+                        <img
+                          id="incoming-current-image"
+                          src="/jobs/<%= job_ref %>/incoming/<%= first_filename %>"
+                          alt="Incoming Main Image"
+                          onclick="openJoModal(this.src)"
+                          style="cursor: pointer;"
+                        />
+                      </div>
+
+                      <!-- Thumbnail Row -->
+                      <div class="thumbnail-row">
+                        <% incoming_images.each do |img_path| %>
+                          <% filename = File.basename(img_path) %>
+                          <img
+                            src="/jobs/<%= job_ref %>/incoming/<%= filename %>"
+                            class="thumbnail"
+                            alt="Incoming Thumbnail"
+                            onclick="document.getElementById('incoming-current-image').src=this.src"
+                          />
+                        <% end %>
+                      </div>
+
+                    <% else %>
+                      <p>No images available.</p>
+                    <% end %>
+                </div>
+            </div>
+            <div class="photo-box">
+                <div class="photo-header">
+                    <span>Drawing Photos</span>
+                    <label class="upload-btn">
+                        Add Drawings
+                        <input type="file" name="drawing_photos[]" multiple accept="image/*" hidden onchange="this.form.submit();" />
+                    </label>
+                </div>
+                <div class="gallery-container">
+                    <% drawing_images = Dir.exist?(drawing_dir) ? Dir.glob("#{drawing_dir}/*.{jpg,jpeg,png,gif}") : [] %>
+                    <% if drawing_images.any? %>
+                        <div class="main-image">
+                        <img 
+                          id="drawing-current-image" 
+                          src="/jobs/<%= job_ref %>/drawings/<%= File.basename(drawing_images.first) %>" 
+                          alt="Drawing Main Image" 
+                          onclick=openJoModal(this.src)
+                          style="cursor: pointer;"
+                        />
+                        </div>
+                        <div class="thumbnail-row">
+                        <% drawing_images.each do |img_path| %>
+                            <% filename = File.basename(img_path) %>
+                            <img
+                            src="/jobs/<%= job_ref %>/drawings/<%= filename %>"
+                            class="thumbnail"
+                            alt="Drawing Thumbnail"
+                            onclick="document.getElementById('drawing-current-image').src=this.src"
+                            />
+                        <% end %>
+                        </div>
+                    <% else %>
+                        <p>No drawing photos available.</p>
+                    <% end %>
+                <div>
+            </div>
+        </div>
+      </div>
+      <% end %>
+
+      <div id="jo-image-modal" class="jo-modal" onclick="closeJoModal()">
+        <span class="close" onclick="closeJoModal()">&times;</span>
+        <img class="jo-modal-content" id="jo-modal-image" />
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <table class="name-material-table">
+            <tr>
+              <td><b>Part Name:</b>
+              <% if @job.part_name.present? %>
+                    &nbsp;<%= @job.part_name %>
+              <% else %>
+                    &nbsp;<%= @job.part_model %> <%= @job.part_type %>
+              <% end %>
+              </td>
+              <td><b>Base Material:</b> <%= @job.base_material %></td>
+              <td><b>Filter Material:</b> 
+              <% if @job.filler_material.present? %>
+                    &nbsp;<%= @job.filler_material %>
+              <% else %>
+                    &nbsp;N/A
+              <% end %>
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <div id="job_processes_list" class="job-process-container">
+        <% @job_processes.each_with_index do |process, i| %>
+          <%= render partial: 'job_processes/process_form', locals: { process: process, i: process.order_index, reference: @reference } %>
+          
+          <div
+            data-job-measurement
+            data-order-index="<%= process.order_index %>"
+            data-diameter-reference='<%= (@reference&.diameter || []).to_json.html_safe %>'
+            data-length-reference='<%= (@reference&.length || []).to_json.html_safe %>'
+            data-measurements='<%= (process.measurements || {}).to_json.html_safe %>'
+          ></div>
+
+
+        <% end %>
+      </div>
+      <% if @job.status == "Confirmed" %>
+      <div class="create-process-container">
+        <select id="job_process_type_select">
+          <%= options_from_collection_for_select(@job_process_types, :id, :name) %>
+        </select>
+        <input type="hidden" id="job_id" value="<%= @job.id %>">
+        <button class="add-measurement-button" id="create_process_btn">+ New Job Process</button>
+      <div>
+      <% end %>
+
+<script>
+  loadAllJobMeasurements = function () {
+    console.log("loading all job measurements")
+    const elements = document.querySelectorAll('[data-job-measurement]');
+
+    elements.forEach((el) => {
+      const orderIndex = el.dataset.orderIndex;
+      const diameterRef = JSON.parse(el.dataset.diameterReference);
+      const lengthRef = JSON.parse(el.dataset.lengthReference || '[{"point":"D01","minimum":"","maximum":""}]');
+      const measurements = JSON.parse(el.dataset.measurements || '{}');
+      console.log(diameterRef)
+      console.log(lengthRef)
+      console.log(measurements)
+
+      const rawDiameter = measurements.diameter;
+      const diameterData = Array.isArray(rawDiameter) ? rawDiameter : rawDiameter ? [rawDiameter] : [{"point":"D01","minimum":"","maximum":""}];
+
+      const rawLength = measurements.length;
+      const lengthData = Array.isArray(rawLength) ? rawLength : rawLength ? [rawLength] : [{"point":"D01","minimum":"","maximum":""}];
+
+      loadMeasurements("diameter", diameterRef, `diameter-body-${orderIndex}`, diameterData, parseInt(orderIndex));
+      loadMeasurements("length", lengthRef, `length-body-${orderIndex}`, lengthData, parseInt(orderIndex));
+    });
+  };
+
+document.addEventListener("turbo:load", () => {
+
+  loadAllJobMeasurements();
+  document.getElementById("create_process_btn").addEventListener("click", (e) => {
+    e.preventDefault();
+
+    const jobId = document.getElementById("job_id").value;
+    const jobProcessTypeId = document.getElementById("job_process_type_select").value;
+
+    fetch("/job_processes/create_process.json", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "X-CSRF-Token": document.querySelector('meta[name="csrf-token"]').getAttribute('content')
+      },
+      body: JSON.stringify({
+        job_id: jobId,
+        job_process_type_id: jobProcessTypeId
+      })
+    })
+    .then(res => res.json())
+    .then(data => {
+      if (data.success) {
+        const container = document.getElementById("job_processes_list");
+        container.insertAdjacentHTML("beforeend", data.html);
+
+        // Parse and inject dynamic row content
+        const index = data.order_index;
+
+        const diameterRef = JSON.parse(data.diameter_reference || "[]");
+        const lengthRef = JSON.parse(data.length_reference || "[]");
+        const measurementData = JSON.parse(data.measurement_data || "{}");
+        console.log(`diameter-body-${index}`)
+        requestAnimationFrame(() => {
+          loadMeasurements("diameter", diameterRef, `diameter-body-${index}`, measurementData?.diameter || []);
+          loadMeasurements("length", lengthRef, `length-body-${index}`, measurementData?.length || []);
+        });
+
+        console.log(`✅ Added Job Process Type ID ${data.job_process_type_id} with order_index ${data.order_index}`);
+      } else {
+        alert("⚠️ Failed to create process.");
+      }
+    })
+    .catch(error => {
+      console.error("❌ Error:", error);
+    });
+  });
+});
+
+  function openJoModal(imageSrc) {
+    const modal = document.getElementById("jo-image-modal");
+    const modalImage = document.getElementById("jo-modal-image");
+    console.log('Image modal open')
+
+    modalImage.src = imageSrc;
+    modal.classList.add("show");
+  }
+
+  function closeJoModal() {
+    const modal = document.getElementById("jo-image-modal");
+    modal.classList.remove("show");
+  }
 </script>
