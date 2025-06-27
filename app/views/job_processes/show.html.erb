@@ -602,8 +602,9 @@ function collectMeasurements(type, tbodyId) {
             if (data.success){
                 console.log("Job process " + processId + " updated successfully");
                 alert("Process updated and saved.");
-                if (processId == 1) {
-                    window.location.reload();  // Reload the page if processId == 1
+                console.log(orderIndex);
+                if (orderIndex == 1) {
+                    window.location.reload();
                 }
             } else{
                 alert("⚠️ Failed to update process.");
@@ -785,7 +786,7 @@ function collectMeasurements(type, tbodyId) {
           <%= options_from_collection_for_select(@job_process_types, :id, :name) %>
         </select>
         <input type="hidden" id="job_id" value="<%= @job.id %>">
-        <button class="add-measurement-button" id="create_process_btn">+ New Job Process</button>
+        <button class="add-measurement-button" id="create_process_btn" onclick="handleCreateProcessClick(event)">+ New Job Process</button>
       <div>
       <% end %>
 
@@ -814,12 +815,8 @@ function collectMeasurements(type, tbodyId) {
     });
   };
 
-document.addEventListener("turbo:load", () => {
-
-  loadAllJobMeasurements();
-  document.getElementById("create_process_btn").addEventListener("click", (e) => {
+  async function handleCreateProcessClick(e) {
     e.preventDefault();
-
     const jobId = document.getElementById("job_id").value;
     const jobProcessTypeId = document.getElementById("job_process_type_select").value;
 
@@ -860,7 +857,21 @@ document.addEventListener("turbo:load", () => {
     .catch(error => {
       console.error("❌ Error:", error);
     });
-  });
+  };
+
+window.addEventListener("beforeunload", () => {
+  sessionStorage.setItem("scrollY", window.scrollY);
+});
+
+
+document.addEventListener("turbo:load", () => {
+  const scrollY = sessionStorage.getItem("scrollY");
+  if (scrollY !== null) {
+    window.scrollTo(0, parseInt(scrollY, 10));
+    sessionStorage.removeItem("scrollY");
+  }
+  // Load all measurements
+  loadAllJobMeasurements();
 });
 
   function openJoModal(imageSrc) {

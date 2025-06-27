@@ -28,7 +28,7 @@
           </thead>
           <tbody id="diameter-body-<%= i %>"></tbody>
         </table>
-        <% if process.job_process_type_id == 1 %>
+        <% if process.order_index == 1 %>
           <div class="add-measurement-row">
             <button class="add-measurement-button" type="button" onclick="addManualRow('diameter', <%= i %>)">+ Add Diameter</button>
           </div>
