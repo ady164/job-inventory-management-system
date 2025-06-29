@@ -38,7 +38,7 @@ class JobsController < ApplicationController
 
   def create
     @job = Job.new(job_params)
-    @job.created_by = current_user.id  # Assign creator here, not from params
+    @job.created_by = current_user.id 
 
     if @job.save
       create_incoming_process(@job)

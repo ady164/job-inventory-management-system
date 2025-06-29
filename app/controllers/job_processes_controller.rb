@@ -24,6 +24,7 @@ class JobProcessesController < ApplicationController
 
   def create_process
     @equipment = Equipment.where(equipment_type: "Machine")
+    @users = User.order(name: :asc)
     @job_process = JobProcess.create!(
       job_id: params[:job_id],
       job_process_type_id: params[:job_process_type_id],

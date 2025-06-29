@@ -848,7 +848,6 @@ function collectMeasurements(type, tbodyId) {
           loadMeasurements("diameter", diameterRef, `diameter-body-${index}`, measurementData?.diameter || []);
           loadMeasurements("length", lengthRef, `length-body-${index}`, measurementData?.length || []);
         });
-        window.location.reload();
 
         console.log(`✅ Added Job Process Type ID ${data.job_process_type_id} with order_index ${data.order_index}`);
       } else {
