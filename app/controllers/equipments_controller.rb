@@ -21,10 +21,6 @@ class EquipmentsController < ApplicationController
   def create
     @equipment = Equipment.new(equipment_params)
 
-    if params[:equipment][:image]
-      save_uploaded_image(@equipment, params[:equipment][:image])
-    end
-
     if @equipment.save
       redirect_to equipments_path, notice: 'Equipment created successfully.'
     else
@@ -35,10 +31,6 @@ class EquipmentsController < ApplicationController
   def edit; end
 
   def update
-    if params[:equipment][:image]
-      save_uploaded_image(@equipment, params[:equipment][:image])
-    end
-
     if @equipment.update(equipment_params)
       redirect_to equipments_path, notice: 'Equipment updated successfully.'
     else
