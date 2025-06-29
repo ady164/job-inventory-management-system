@@ -60,6 +60,7 @@ class JobsController < ApplicationController
 
   def destroy
     @job = Job.find(params[:id])
+    @job.job_measurement_references.destroy_all
     @job.job_processes.destroy_all
     @job.destroy
     redirect_to jobs_path, notice: 'Job was successfully deleted.'
