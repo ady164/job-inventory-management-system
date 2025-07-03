@@ -47,9 +47,7 @@ class IotController < ApplicationController
             update_status = "Requested"
         elsif op_type == "Restock"
             updated_quantity = inventory.quantity + qty
-            inventory.quantity = updated_quantity
-            inventory.save!
-            # inventory.update!(quantity: updated_quantity)
+            inventory.update!(quantity: updated_quantity)
             Rails.logger.error inventory.errors.full_messages
             update_status = "Completed"
             flash[:notice] = "#{updated_quantity} qty restock updated"
