@@ -42,7 +42,7 @@ Rails.application.routes.draw do
 
   # IoT routes for inventory management via IoT device
   resources :iot, only: [:index, :show] do
-    post 'update_quantity', on: :member
+    match 'update_quantity', on: :member, via: [:post, :patch]
   end
 
   # API for Inventory Log Route
