@@ -11,7 +11,7 @@ class IotController < ApplicationController
     end
 
     def update_quantity
-        @inventory = Inventory.find(params[:id])
+        inventory = Inventory.find(params[:id])
         input_pin = params[:user_pin]
         qty = params[:quantity].to_i
         op_type = params[:operation_type]
@@ -27,18 +27,18 @@ class IotController < ApplicationController
         # Log the invalid transaction
         InventoryLog.create!(
         user_id: nil,
-        inventory_id: @inventory.id,
+        inventory_id: inventory.id,
         quantity: qty,
         operation_type: op_type,
         message: "Invalid PIN"
         )
-        redirect_to iot_path(@inventory) and return
+        redirect_to iot_path(inventory) and return
         end
 
         if op_type == "Dispense"
-            if qty <= 0 || qty > @inventory.quantity
+            if qty <= 0 || qty > inventory.quantity
             flash[:alert] = "Invalid quantity."
-            redirect_to iot_path(@inventory) and return
+            redirect_to iot_path(inventory) and return
             end
         end
 
@@ -46,8 +46,10 @@ class IotController < ApplicationController
         if op_type == "Dispense"
             update_status = "Requested"
         elsif op_type == "Restock"
-            updated_quantity = @inventory.quantity + qty
-            @inventory.update(quantity: updated_quantity)
+            updated_quantity = inventory.quantity + qty
+            inventory.update(
+                quantity: updated_quantity
+                )
             update_status = "Completed"
             flash[:notice] = "#{updated_quantity} qty restock updated"
         end
@@ -62,14 +64,14 @@ class IotController < ApplicationController
         message: "#{op_type} request successful.",
         job_id: params[:job_id]
         )
-        inventoryname = @inventory.name
+        inventoryname = inventory.name
         if op_type == "Dispense"
             opname = "dispensed"
         elsif op_type == "Restock"
             opname = "restocked"
         end
         # flash[:notice] = "#{inventoryname} #{opname} #{update_status} quantity: #{qty}.\nThank you #{user.name}!"
-        redirect_to iot_path(@inventory)
+        redirect_to iot_path(inventory)
     end
 
     private
