@@ -11,6 +11,7 @@ class IotController < ApplicationController
     end
 
     def update_quantity
+        @inventory = Inventory.find(params[:id])
         input_pin = params[:user_pin]
         qty = params[:quantity].to_i
         op_type = params[:operation_type]

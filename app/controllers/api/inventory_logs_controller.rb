@@ -35,10 +35,17 @@ class Api::InventoryLogsController < ApplicationController
       inventory = Inventory.find(inventory_log.inventory_id)
       quantity_to_deduct = inventory_log.quantity.to_i
 
+      Rails.logger.info ">>> update_inventory: ID=#{inventory_log.id}, QtyToDeduct=#{quantity_to_deduct}, InventoryID=#{inventory.id}, Available=#{inventory.quantity}"
+
       if inventory.quantity >= quantity_to_deduct
-        inventory.update(quantity: inventory.quantity - quantity_to_deduct)
+        success = inventory.update(quantity: inventory.quantity - quantity_to_deduct)
+        if success
+          Rails.logger.info ">>> Inventory #{inventory.id} updated to #{inventory.quantity}"
+        else
+          Rails.logger.error ">>> Inventory update failed: #{inventory.errors.full_messages.join(", ")}"
+        end
       else
-        Rails.logger.warn "Insufficient inventory quantity: Available #{inventory.quantity}, Requested #{quantity_to_deduct}"
+        Rails.logger.warn ">>> Insufficient quantity: Available #{inventory.quantity}, Requested #{quantity_to_deduct}"
       end
     end
   end
